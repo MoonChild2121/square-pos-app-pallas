@@ -1,0 +1,49 @@
+{
+  "name": "square-app",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "prepare": "panda codegen",
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start",
+    "lint": "eslint . --ext .ts,.tsx --report-unused-disable-directives --max-warnings 0",
+    "format": "prettier --write ."
+  },
+  "dependencies": {
+    "@auth/supabase-adapter": "^1.10.0",
+    "@pallas-ui/panda-preset": "workspace:*",
+    "@pallas-ui/breadcrumb": "workspace:*",
+    "@pallas-ui/carousel": "workspace:*",
+    "@pallas-ui/components": "workspace:*",
+    "@pallas-ui/form": "workspace:*",
+    "@pallas-ui/sidebar": "workspace:*",
+    "@pallas-ui/style-context": "workspace:*",
+    "@radix-ui/react-slot": "^1.0.2",
+    "@supabase/supabase-js": "^2.50.2",
+    "json-bigint": "^1.0.0",
+    "jsonwebtoken": "^9.0.2",
+    "lucide-react": "^0.358.0",
+    "next": "^13.4.19",
+    "next-auth": "^4.10.3",
+    "react": "^18.3.1",
+    "react-dom": "^18.3.1",
+    "square": "^43.0.0"
+  },
+  "devDependencies": {
+    "@eslint/eslintrc": "^3",
+    "@pandacss/dev": "^0.54.0",
+    "@types/jsonwebtoken": "^9.0.10",
+    "@types/node": "^20",
+    "@types/react": "^19",
+    "@types/react-dom": "^19",
+    "@typescript-eslint/eslint-plugin": "^8.35.1",
+    "@typescript-eslint/parser": "^8.35.1",
+    "eslint": "^9",
+    "eslint-config-next": "15.3.4",
+    "eslint-config-prettier": "^10.1.5",
+    "eslint-plugin-prettier": "^5.5.1",
+    "prettier": "^3.6.2",
+    "typescript": "^5"
+  }
+}

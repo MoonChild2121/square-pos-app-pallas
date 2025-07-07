@@ -1,0 +1,100 @@
+@layer reset, base, tokens, recipes, utilities;
+@supports (color: var(--panda)) {
+  @import "../styled-system/styles.css";
+}
+
+@font-face {
+  font-family: 'Geist';
+  src: url('./fonts/GeistVF.woff') format('woff');
+  font-weight: 100 900;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Geist Mono';
+  src: url('./fonts/GeistMonoVF.woff') format('woff');
+  font-weight: 100 900;
+  font-style: normal;
+  font-display: swap;
+}
+
+:root {
+  --font-geist: 'Geist';
+  --font-geist-mono: 'Geist Mono';
+  --font-sans: var(--font-inter);
+  --font-heading: var(--font-noto-sans-jp);
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+@layer base {
+  html, body {
+    height: 100%;
+    background-color: white;
+    color: black;
+    font-family: var(--font-sans);
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+
+  h1, h2, h3, h4, h5, h6 {
+    font-family: var(--font-heading);
+  }
+
+  *, *::before, *::after {
+    box-sizing: border-box;
+  }
+}
+body {
+  font-family: var(--font-geist);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  background-color: var(--colors-surface-layout);
+  color: var(--colors-text-DEFAULT);
+}
+.pattern-bg {
+  background-image: url('/images/webb-dark.png');
+  background-repeat: repeat;
+  background-color: var(--colors-surface-spotlight);
+  background-blend-mode: overlay;
+}
+
+@keyframes slideIn {
+  from {
+    transform: translateY(-10px) translateX(-50%);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0) translateX(-50%);
+    opacity: 1;
+  }
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes slideIn {
+  from {
+    transform: translateY(-10px) translateX(-50%);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0) translateX(-50%);
+    opacity: 1;
+  }
+}
+/* Dark mode adjustments */
+@media (prefers-color-scheme: light) {
+  html {
+    color-scheme: light;
+  }
+}
