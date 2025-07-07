@@ -2,8 +2,9 @@ import { createPreset } from '@pallas-ui/panda-preset'
 import { defineConfig } from '@pandacss/dev'
 import { presetPrimaryColors } from '@pallas-ui/panda-preset/colors/paletteGenerator'
 import type { ThemeColorPalette } from '@pallas-ui/panda-preset/types'
-import { button } from './theme/recipes/button'
-import { heading, paragraph } from './theme/recipes/typography'
+import { button } from './src/theme/recipes/button'
+import { heading, paragraph } from './src/theme/recipes/typography'
+import { recipes } from './src/theme'
 
 const themeColorPalette: ThemeColorPalette = {
   primary: { colorName: 'blue', colorValue: presetPrimaryColors['blue']! },
@@ -26,11 +27,7 @@ export default defineConfig({
   // Useful for theme customization
   theme: {
     extend: {
-      recipes: {
-        button,
-        heading,
-        paragraph,
-      },
+      recipes,
       tokens: {
         fonts: {
           heading: {

@@ -12,7 +12,7 @@ export function LoginForm() {
   const handleSignIn = async () => {
     setIsLoading(true)
     try {
-      await signIn('square', { callbackUrl: '/productListing' })
+      await signIn('square', { callbackUrl: '/productlisting' })
       // If signIn redirects immediately, this line might never run.
       // If it returns a promise, you can handle errors here.
     } catch (error) {
@@ -47,7 +47,7 @@ export function LoginForm() {
 
         <Button
           onClick={handleSignIn}
-          variant="neutral"
+          variant="primary"
           width="full"
           size="lg"
           isLoading={isLoading}

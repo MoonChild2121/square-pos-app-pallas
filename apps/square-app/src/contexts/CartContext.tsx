@@ -1,4 +1,4 @@
-import { createContext, useContext, useReducer, ReactNode } from 'react'
+import { createContext, useContext, useReducer, ReactNode, useEffect } from 'react'
 
 export interface CartItem {
   id: string
@@ -22,12 +22,24 @@ type CartAction =
   | { type: 'REMOVE_ITEM'; payload: string }
   | { type: 'UPDATE_QUANTITY'; payload: { id: string; quantity: number } }
   | { type: 'CLEAR_CART' }
+  | { type: 'LOAD_CART'; payload: CartState }
+
+const CART_STORAGE_KEY = 'square_app_cart'
 
 const initialState: CartState = {
   items: [],
 }
 
+// Load cart from localStorage
+const loadStoredCart = (): CartState => {
+  if (typeof window === 'undefined') return initialState
+  const storedCart = localStorage.getItem(CART_STORAGE_KEY)
+  return storedCart ? JSON.parse(storedCart) : initialState
+}
+
 function cartReducer(state: CartState, action: CartAction): CartState {
+  let newState: CartState
+
   switch (action.type) {
     case 'ADD_ITEM': {
       const existingItemIndex = state.items.findIndex(
@@ -48,27 +60,30 @@ function cartReducer(state: CartState, action: CartAction): CartState {
             : action.payload.selectedModifier.price
         } : undefined
       }
-
+      // If the item already exists, update the quantity
       if (existingItemIndex > -1) {
         const newItems = [...state.items]
         newItems[existingItemIndex] = {
           ...newItems[existingItemIndex],
           quantity: newItems[existingItemIndex].quantity + 1
         }
-        return { ...state, items: newItems }
+        newState = { ...state, items: newItems }
+      } else {
+        // If the item does not exist, add it to the cart
+        newState = { ...state, items: [...state.items, itemToAdd] }
       }
-
-      return { ...state, items: [...state.items, itemToAdd] }
+      break
     }
-
+    
     case 'REMOVE_ITEM':
-      return {
+      newState = {
         ...state,
         items: state.items.filter((item) => item.id !== action.payload),
       }
+      break
 
     case 'UPDATE_QUANTITY':
-      return {
+      newState = {
         ...state,
         items: state.items.map((item) =>
           item.id === action.payload.id
@@ -76,13 +91,26 @@ function cartReducer(state: CartState, action: CartAction): CartState {
             : item
         ),
       }
+      break
 
     case 'CLEAR_CART':
-      return initialState
+      newState = initialState
+      break
+
+    case 'LOAD_CART':
+      newState = action.payload
+      break
 
     default:
       return state
   }
+
+  // Save to localStorage after each change
+  if (typeof window !== 'undefined') {
+    localStorage.setItem(CART_STORAGE_KEY, JSON.stringify(newState))
+  }
+
+  return newState
 }
 
 interface CartContextType {
@@ -98,6 +126,12 @@ const CartContext = createContext<CartContextType | undefined>(undefined)
 
 export function CartProvider({ children }: { children: ReactNode }) {
   const [state, dispatch] = useReducer(cartReducer, initialState)
+
+  // Load cart from localStorage on mount
+  useEffect(() => {
+    const storedCart = loadStoredCart()
+    dispatch({ type: 'LOAD_CART', payload: storedCart })
+  }, [])
 
   const addItem = (item: CartItem) => {
     dispatch({ type: 'ADD_ITEM', payload: item })

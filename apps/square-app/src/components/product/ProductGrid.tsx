@@ -4,8 +4,8 @@ import { Grid } from '@styled-system/jsx'
 import { css } from '@styled-system/css'
 import { useState } from 'react'
 import { useCart } from '@/contexts/CartContext'
-import ModifierModal from './ModifierModal'
-import ProductCard from '@/components/ProductCard'
+import ModifierModal from '../ModifierModal'
+import ProductCard from '@/components/product/ProductCard'
 
 interface Modifier {
   id: string
@@ -72,23 +72,23 @@ export default function ProductGrid({ products }: ProductGridProps) {
   return (
     <>
       <Grid
-        className={css({
+      className={css({
           gridTemplateColumns: 'repeat(auto-fill, minmax(160px, 1fr))',
-          gap: '4',
+        gap: '4',
           p: '4',
-          w: '100%',
+        w: '100%',
           overflowY: 'auto',
-        })}
-      >
-        {products.map((product) => (
-          <ProductCard
-            key={product.id}
-            name={product.name}
+      })}
+    >
+      {products.map((product) => (
+        <ProductCard
+          key={product.id}
+          name={product.name}
             price={convertPrice(product.price)}
-            imageUrl={product.imageUrl}
+          imageUrl={product.imageUrl}
             onClick={() => handleProductClick(product)}
-          />
-        ))}
+        />
+      ))}
       </Grid>
 
       {selectedProduct && (

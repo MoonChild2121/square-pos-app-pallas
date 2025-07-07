@@ -10,20 +10,23 @@ interface MenuBoxProps {
   label: string
   count: number
   icon?: React.ReactNode
+  isSelected?: boolean
+  onClick?: () => void
 }
 
-export default function MenuBox({ label, count, icon }: MenuBoxProps) {
+export default function MenuBox({ label, count, icon, isSelected = false, onClick }: MenuBoxProps) {
   return (
     <Box
+      onClick={onClick}
       p="4"
       minW="120px"
       className={css({
         border: '1px solid',
-        borderColor: 'primary.border',
+        borderColor: isSelected ? 'primary' : 'primary.border',
         borderRadius: 'xl',
         width: '150px',
         height: '150px',
-        bg: 'bgSolid.text',
+        bg: isSelected ? 'primary.bgHover' : 'bgSolid.text',
         transition: 'all 0.2s',
         _hover: {
           bg: 'primary.bgHover',

@@ -8,7 +8,7 @@ export async function middleware(request: NextRequest) {
 
   if (isAuthPage) {
     if (token) {
-      return NextResponse.redirect(new URL('/productListing', request.url));
+      return NextResponse.redirect(new URL('/productlisting', request.url));
     }
     return NextResponse.next();
   }
@@ -21,5 +21,5 @@ export async function middleware(request: NextRequest) {
 }
 
 export const config = {
-  matcher: ['/productListing/:path*', '/login'],
+  matcher: ['/productlisting/:path*', '/login'],
 };

@@ -3,8 +3,9 @@
 import { Box, HStack } from '@styled-system/jsx'
 import { css } from '@styled-system/css'
 import Heading from '@/components/ui/typography/heading'
-import MenuBox from '@/components/MenuBox'
+import MenuBox from '@/components/menu/MenuBox'
 import { Utensils } from 'lucide-react'
+import MenuWithRecipe from './MenuWithRecipe'
 
 interface MenuItem {
   id: string
@@ -35,7 +36,7 @@ export default function MenuBoxGrid({ items, selectedCategory, onCategorySelect 
       {/* Scrollable horizontal list */}
       <Box
         className={css({
-          px: '4',
+          p: '4',
           overflowX: 'auto',
           whiteSpace: 'nowrap',
           scrollbarWidth: 'none',
@@ -46,7 +47,7 @@ export default function MenuBoxGrid({ items, selectedCategory, onCategorySelect 
       >
         <HStack gap="4" w="max-content">
           {items.map((item) => (
-            <MenuBox
+            <MenuWithRecipe
               key={item.id}
               label={item.label}
               count={item.count}

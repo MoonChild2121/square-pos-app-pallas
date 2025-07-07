@@ -4,8 +4,8 @@ import { useCallback, useState } from 'react'
 import { HStack, Box } from '@styled-system/jsx'
 import { Input } from '@/components/ui/input'
 import { Search } from 'lucide-react'
-import { css } from '@styled-system/css'
 import debounce from 'lodash/debounce'
+import { searchBox } from '@styled-system/recipes' 
 
 interface SearchBarProps {
   onSearch: (searchTerm: string) => void;
@@ -14,7 +14,6 @@ interface SearchBarProps {
 export default function SearchBar({ onSearch }: SearchBarProps) {
   const [searchTerm, setSearchTerm] = useState('')
 
-  // Create a debounced search function that only triggers after 300ms of no typing
   const debouncedSearch = useCallback(
     debounce((term: string) => {
       onSearch(term)
@@ -29,8 +28,8 @@ export default function SearchBar({ onSearch }: SearchBarProps) {
   }
 
   return (
-    <HStack w="full" align="flex-start" gap="1.5">
-      <Input size="lg" shape="rounded">
+    <HStack align="flex-start" gap="1.5" pl="4"> 
+      <Input className={searchBox()} size="lg" shape="rounded">
         <Input.Text 
           placeholder="Search" 
           value={searchTerm}
