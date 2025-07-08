@@ -38,7 +38,6 @@ export const productCard = defineSlotRecipe({
     },
     price: {
       fontSize: 'sm',
-      color: 'gray.600',
     },
   },
 })

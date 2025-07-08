@@ -10,6 +10,7 @@
   "scripts": {
     "build": "turbo build --no-cache --force",
     "dev": "turbo dev",
+    "scan": "concurrently \"pnpm dev --filter=square-pos-app\" \"npx react-scan@latest http://localhost:3000\"",
     "start:square": "pnpm run start --filter=square-app",
     "lint": "turbo lint",
     "format": "prettier --write \"**/*.{ts,tsx,md}\"",

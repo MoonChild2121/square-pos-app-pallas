@@ -1,6 +1,7 @@
 import type { Metadata } from 'next'
 import './globals.css'
 import { Providers } from './providers'
+import { ReactScan } from './ReactScan'
 
 export const metadata: Metadata = {
   title: 'Pallas Pay',
@@ -14,6 +15,7 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en">
+      <ReactScan />
       <body>
         <Providers>{children}</Providers>
       </body>

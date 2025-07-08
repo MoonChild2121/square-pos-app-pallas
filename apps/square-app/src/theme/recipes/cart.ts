@@ -24,7 +24,6 @@ export const cartItem = defineSlotRecipe({
       width: '70px',
       height: '70px',
       flexShrink: 0,
-      bg: 'gray.50',
     },
     content: {
       maxW: '140px',
@@ -41,7 +40,6 @@ export const cartItem = defineSlotRecipe({
       textOverflow: 'ellipsis',
     },
     modifier: {
-      color: 'gray.600',
     },
     controls: {
       px: '2',
@@ -50,7 +48,6 @@ export const cartItem = defineSlotRecipe({
       gap: '2',
       display: 'flex',
       alignItems: 'center',
-      bg: 'gray.100',
     },
     button: {
       color: 'bgSolid.text',

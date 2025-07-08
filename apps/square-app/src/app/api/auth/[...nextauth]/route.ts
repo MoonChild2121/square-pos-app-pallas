@@ -90,23 +90,19 @@ export const authOptions: NextAuthOptions = {
   ],
   callbacks: {
     async jwt({ token, account, user }) {
-      console.log('JWT Callback - Account:', account);
-      console.log('JWT Callback - Token:', token);
-      
+
       if (account?.access_token) {
         token.accessToken = account.access_token;
       }
       return token;
     },
     async session({ session, token }) {
-      console.log('Session Callback - Token:', token);
       
       if (session.user) {
         session.user.id = token.sub;
         session.accessToken = token.accessToken as string | undefined;
       }
       
-      console.log('Session Callback - Final Session:', session);
       return session;
     },
   },

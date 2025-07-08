@@ -5,6 +5,7 @@
   "scripts": {
     "prepare": "panda codegen",
     "dev": "next dev",
+    "scan": "next dev & npx react-scan@latest localhost:3000",
     "build": "next build",
     "start": "next start",
     "lint": "eslint . --ext .ts,.tsx --report-unused-disable-directives --max-warnings 0",
@@ -12,6 +13,7 @@
   },
   "dependencies": {
     "@auth/supabase-adapter": "^1.10.0",
+    "@million/lint": "^1.0.14",
     "@pallas-ui/breadcrumb": "workspace:*",
     "@pallas-ui/carousel": "workspace:*",
     "@pallas-ui/components": "workspace:*",
@@ -30,6 +32,7 @@
     "next-auth": "^4.10.3",
     "react": "^18.3.1",
     "react-dom": "^18.3.1",
+    "react-scan": "^0.4.3",
     "square": "^43.0.0"
   },
   "devDependencies": {
@@ -41,6 +44,7 @@
     "@types/react-dom": "^19",
     "@typescript-eslint/eslint-plugin": "^8.35.1",
     "@typescript-eslint/parser": "^8.35.1",
+    "concurrently": "^9.2.0",
     "eslint": "^9",
     "eslint-config-next": "15.3.4",
     "eslint-config-prettier": "^10.1.5",
