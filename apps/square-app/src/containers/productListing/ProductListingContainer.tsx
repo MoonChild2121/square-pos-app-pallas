@@ -25,6 +25,7 @@ interface CatalogItem {
     categoryId?: string
     variations: ItemVariation[]
     imageIds?: string[]
+    taxIds?: string[]
   }
 }
 
@@ -150,6 +151,7 @@ export default function ProductListingContainer() {
             name: variation.itemVariationData.name,
             price: variation.itemVariationData.priceMoney,
             imageUrl,
+            taxIds: item.itemData.taxIds
           }
         })
       )

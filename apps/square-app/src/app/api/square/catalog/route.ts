@@ -3,7 +3,7 @@ import { getServerSession } from 'next-auth';
 import { authOptions } from '../../auth/[...nextauth]/route';
 import JSONbig from 'json-bigint';
 import util from 'util';
-import { NextResponse } from 'next/server'; // ✅ import this
+import { NextResponse } from 'next/server'; 
 
 export async function GET() {
   try {

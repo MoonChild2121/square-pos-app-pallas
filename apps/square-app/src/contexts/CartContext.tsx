@@ -6,11 +6,7 @@ export interface CartItem {
   price: number
   quantity: number
   imageUrl?: string
-  selectedModifier?: {
-    id: string
-    name: string
-    price: number
-  }
+  taxIds?: string[]
 }
 
 interface CartState {
@@ -43,22 +39,13 @@ function cartReducer(state: CartState, action: CartAction): CartState {
   switch (action.type) {
     case 'ADD_ITEM': {
       const existingItemIndex = state.items.findIndex(
-        (item) => 
-          item.id === action.payload.id && 
-          (!item.selectedModifier || !action.payload.selectedModifier || 
-            item.selectedModifier.id === action.payload.selectedModifier.id)
+        (item) => item.id === action.payload.id
       )
 
       // Ensure price is a number
       const itemToAdd = {
         ...action.payload,
-        price: typeof action.payload.price === 'string' ? parseFloat(action.payload.price) : action.payload.price,
-        selectedModifier: action.payload.selectedModifier ? {
-          ...action.payload.selectedModifier,
-          price: typeof action.payload.selectedModifier.price === 'string' 
-            ? parseFloat(action.payload.selectedModifier.price) 
-            : action.payload.selectedModifier.price
-        } : undefined
+        price: typeof action.payload.price === 'string' ? parseFloat(action.payload.price) : action.payload.price
       }
       // If the item already exists, update the quantity
       if (existingItemIndex > -1) {
@@ -156,8 +143,7 @@ export function CartProvider({ children }: { children: ReactNode }) {
   const calculateTotal = () => {
     const subtotal = state.items.reduce((sum, item) => {
       const itemTotal = item.price * item.quantity
-      const modifierTotal = item.selectedModifier ? item.selectedModifier.price * item.quantity : 0
-      return sum + itemTotal + modifierTotal
+      return sum + itemTotal
     }, 0)
 
     const tax = +(subtotal * 0.1).toFixed(2) // 10% tax

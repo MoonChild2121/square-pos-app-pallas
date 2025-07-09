@@ -1,14 +1,15 @@
 'use client'
 
-import { Box, Flex, HStack, VStack } from '@styled-system/jsx'
+import { Box, Flex, VStack } from '@styled-system/jsx'
 import { css } from '@styled-system/css'
 import { useCart } from '@/contexts/CartContext'
 import CartItem from './CartItem'
-import CartSummary from './CartSummary'
+import { Button } from '@/components/ui/button'
+import { useRouter } from 'next/navigation'
 
 export default function Cart() {
-  const { state, calculateTotal } = useCart()
-  const { subtotal, tax, total } = calculateTotal()
+  const { state } = useCart()
+  const router = useRouter()
 
   return (
     <Flex direction="column" h="100%" justify="space-between">
@@ -24,23 +25,22 @@ export default function Cart() {
       >
         {state.items.map((item) => (
           <CartItem
-            key={`${item.id}-${item.selectedModifier?.id || 'no-modifier'}`}
+            key={item.id}
             {...item}
           />
         ))}
       </VStack>
 
-      {/* Summary */}
-      <CartSummary
-        subtotal={subtotal}
-        tax={tax}
-        total={total}
-        isDisabled={state.items.length === 0}
-        onSubmit={() => {
-          // Future: add order handling here
-          console.log('Place order clicked')
-        }}
-      />
+      {/* Checkout Button */}
+      <Box pt="4">
+        <Button 
+          width="full" 
+          disabled={state.items.length === 0}
+          onClick={() => router.push('/checkout')}
+        >
+          Proceed to Checkout
+        </Button>
+      </Box>
     </Flex>
   )
 }

@@ -5,25 +5,26 @@ import { Minus, Plus } from 'lucide-react'
 import { useCart } from '@/contexts/CartContext'
 import { cartItem } from '@styled-system/recipes'
 
+interface Props {
+  id: string
+  name: string
+  price: number
+  quantity: number
+  imageUrl?: string
+  taxIds?: string[]
+}
+
 export default function CartItem({
   id,
   name,
   price,
   quantity,
   imageUrl,
-  selectedModifier,
-}: {
-  id: string
-  name: string
-  price: number
-  quantity: number
-  imageUrl?: string
-  selectedModifier?: { id: string; name: string; price: number }
-}) {
+  taxIds,
+}: Props) {
   const { updateQuantity } = useCart()
-  const totalPrice = price + (selectedModifier?.price || 0)
 
-  const { root, image, content, title, modifier, controls, button } = cartItem()
+  const { root, image, content, title, controls, button } = cartItem()
 
   return (
     <Box pb="3">
@@ -37,9 +38,9 @@ export default function CartItem({
         </Box>
         <VStack className={content}>
           <Heading level={5} className={title}>{name}</Heading>
-          <Paragraph size="sm">${totalPrice.toFixed(2)}</Paragraph>
-          {selectedModifier && (
-            <Paragraph className={modifier}>{selectedModifier.name}</Paragraph>
+          <Paragraph size="sm">${price.toFixed(2)}</Paragraph>
+          {taxIds && taxIds.length > 0 && (
+            <Paragraph size="sm" color="secondary">Tax ID: {taxIds[0]}</Paragraph>
           )}
         </VStack>
         <HStack className={controls}>
