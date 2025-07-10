@@ -4,7 +4,7 @@ import Heading from '@/components/ui/typography/heading'
 import Paragraph from '@/components/ui/typography/paragraph'
 import { Box, VStack } from '@styled-system/jsx'
 import { css } from '@styled-system/css'
-import { signIn } from 'next-auth/react'
+import { signIn } from 'next-auth/react' //nextauth client function to trigger sign-in with a provider
 
 export function LoginForm() {
   const [isLoading, setIsLoading] = useState(false)
@@ -12,9 +12,8 @@ export function LoginForm() {
   const handleSignIn = async () => {
     setIsLoading(true)
     try {
-      await signIn('square', { callbackUrl: '/productlisting' })
-      // If signIn redirects immediately, this line might never run.
-      // If it returns a promise, you can handle errors here.
+      await signIn('square', { callbackUrl: '/menu' }) //start noauth flow using swuare provider
+      // api/auth/signin/square -> redirects to square oauth page -> square redirects to app 
     } catch (error) {
       setIsLoading(false) // Reset if error occurs
       console.error(error)

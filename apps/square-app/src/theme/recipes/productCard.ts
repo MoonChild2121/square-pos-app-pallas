@@ -4,32 +4,34 @@ import { defineSlotRecipe } from '@pandacss/dev'
 export const productCard = defineSlotRecipe({
   className: 'productCard',
   description: 'Product card with image, name, and price slots',
-  slots: ['root', 'image', 'name', 'price'],
+  slots: ['root', 'image', 'nameContainer', 'name', 'price'],
   base: {
     root: {
       cursor: 'pointer',
       borderRadius: 'xl',
-      bg: 'primary.bg',
-      border: '1px solid',
-      borderColor: 'primary.border',
-      p: '3',
+      bg: 'bgSolid.text',
+      boxShadow: 'md',
+      pt: '2',
       transition: 'transform 0.2s ease-in-out',
       _hover: {
         transform: 'scale(1.02)',
       },
     },
     image: {
-      bg: 'gray.50',
       borderRadius: 'xl',
-      p: '2',
-      mb: '2',
-      aspectRatio: '1',
+      p: '1', // reduced padding
+      aspectRatio: '4/3', // was '1'; now image height is reduced
       display: 'flex',
       alignItems: 'center',
       justifyContent: 'center',
     },
+    nameContainer: {
+      borderRadius: '0 0 10px 10px',
+      p: '2',
+      bg: 'fill.secondary',
+    },
     name: {
-      fontSize: 'sm',
+      fontSize: 'md',
       fontWeight: 'medium',
       mb: '1',
       whiteSpace: 'nowrap',
@@ -37,7 +39,8 @@ export const productCard = defineSlotRecipe({
       textOverflow: 'ellipsis',
     },
     price: {
-      fontSize: 'sm',
+      fontSize: 'md',
+      fontWeight: 'bold',
     },
   },
 })

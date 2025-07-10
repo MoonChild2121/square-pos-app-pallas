@@ -13,7 +13,6 @@
   },
   "dependencies": {
     "@auth/supabase-adapter": "^1.10.0",
-    "@million/lint": "^1.0.14",
     "@pallas-ui/breadcrumb": "workspace:*",
     "@pallas-ui/carousel": "workspace:*",
     "@pallas-ui/components": "workspace:*",
@@ -23,6 +22,7 @@
     "@pallas-ui/style-context": "workspace:*",
     "@radix-ui/react-slot": "^1.0.2",
     "@supabase/supabase-js": "^2.50.2",
+    "@tanstack/react-query": "^5.81.5",
     "@types/lodash": "^4.17.20",
     "json-bigint": "^1.0.0",
     "jsonwebtoken": "^9.0.2",

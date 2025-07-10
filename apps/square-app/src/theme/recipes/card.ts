@@ -1,44 +1,42 @@
+// @styled-system/recipes/cardBox.ts
 import { defineRecipe } from '@pandacss/dev'
 
 export const cardBox = defineRecipe({
   className: 'cardBox',
-  description: 'Card component with productcard and menucard variants',
+  description: 'Card component with variants for menu, cart item, and order item',
   base: {
     borderRadius: 'xl',
     transition: 'all 0.2s ease-in-out',
+    position: 'relative',
   },
   variants: {
     variant: {
-      productcard: {
-        bg: 'primary.bg',
-        p: '2',
-        cursor: 'pointer',
-        borderRadius: 'xl',
-        border: '1px solid',
-        borderColor: 'primary.border',
-        _hover: {
-          transform: 'scale(1.02)',
-        },
-      },
       menucard: {
         p: '4',
         minW: '120px',
         w: '150px',
         h: '150px',
-        bg: 'primary.bg',
-        border: '1px solid',
-        borderColor: 'primary.border',
         borderRadius: 'xl',
+        boxShadow: 'md',
         transition: 'all 0.2s',
         _hover: {
-          bg: 'primary.bgHover',
-          borderColor: 'primary.borderHover',
           cursor: 'pointer',
+          transform: 'scale(1.02)',
         },
       },
-       cartitem: {
+      cartitem: {
         p: '2',
         bg: 'surface.layout',
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'space-between',
+        gap: '4',
+      },
+      orderitemcard: {
+        p: '3',
+        bg: 'surface.container.low',
+        borderRadius: 'lg',
+        boxShadow: 'sm',
         display: 'flex',
         alignItems: 'center',
         justifyContent: 'space-between',
@@ -47,17 +45,33 @@ export const cardBox = defineRecipe({
     },
     isSelected: {
       true: {
-        bg: 'primary.bgHover',
-        borderColor: 'primary.hover',
+        bg: 'primary.bg',
+        color: 'primary.fg',
+        boxShadow: 'lg',
+        _hover: {
+          bg: 'primary.bg',
+          transform: 'scale(1.02)',
+        },
       },
       false: {
-        bg: 'primary.bg',
-        borderColor: 'primary.border',
+        bg: 'bgSolid.text',
+        _hover: {
+          bg: 'primary.bg',
+        },
       },
     },
   },
+  compoundVariants: [
+    {
+      variant: 'menucard',
+      isSelected: true,
+      css: {
+        bg: 'primary.bg',
+      },
+    },
+  ],
   defaultVariants: {
-    variant: 'productcard',
+    variant: 'menucard',
+    isSelected: false,
   },
 })
-

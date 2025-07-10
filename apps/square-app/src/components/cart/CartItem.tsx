@@ -1,9 +1,13 @@
+'use client'
+
+import { memo, useCallback } from 'react'
 import { Box, HStack, VStack } from '@styled-system/jsx'
 import Paragraph from '@/components/ui/typography/paragraph'
 import Heading from '@/components/ui/typography/heading'
-import { Minus, Plus } from 'lucide-react'
-import { useCart } from '@/contexts/CartContext'
+import { Minus, Plus, Trash2 } from 'lucide-react'
+import { useCartActions } from '@/contexts/CartContext'
 import { cartItem } from '@styled-system/recipes'
+import { css } from '@styled-system/css'
 
 interface Props {
   id: string
@@ -14,7 +18,7 @@ interface Props {
   taxIds?: string[]
 }
 
-export default function CartItem({
+const CartItem = memo(function CartItem({
   id,
   name,
   price,
@@ -22,13 +26,30 @@ export default function CartItem({
   imageUrl,
   taxIds,
 }: Props) {
-  const { updateQuantity } = useCart()
+  const { updateQuantity } = useCartActions()
+  const { root, image, content, title, controls, button, deleteButton, contentWrapper } = cartItem()
 
-  const { root, image, content, title, controls, button } = cartItem()
+  const handleDecrease = useCallback(() => {
+    updateQuantity(id, quantity - 1)
+  }, [id, quantity, updateQuantity])
+
+  const handleIncrease = useCallback(() => {
+    updateQuantity(id, quantity + 1)
+  }, [id, quantity, updateQuantity])
+
+  const handleDelete = useCallback(() => {
+    updateQuantity(id, 0)
+  }, [id, updateQuantity])
 
   return (
-    <Box pb="3">
-      <HStack className={root}>
+    <Box pb="1">
+      <Box className={root}>
+        {/* Delete Button */}
+        <Box onClick={handleDelete} className={deleteButton}>
+          <Trash2 size={20} />
+        </Box>
+
+        {/* Image */}
         <Box className={image}>
           <img
             src={imageUrl || '/placeholder-image.jpg'}
@@ -36,23 +57,29 @@ export default function CartItem({
             style={{ width: '100%', height: '100%', objectFit: 'contain' }}
           />
         </Box>
-        <VStack className={content}>
-          <Heading level={5} className={title}>{name}</Heading>
-          <Paragraph size="sm">${price.toFixed(2)}</Paragraph>
-          {taxIds && taxIds.length > 0 && (
-            <Paragraph size="sm" color="secondary">Tax ID: {taxIds[0]}</Paragraph>
-          )}
-        </VStack>
-        <HStack className={controls}>
-          <Box onClick={() => updateQuantity(id, quantity - 1)} className={button}>
-            <Minus size={14} />
-          </Box>
-          <Paragraph>{quantity}</Paragraph>
-          <Box onClick={() => updateQuantity(id, quantity + 1)} className={button}>
-            <Plus size={14} />
-          </Box>
-        </HStack>
-      </HStack>
+
+        {/* Content Wrapper */}
+        <Box className={contentWrapper}>
+          {/* Item Details */}
+          <VStack className={content}>
+            <Heading level={6}>{name}</Heading>
+            <Paragraph size="sm">${price.toFixed(2)}</Paragraph>
+          </VStack>
+
+          {/* Quantity Controls */}
+          <HStack className={controls}>
+            <Box onClick={handleDecrease} className={button}>
+              <Minus size={20} />
+            </Box>
+            <Paragraph>{quantity}</Paragraph>
+            <Box onClick={handleIncrease} className={button}>
+              <Plus size={20} />
+            </Box>
+          </HStack>
+        </Box>
+      </Box>
     </Box>
   )
-}
+})
+
+export default CartItem

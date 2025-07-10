@@ -1,16 +1,10 @@
 'use client'
 
+import { memo, useCallback } from 'react'
 import { Grid } from '@styled-system/jsx'
 import { css } from '@styled-system/css'
-import { useState } from 'react'
-import { useCart } from '@/contexts/CartContext'
+import { useCartActions } from '@/contexts/CartContext'
 import ProductCard from '@/components/product/ProductCard'
-
-interface Modifier {
-  id: string
-  name: string
-  price: number
-}
 
 interface Product {
   id: string
@@ -27,14 +21,37 @@ interface ProductGridProps {
   products: Product[]
 }
 
-export default function ProductGrid({ products }: ProductGridProps) {
-  const { addItem } = useCart()
+// Memoized product card wrapper
+const MemoizedProductCard = memo(function MemoizedProductCard({
+  product,
+  onAddToCart
+}: {
+  product: Product
+  onAddToCart: (product: Product) => void
+}) {
+  const handleClick = useCallback(() => {
+    onAddToCart(product)
+  }, [product, onAddToCart])
 
-  const convertPrice = (price: { amount: number; currency: string }): number => {
-    return price.amount / 100 // Convert cents to dollars
-  }
+  return (
+    <ProductCard
+      name={product.name}
+      price={convertPrice(product.price)}
+      imageUrl={product.imageUrl}
+      onClick={handleClick}
+    />
+  )
+})
 
-  const handleProductClick = (product: Product) => {
+// Price conversion utility
+const convertPrice = (price: { amount: number; currency: string }): number => {
+  return price.amount / 100 // Convert cents to dollars
+}
+
+const ProductGrid = memo(function ProductGrid({ products }: ProductGridProps) {
+  const { addItem } = useCartActions()
+
+  const handleAddToCart = useCallback((product: Product) => {
     addItem({
       id: product.id,
       name: product.name,
@@ -43,7 +60,7 @@ export default function ProductGrid({ products }: ProductGridProps) {
       imageUrl: product.imageUrl,
       taxIds: product.taxIds
     })
-  }
+  }, [addItem])
 
   return (
     <Grid
@@ -53,18 +70,19 @@ export default function ProductGrid({ products }: ProductGridProps) {
         p: '4',
         w: '100%',
         overflowY: 'auto',
+        scrollbarGutter: 'stable',
       })}
     >
       {products.map((product) => (
-        <ProductCard
+        <MemoizedProductCard
           key={product.id}
-          name={product.name}
-          price={convertPrice(product.price)}
-          imageUrl={product.imageUrl}
-          onClick={() => handleProductClick(product)}
+          product={product}
+          onAddToCart={handleAddToCart}
         />
       ))}
     </Grid>
   )
-}
+})
+
+export default ProductGrid
 

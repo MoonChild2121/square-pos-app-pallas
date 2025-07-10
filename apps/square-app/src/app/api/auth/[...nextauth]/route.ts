@@ -32,7 +32,7 @@ export const authOptions: NextAuthOptions = {
           session: 'false',
         },
       },
-      token: {
+      token: { //square needs a custom post call
         url: `${SQUARE_SANDBOX_URL}/oauth2/token`,
         async request({ client, params, checks }) {
           console.log('Requesting token with code:', params.code);
@@ -89,18 +89,18 @@ export const authOptions: NextAuthOptions = {
     },
   ],
   callbacks: {
-    async jwt({ token, account, user }) {
+    async jwt({ token, account, user }) { //runs every time a token is issued or updated
 
       if (account?.access_token) {
         token.accessToken = account.access_token;
       }
       return token;
     },
-    async session({ session, token }) {
+    async session({ session, token }) { //runs whenever a session is created
       
       if (session.user) {
         session.user.id = token.sub;
-        session.accessToken = token.accessToken as string | undefined;
+        session.accessToken = token.accessToken as string | undefined; //inject the access token into the session so client or server side components can access it
       }
       
       return session;
@@ -109,6 +109,6 @@ export const authOptions: NextAuthOptions = {
   debug: true,
 };
 
-const handler = NextAuth(authOptions);
+const handler = NextAuth(authOptions);// call main function to generate the api route handler
 
-export { handler as GET, handler as POST }; //next.js App Router uses route handlers to manage auth logic at /api/auth
+export { handler as GET, handler as POST }; //required in app router to handle both get and post

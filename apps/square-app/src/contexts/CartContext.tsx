@@ -1,4 +1,4 @@
-import { createContext, useContext, useReducer, ReactNode, useEffect } from 'react'
+import { createContext, useContext, useReducer, ReactNode, useEffect, useMemo, useCallback } from 'react'
 
 export interface CartItem {
   id: string
@@ -111,6 +111,20 @@ interface CartContextType {
 
 const CartContext = createContext<CartContextType | undefined>(undefined)
 
+// Split contexts for different parts of the cart
+const CartItemsContext = createContext<CartItem[] | undefined>(undefined)
+const CartActionsContext = createContext<{
+  addItem: (item: CartItem) => void
+  removeItem: (id: string) => void
+  updateQuantity: (id: string, quantity: number) => void
+  clearCart: () => void
+} | undefined>(undefined)
+const CartTotalsContext = createContext<{
+  subtotal: number
+  tax: number
+  total: number
+} | undefined>(undefined)
+
 export function CartProvider({ children }: { children: ReactNode }) {
   const [state, dispatch] = useReducer(cartReducer, initialState)
 
@@ -120,27 +134,27 @@ export function CartProvider({ children }: { children: ReactNode }) {
     dispatch({ type: 'LOAD_CART', payload: storedCart })
   }, [])
 
-  const addItem = (item: CartItem) => {
+  const addItem = useCallback((item: CartItem) => {
     dispatch({ type: 'ADD_ITEM', payload: item })
-  }
+  }, [])
 
-  const removeItem = (id: string) => {
+  const removeItem = useCallback((id: string) => {
     dispatch({ type: 'REMOVE_ITEM', payload: id })
-  }
+  }, [])
 
-  const updateQuantity = (id: string, quantity: number) => {
+  const updateQuantity = useCallback((id: string, quantity: number) => {
     if (quantity <= 0) {
       removeItem(id)
     } else {
       dispatch({ type: 'UPDATE_QUANTITY', payload: { id, quantity } })
     }
-  }
+  }, [removeItem])
 
-  const clearCart = () => {
+  const clearCart = useCallback(() => {
     dispatch({ type: 'CLEAR_CART' })
-  }
+  }, [])
 
-  const calculateTotal = () => {
+  const totals = useMemo(() => {
     const subtotal = state.items.reduce((sum, item) => {
       const itemTotal = item.price * item.quantity
       return sum + itemTotal
@@ -150,28 +164,60 @@ export function CartProvider({ children }: { children: ReactNode }) {
     const total = subtotal + tax
 
     return { subtotal, tax, total }
-  }
+  }, [state.items])
+
+  const actions = useMemo(() => ({
+    addItem,
+    removeItem,
+    updateQuantity,
+    clearCart,
+  }), [addItem, removeItem, updateQuantity, clearCart])
 
   return (
-    <CartContext.Provider
-      value={{
-        state,
-        addItem,
-        removeItem,
-        updateQuantity,
-        clearCart,
-        calculateTotal,
-      }}
-    >
-      {children}
-    </CartContext.Provider>
+    <CartItemsContext.Provider value={state.items}>
+      <CartActionsContext.Provider value={actions}>
+        <CartTotalsContext.Provider value={totals}>
+          {children}
+        </CartTotalsContext.Provider>
+      </CartActionsContext.Provider>
+    </CartItemsContext.Provider>
   )
 }
 
-export function useCart() {
-  const context = useContext(CartContext)
+// Split hooks for different parts of the cart
+export function useCartItems() {
+  const context = useContext(CartItemsContext)
   if (context === undefined) {
-    throw new Error('useCart must be used within a CartProvider')
+    throw new Error('useCartItems must be used within a CartProvider')
   }
   return context
+}
+
+export function useCartActions() {
+  const context = useContext(CartActionsContext)
+  if (context === undefined) {
+    throw new Error('useCartActions must be used within a CartProvider')
+  }
+  return context
+}
+
+export function useCartTotals() {
+  const context = useContext(CartTotalsContext)
+  if (context === undefined) {
+    throw new Error('useCartTotals must be used within a CartProvider')
+  }
+  return context
+}
+
+// Legacy hook for backward compatibility
+export function useCart() {
+  const items = useCartItems()
+  const actions = useCartActions()
+  const totals = useCartTotals()
+  
+  return {
+    state: { items },
+    ...actions,
+    calculateTotal: () => totals
+  }
 } 

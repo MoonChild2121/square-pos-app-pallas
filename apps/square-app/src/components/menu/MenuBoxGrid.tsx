@@ -1,11 +1,10 @@
 'use client'
 
+import { memo, useCallback } from 'react'
 import { Box, HStack } from '@styled-system/jsx'
 import { css } from '@styled-system/css'
 import Heading from '@/components/ui/typography/heading'
-import MenuBox from '@/components/menu/MenuBox'
-import { Utensils } from 'lucide-react'
-import MenuWithRecipe from './MenuWithRecipe'
+import MenuBox from './MenuBox'
 
 interface MenuItem {
   id: string
@@ -20,19 +19,39 @@ interface MenuBoxGridProps {
   onCategorySelect: (categoryId: string) => void
 }
 
-export default function MenuBoxGrid({ items, selectedCategory, onCategorySelect }: MenuBoxGridProps) {
+// Memoized individual menu item component
+const MenuItem = memo(function MenuItem({
+  item,
+  isSelected,
+  onSelect
+}: {
+  item: MenuItem
+  isSelected: boolean
+  onSelect: (id: string) => void
+}) {
+  const handleClick = useCallback(() => {
+    onSelect(item.id)
+  }, [item.id, onSelect])
+
+  return (
+    <MenuBox
+      key={item.id}
+      label={item.label}
+      count={item.count}
+      icon={item.icon}
+      isSelected={isSelected}
+      onClick={handleClick}
+    />
+  )
+})
+
+const MenuBoxGrid = memo(function MenuBoxGrid({ 
+  items, 
+  selectedCategory, 
+  onCategorySelect 
+}: MenuBoxGridProps) {
   return (
     <Box>
-      {/* Header section */}
-      <Box
-        className={css({
-          mb: '3',
-          px: '4',
-        })}
-      >
-        <Heading level={3}>m</Heading>
-      </Box>
-
       {/* Scrollable horizontal list */}
       <Box
         className={css({
@@ -47,17 +66,17 @@ export default function MenuBoxGrid({ items, selectedCategory, onCategorySelect 
       >
         <HStack gap="4" w="max-content">
           {items.map((item) => (
-            <MenuWithRecipe
+            <MenuItem
               key={item.id}
-              label={item.label}
-              count={item.count}
-              icon={item.icon}
+              item={item}
               isSelected={selectedCategory === item.id}
-              onClick={() => onCategorySelect(item.id)}
+              onSelect={onCategorySelect}
             />
           ))}
         </HStack>
       </Box>
     </Box>
   )
-}
+})
+
+export default MenuBoxGrid
