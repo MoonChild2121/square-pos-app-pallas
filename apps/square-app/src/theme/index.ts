@@ -4,7 +4,6 @@ import { searchBox } from './recipes/searchBox'
 import { cartItem } from './recipes/cart'
 import { productCard } from './recipes/productCard'
 import { header } from './recipes/header'
-import { spacing } from './tokens/rounded-spacing'
 import { pill } from './recipes/pill'
 import { orderConfirmation } from './recipes/orderConfirmation'
 import { skeleton } from './recipes/skeleton'
@@ -19,9 +18,7 @@ export const recipes = {
   header,
   pill,
   orderConfirmation,
-  skeleton,
+  skeleton, 
 }
 
-export const tokens = {
-  spacing,
-}
+export { animations } from './animations'

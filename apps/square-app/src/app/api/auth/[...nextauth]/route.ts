@@ -1,41 +1,56 @@
+// Import NextAuth and the types used to configure it
 import NextAuth from 'next-auth';
 import type { NextAuthOptions } from 'next-auth';
 
+// Define the base URL for the Square sandbox environment
 const SQUARE_SANDBOX_URL = 'https://connect.squareupsandbox.com';
 
+// --- Type Augmentation Section ---
+
+// Extend the default `Session` and `JWT` types from NextAuth to include Square-specific fields
 declare module 'next-auth' {
-  //extending the default session shape to store the Square merchant.id and business_name
   interface Session {
     user: {
-      id?: string | null;
-      name?: string | null;
-      email?: string | null;
+      id?: string | null;     // Square merchant ID
+      name?: string | null;   // Square business name
+      email?: string | null; 
     };
-    accessToken?: string;
+    accessToken?: string;     // Our custom addition to the session
   }
 
   interface JWT {
-    accessToken?: string;
+    accessToken?: string;     // Attach the Square access token to the JWT
   }
 }
 
+// --- NextAuth Configuration Section ---
+
+// Define the full NextAuth config object
 export const authOptions: NextAuthOptions = {
+  // Define a custom OAuth provider for Square
   providers: [
     {
-      id: 'square',
-      name: 'Square',
-      type: 'oauth',
+      id: 'square',               // Provider ID used internally
+      name: 'Square',             // Display name for the provider
+      type: 'oauth',              // Type of auth strategy
+
+      // OAuth2 Authorization URL and parameters
       authorization: {
         url: `${SQUARE_SANDBOX_URL}/oauth2/authorize`,
         params: {
+          // Required scopes for accessing merchant, orders, items, and payments
           scope: 'MERCHANT_PROFILE_READ PAYMENTS_READ PAYMENTS_WRITE ITEMS_READ ORDERS_READ',
-          session: 'false',
+          session: 'false', 
         },
       },
-      token: { //square needs a custom post call
+
+      // How to exchange the authorization code for access tokens
+      token: {
         url: `${SQUARE_SANDBOX_URL}/oauth2/token`,
-        async request({ client, params, checks }) {
+        async request({params }) {
           console.log('Requesting token with code:', params.code);
+
+          // Make a custom POST request to Square's token endpoint
           const response = await fetch(`${SQUARE_SANDBOX_URL}/oauth2/token`, {
             method: 'POST',
             headers: {
@@ -43,15 +58,15 @@ export const authOptions: NextAuthOptions = {
               'Content-Type': 'application/json',
             },
             body: JSON.stringify({
-              client_id: process.env.NEXT_PUBLIC_SQUARE_APPLICATION_ID,
-              client_secret: process.env.SQUARE_APPLICATION_SECRET,
-              code: params.code,
-              grant_type: 'authorization_code',
-              redirect_uri: 'http://localhost:3000/api/auth/callback/square',
+              client_id: process.env.NEXT_PUBLIC_SQUARE_APPLICATION_ID,   // from .env
+              client_secret: process.env.SQUARE_APPLICATION_SECRET,       // from .env
+              code: params.code,                                          // auth code from Square
+              grant_type: 'authorization_code',                           // standard OAuth2 grant
+              redirect_uri: 'http://localhost:3000/api/auth/callback/square', // must match Square app settings
             }),
           });
 
-          const tokens = await response.json();
+          const tokens = await response.json(); // Parse the response
           console.log('Token Response:', tokens);
 
           if (!response.ok) {
@@ -59,56 +74,68 @@ export const authOptions: NextAuthOptions = {
             throw new Error(tokens.message || 'Failed to get access token');
           }
 
+          // Return the tokens in a format NextAuth expects
           return { tokens };
         },
       },
+
+      // How to fetch the user's profile (merchant data) after authentication
       userinfo: {
-        //want to store merchant.id and business_name in the session
-        url: `${SQUARE_SANDBOX_URL}/v2/merchants/me`,
+        url: `${SQUARE_SANDBOX_URL}/v2/merchants/me`, // Square endpoint to get merchant info
         async request({ tokens }) {
           const response = await fetch(`${SQUARE_SANDBOX_URL}/v2/merchants/me`, {
             headers: {
-              Authorization: `Bearer ${tokens.access_token}`,
+              Authorization: `Bearer ${tokens.access_token}`,     // Square token
               'Content-Type': 'application/json',
               'Square-Version': '2024-01-01',
             },
           });
-          return response.json();
+          return response.json(); // Return profile JSON to NextAuth
         },
       },
+
+      // Credentials needed for OAuth
       clientId: process.env.NEXT_PUBLIC_SQUARE_APPLICATION_ID,
       clientSecret: process.env.SQUARE_APPLICATION_SECRET,
+
+      // Format Square's profile shape into the shape NextAuth expects
       profile(profile) {
-        //formats the fetched profile into NextAuth's expected shape
         return {
-          id: profile.merchant?.id || 'default-id',
-          name: profile.merchant?.business_name || null,
-          email: null,
+          id: profile.merchant?.id || 'default-id',            // Square merchant ID
+          name: profile.merchant?.business_name || null,       // Store name
+          email: null,                                          // Not returned by Square
         };
       },
     },
   ],
-  callbacks: {
-    async jwt({ token, account, user }) { //runs every time a token is issued or updated
 
+  // --- Callback Functions ---
+
+  callbacks: {
+    // Called when a JWT is created or updated
+    async jwt({ token, account, user }) {
       if (account?.access_token) {
-        token.accessToken = account.access_token;
+        token.accessToken = account.access_token; // Store Square token in JWT
       }
       return token;
     },
-    async session({ session, token }) { //runs whenever a session is created
-      
+
+    // Called when a session is created from a JWT
+    async session({ session, token }) {
       if (session.user) {
-        session.user.id = token.sub;
-        session.accessToken = token.accessToken as string | undefined; //inject the access token into the session so client or server side components can access it
+        session.user.id = token.sub; // sub = user ID from JWT
+        session.accessToken = token.accessToken as string | undefined; // Expose token to the client
       }
-      
       return session;
     },
   },
+
+  // Enable logging for easier debugging
   debug: true,
 };
 
-const handler = NextAuth(authOptions);// call main function to generate the api route handler
+// Export a Next.js API route handler generated by NextAuth
+const handler = NextAuth(authOptions);
 
-export { handler as GET, handler as POST }; //required in app router to handle both get and post
+// App Router requires both GET and POST handlers to be exported
+export { handler as GET, handler as POST };

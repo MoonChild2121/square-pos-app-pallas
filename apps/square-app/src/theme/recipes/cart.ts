@@ -145,5 +145,24 @@ export const cartContainer = defineSlotRecipe({
       borderTop: '1px solid',
       borderColor: 'surface.container.highest',
     }
+  },
+  variants: {
+    variant: {
+      default: {},
+      skeleton: {
+        summary: {
+          display: 'flex',
+          flexDirection: 'column',
+          gap: '4',
+          minH: '120px',
+          bg: 'surface.container',
+          borderRadius: 'lg',
+          p: '4',
+        }
+      }
+    }
+  },
+  defaultVariants: {
+    variant: 'default'
   }
 })

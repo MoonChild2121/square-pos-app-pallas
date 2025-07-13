@@ -2,7 +2,7 @@ import { createPreset } from '@pallas-ui/panda-preset'
 import { defineConfig } from '@pandacss/dev'
 import { presetPrimaryColors } from '@pallas-ui/panda-preset/colors/paletteGenerator'
 import type { ThemeColorPalette } from '@pallas-ui/panda-preset/types'
-import { recipes, tokens } from './src/theme'
+import { recipes } from './src/theme'
 
 const themeColorPalette: ThemeColorPalette = {
   primary: { colorName: 'blue', colorValue: presetPrimaryColors['blue']! },
@@ -39,9 +39,6 @@ export default defineConfig({
           }
         },
       },
-      semanticTokens: {
-        spacing: tokens.spacing,
-      }
     },
   },
   // The output directory for your css system

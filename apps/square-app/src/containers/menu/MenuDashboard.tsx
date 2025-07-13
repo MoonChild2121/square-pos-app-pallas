@@ -7,11 +7,25 @@ import { useCatalog } from '@/hooks/useCatalog'
 import { useCart } from '@/contexts/CartContext'
 import { useSearchParams } from 'next/navigation'
 
-export function MenuDashboard() {
+interface InitialData {
+  catalog: any[]
+  images: Record<string, string>
+}
+
+interface MenuDashboardProps {
+  initialData: InitialData
+}
+
+export function MenuDashboard({ initialData }: MenuDashboardProps) { //initialData is the data that was fetched from the server
   const [selectedItem, setSelectedItem] = useState<string>('all')
   const [searchTerm, setSearchTerm] = useState('')
   
-  const { items, imageData } = useCatalog()
+  const { items, imageData } = useCatalog({
+    initialData: {
+      items: initialData.catalog,
+      images: initialData.images
+    }
+  })
   const { clearCart } = useCart()
   const searchParams = useSearchParams()
 

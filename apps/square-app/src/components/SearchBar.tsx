@@ -3,9 +3,11 @@
 import { useCallback, useState } from 'react'
 import { HStack, Box } from '@styled-system/jsx'
 import { Input } from '@/components/ui/input'
-import { Search } from 'lucide-react'
+import { Search, X } from 'lucide-react'
 import debounce from 'lodash/debounce'
-import { searchBox } from '@styled-system/recipes' 
+import { searchBox } from '@styled-system/recipes'
+import { Button } from '@/components/ui/button'
+import { css } from '@styled-system/css'
 
 interface SearchBarProps {
   onSearch: (searchTerm: string) => void;
@@ -27,16 +29,37 @@ export default function SearchBar({ onSearch }: SearchBarProps) {
     debouncedSearch(value)
   }
 
+  const handleClear = () => {
+    setSearchTerm('')
+    onSearch('')
+  }
+
   return (
     <HStack align="flex-start" gap="1.5" pl="4"> 
       <Input className={searchBox()} size="lg" shape="rounded">
+      <Search size={20} className={css({ mr: '2' })}/>
         <Input.Text 
           placeholder="Search" 
           value={searchTerm}
           onChange={handleSearchChange}
         />
         <Input.Postfix>
-          <Search size={20} />
+          {searchTerm && (
+            <Button
+              variant="text"
+              size="sm"
+              onClick={handleClear}
+              className={css({
+                p: '0',
+                minW: '0',
+                h: 'auto',
+                color: 'text.secondary',
+                _hover: { color: 'text' }
+              })}
+            >
+              <X size={25} />
+            </Button>
+          )}
         </Input.Postfix>
       </Input>
     </HStack>

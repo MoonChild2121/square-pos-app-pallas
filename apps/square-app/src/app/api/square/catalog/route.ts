@@ -2,40 +2,53 @@ import { SquareClient, SquareEnvironment } from 'square';
 import { getServerSession } from 'next-auth';
 import { authOptions } from '../../auth/[...nextauth]/route';
 import JSONbig from 'json-bigint';
-import util from 'util';
-import { NextResponse } from 'next/server'; 
+import { NextResponse } from 'next/server';
 
 export async function GET() {
   try {
     const session = await getServerSession(authOptions);
-
-    if (!session) {
-      return NextResponse.json({ error: 'Unauthorized - No session' }, { status: 401 });
+    
+    if (!session?.accessToken) {
+      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
     }
-
-    if (!session.accessToken) {
-      console.error('No access token in session:', session);
-      return NextResponse.json({ error: 'Unauthorized - No access token' }, { status: 401 });
-    }
-
-    console.log('Using access token:', session.accessToken);
 
     const client = new SquareClient({
       token: session.accessToken,
       environment: SquareEnvironment.Sandbox,
     });
 
-    const catalogResponse = await client.catalog.list({ types: "ITEM" });
+    // Fetch both catalog items and images in parallel
+    const [catalogResponse, imagesResponse] = await Promise.all([
+      client.catalog.list({ types: "ITEM" }),
+      client.catalog.list({ types: "IMAGE" })
+    ]);
 
-    const serializedData = JSONbig({ useNativeBigInt: true }).stringify(catalogResponse.data);
-    const parsedData = JSON.parse(serializedData);
+    // Process catalog data
+    const serializedCatalog = JSONbig({ useNativeBigInt: true }).stringify(catalogResponse.data);
+    const catalogData = JSON.parse(serializedCatalog);
+    const items = catalogData.filter((item: any) => item.type === 'ITEM');
 
-    console.log("from catalog:");
-    console.log(catalogResponse.data);
-    console.log("from bigint:");
-    console.log(util.inspect(parsedData, { depth: null, colors: true }));
+    // Process image data
+    const serializedImages = JSONbig({ useNativeBigInt: true }).stringify(imagesResponse.data);
+    const imagesData = JSON.parse(serializedImages);
+    const imageMap = imagesData.reduce((acc: Record<string, string>, obj: any) => {
+      if (obj.type === 'IMAGE' && obj.imageData?.url) {
+        acc[obj.id] = obj.imageData.url;
+      }
+      return acc;
+    }, {});
 
-    return NextResponse.json(parsedData);
+    // Add caching headers to the response
+    return NextResponse.json(
+      { items, images: imageMap },
+      {
+        headers: {
+          'Cache-Control': 'public, s-maxage=300, stale-while-revalidate=3600',
+          'CDN-Cache-Control': 'public, s-maxage=300, stale-while-revalidate=3600',
+          'Vercel-CDN-Cache-Control': 'public, s-maxage=300, stale-while-revalidate=3600',
+        }
+      }
+    );
   } catch (error: any) {
     console.error('Error fetching catalog:', error);
     return NextResponse.json(

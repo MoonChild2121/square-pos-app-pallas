@@ -1,5 +1,6 @@
 import { useQuery } from '@tanstack/react-query';
 
+// modeling structure of square catalog api response
 interface ItemVariation {
   id: string;
   itemVariationData: {
@@ -24,6 +25,11 @@ interface CatalogItem {
   };
 }
 
+interface CatalogResponse { //what your API endpoint returns
+  items: CatalogItem[];
+  images: Record<string, string>;
+}
+
 // Create a mapping of variant IDs to image IDs
 function createVariantImageMap(items: CatalogItem[]): Record<string, string[]> {
   return items.reduce((acc, item) => {
@@ -32,13 +38,12 @@ function createVariantImageMap(items: CatalogItem[]): Record<string, string[]> {
       acc[variation.id] = variation.itemVariationData.imageIds || itemImageIds;
     });
     return acc;
-  }, {} as Record<string, string[]>);
+  }, {} as Record<string, string[]>); //{ 'VARIANT_ID_123': ['IMAGE_ID_abc'] }
 }
 
 // Query keys for React Query
 export const catalogKeys = {
-  catalog: ['catalog'] as const,
-  images: ['catalogImages'] as const,
+  all: ['catalog'] as const,
 }
 
 // Helper to get the base URL for API calls
@@ -48,61 +53,54 @@ const getBaseUrl = () => {
     return process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3000'
   }
   // Client-side
-  return ''
+  return '' //the server, it returns an absolute URL (used for SSR) On the client, it returns an empty string, so fetch('/api/...') works as relative
 }
 
-// Server-side fetch functions
-export async function fetchCatalog(): Promise<CatalogItem[]> {
+// Server-side fetch function
+export async function fetchCatalog(accessToken?: string): Promise<CatalogResponse> {
   const baseUrl = getBaseUrl()
   const response = await fetch(`${baseUrl}/api/square/catalog`, {
     headers: {
       'Cache-Control': 'max-age=3600',
+      ...(accessToken && { 'Authorization': `Bearer ${accessToken}` })
+    },
+    next: {
+      revalidate: 300 // 5 minutes
     }
   });
   if (!response.ok) throw new Error('Failed to fetch catalog');
-  const data = await response.json();
-  return data.filter((item: any) => item.type === 'ITEM');
-}
-
-export async function fetchImages(): Promise<Record<string, string>> {
-  const baseUrl = getBaseUrl()
-  const response = await fetch(`${baseUrl}/api/square/image`, {
-    headers: {
-      'Cache-Control': 'max-age=3600',
-    }
-  });
-  if (!response.ok) throw new Error('Failed to fetch images');
   return response.json();
 }
 
+interface UseCatalogOptions {
+  initialData?: CatalogResponse;
+}
+
 // Client-side hook
-export function useCatalog() {
-  const { data: items = [], isLoading: isLoadingCatalog } = useQuery({
-    queryKey: catalogKeys.catalog,
-    queryFn: fetchCatalog,
-    staleTime: 1000 * 60 * 5,
-    gcTime: 1000 * 60 * 30,
+//populates client-side React Query without a network request
+export function useCatalog({ initialData }: UseCatalogOptions = {}) {
+  const { data = initialData || { items: [], images: {} }, isLoading } = useQuery({
+    queryKey: catalogKeys.all,
+    queryFn: () => fetchCatalog(),
+    staleTime: 1000 * 60 * 5, // 5 minutes
+    gcTime: 1000 * 60 * 60 * 24, // 24 hours
+    refetchOnWindowFocus: false,
+    refetchOnMount: false,
+    initialData,
   });
 
-  const { data: imageData = {}, isLoading: isLoadingImages } = useQuery({
-    queryKey: catalogKeys.images,
-    queryFn: fetchImages,
-    staleTime: 1000 * 60 * 5,
-    gcTime: 1000 * 60 * 30,
-  });
-
-  const variantImageMap = createVariantImageMap(items);
+  const variantImageMap = createVariantImageMap(data.items);
 
   const getVariantImageUrl = (variantId: string): string | undefined => {
     const imageIds = variantImageMap[variantId];
     if (!imageIds?.length) return undefined;
-    return imageData[imageIds[0]];
+    return data.images[imageIds[0]];
   };
 
   return {
-    items,
-    imageData,
+    items: data.items,
+    imageData: data.images,
     getVariantImageUrl,
-    isLoading: isLoadingCatalog || isLoadingImages,
+    isLoading,
   };
 } 

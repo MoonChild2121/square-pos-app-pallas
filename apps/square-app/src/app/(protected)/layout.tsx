@@ -1,12 +1,8 @@
 'use client';
 
-import { useSession } from 'next-auth/react';
-import { usePathname } from 'next/navigation';
 import { CartProvider } from '@/contexts/CartContext'
 
 export default function ProtectedLayout({ children }: { children: React.ReactNode }) {
-  const { data: session } = useSession();
-  const pathname = usePathname();
 
   return (
     <CartProvider>

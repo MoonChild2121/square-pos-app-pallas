@@ -1,25 +1,34 @@
-import { dehydrate, HydrationBoundary, QueryClient } from '@tanstack/react-query'
+import { Suspense } from 'react' 
 import { MenuDashboard } from '@/containers/menu/MenuDashboard'
-import { catalogKeys, fetchCatalog, fetchImages } from '@/hooks/useCatalog'
+import { fetchCatalog } from '@/hooks/useCatalog'
+import { getServerSession } from 'next-auth'
+import { authOptions } from '@/app/api/auth/[...nextauth]/route'
+import { redirect } from 'next/navigation' //Next.js App Router utility that performs server-side redirects
+
+// Configure route segment
+export const revalidate = 300 // revalidate every 5 minutes
+
+async function getInitialData() {
+  const session = await getServerSession(authOptions)
+  
+  if (!session?.accessToken) {
+    redirect('/api/auth/signin')
+  }
+
+  const data = await fetchCatalog(session.accessToken)
+
+  return {
+    catalog: data.items,
+    images: data.images
+  }
+}
 
 export default async function MenuPage() {
-  const queryClient = new QueryClient()
-
-  // Prefetch data on the server
-  await Promise.all([
-    queryClient.prefetchQuery({
-      queryKey: catalogKeys.catalog,
-      queryFn: fetchCatalog,
-    }),
-    queryClient.prefetchQuery({
-      queryKey: catalogKeys.images,
-      queryFn: fetchImages,
-    }),
-  ])
+  const initialData = await getInitialData()
 
   return (
-    <HydrationBoundary state={dehydrate(queryClient)}>
-      <MenuDashboard />
-    </HydrationBoundary>
+    <Suspense fallback={<div>Loading...</div>}>
+      <MenuDashboard initialData={initialData} />
+    </Suspense>
   )
 } 

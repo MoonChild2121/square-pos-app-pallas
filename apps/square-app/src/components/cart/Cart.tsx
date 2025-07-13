@@ -1,14 +1,16 @@
 'use client'
 
-import { memo } from 'react'
+import { memo, useEffect } from 'react'
 import { Box } from '@styled-system/jsx'
-import { useCartItems } from '@/contexts/CartContext'
+import { useCartState, useCartActions } from '@/contexts/CartContext'
 import CartItem from './CartItem'
 import { Button } from '@/components/ui/button'
 import { useRouter } from 'next/navigation'
 import Heading from '@/components/ui/typography/heading'
-import OrderSummary from './OrderSummary'
+import OrderSummary from '../orders/OrderSummary'
+import { OrderSummarySkeleton } from '../skeletons/order-skeletons/OrderSummarySkeleton'
 import { css } from '@styled-system/css'
+import { useOrderCalculation } from '@/hooks/useOrderCalculation'
 
 // Memoized cart items list component
 const CartItemsList = memo(function CartItemsList({ items }: { items: any[] }) {
@@ -31,7 +33,13 @@ const CartItemsList = memo(function CartItemsList({ items }: { items: any[] }) {
 })
 
 // Memoized checkout button component
-const CheckoutButton = memo(function CheckoutButton({ disabled }: { disabled: boolean }) {
+const CheckoutButton = memo(function CheckoutButton({ 
+  disabled,
+  loading 
+}: { 
+  disabled: boolean
+  loading: boolean 
+}) {
   const router = useRouter()
   
   return (
@@ -39,6 +47,7 @@ const CheckoutButton = memo(function CheckoutButton({ disabled }: { disabled: bo
       <Button 
         width="full" 
         disabled={disabled}
+        isLoading={loading}
         onClick={() => router.push('/checkout')}
       >
         Proceed to Checkout
@@ -48,8 +57,20 @@ const CheckoutButton = memo(function CheckoutButton({ disabled }: { disabled: bo
 })
 
 const Cart = memo(function Cart() {
-  const items = useCartItems()
-  const isEmpty = items.length === 0
+  const state = useCartState()
+  const { setOrder } = useCartActions()
+  const isEmpty = state.items.length === 0
+  const orderCalc = useOrderCalculation({
+    items: state.items,
+    debounceMs: 300
+  })
+
+  // Store the calculated order in the cart context
+  useEffect(() => {
+    if (orderCalc.order && !orderCalc.loading && !orderCalc.error) {
+      setOrder(orderCalc.order)
+    }
+  }, [orderCalc.order, orderCalc.loading, orderCalc.error, setOrder])
 
   return (
     <Box className={css({
@@ -70,12 +91,19 @@ const Cart = memo(function Cart() {
       })}>
         <Heading level={4}>Cart Items</Heading>
       </Box>
-      <CartItemsList items={items} />
+      <CartItemsList items={state.items} />
       <Box mb="2">
-        <OrderSummary />
+        {orderCalc.loading ? (
+          <OrderSummarySkeleton />
+        ) : (
+          <OrderSummary orderCalc={orderCalc} />
+        )}
       </Box>
       <Box mt="2">
-        <CheckoutButton disabled={isEmpty} />
+        <CheckoutButton 
+          disabled={isEmpty} 
+          loading={orderCalc.loading}
+        />
       </Box>
     </Box>
   )

@@ -11,13 +11,18 @@ export function Providers({ children }: { children: React.ReactNode }) {
       queries: {
         staleTime: 1000 * 60 * 5, // 5 minutes
         gcTime: 1000 * 60 * 60 * 24, // 24 hours
+        refetchOnWindowFocus: false,
+        refetchOnMount: false,
       },
     },
   }));
 
   return (
     <QueryClientProvider client={queryClient}>
-      <SessionProvider>
+      <SessionProvider 
+        refetchOnWindowFocus={false}
+        refetchInterval={0}
+      >
         <CartProvider>
             {children}
         </CartProvider>

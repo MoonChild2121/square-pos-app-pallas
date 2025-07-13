@@ -1,6 +1,6 @@
 'use client'
 
-import { memo } from 'react'
+import { memo, useState } from 'react'
 import { Flex, Box } from '@styled-system/jsx'
 import { css } from '@styled-system/css'
 import { Header } from '@/components/layout/Header'
@@ -8,6 +8,7 @@ import MenuBoxGrid from '@/components/menu/MenuBoxGrid'
 import ProductGrid from '@/components/product/ProductGrid'
 import SearchBar from '@/components/SearchBar'
 import Cart from '@/components/cart/Cart'
+import { CartToggle } from '@/components/cart/CartToggle'
 
 interface Product {
   id: string
@@ -82,12 +83,19 @@ export const MenuLayout = memo(function MenuLayout({
   loading,
   products,
 }: Props) {
+  const [isCartOpen, setIsCartOpen] = useState(false)
+
   if (loading) return <div>Loading...</div>
 
   return (
     <Flex w="100%" h="100vh" className={css({ overflow: 'hidden' })}>
       {/* Main */}
-      <Flex direction="column" flex="1" className={css({ p: '4', gap: '4' })}>
+      <Flex direction="column" flex="1" className={css({ 
+        p: '4', 
+        gap: '4',
+        maxW: { base: '100%', lg: isCartOpen ? 'calc(100% - 400px)' : '100%' },
+        transition: 'max-width 0.3s ease-in-out',
+      })}>
         <Header />
         <MenuSection
           menuItems={menuItems}
@@ -98,15 +106,30 @@ export const MenuLayout = memo(function MenuLayout({
         <ProductSection products={products} />
       </Flex>
 
+      {/* Cart Toggle Button */}
+      <CartToggle isOpen={isCartOpen} onToggle={() => setIsCartOpen(!isCartOpen)} />
+
       {/* Cart */}
       <Box
-        w="400px"
         className={css({
+          position: { base: 'fixed', lg: 'relative' },
+          top: { base: 0, lg: 'auto' },
+          right: { base: 0, lg: 'auto' },
+          bottom: { base: 0, lg: 'auto' },
+          w: { base: '100%', md: '400px' },
+          maxW: '100%',
           p: '4',
           bg: 'surface.container',
-          borderRadius: 'lg',
+          borderRadius: { base: 'lg lg 0 0', lg: 'lg' },
           boxShadow: 'lg',
           height: '100%',
+          transform: {
+            base: isCartOpen ? 'translateX(0)' : 'translateX(100%)',
+            lg: 'none'
+          },
+          transition: 'transform 0.3s ease-in-out',
+          zIndex: { base: 40, lg: 'auto' },
+          overflowY: 'auto',
         })}
       >
         <Cart />

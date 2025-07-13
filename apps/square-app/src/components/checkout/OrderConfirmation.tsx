@@ -2,77 +2,26 @@
 
 import { Box, VStack, HStack } from '@styled-system/jsx'
 import { Heading, Paragraph } from '@/components/ui/typography'
-import { OrderItemCard } from './OrderItemCard'
-import { OrderDetails } from '../cart/OrderDetails'
+import { OrderItemCard } from '../orders/OrderItemCard'
+import { OrderDetails } from '../orders/OrderDetails'
+import { OrderDetailsSkeleton } from '../skeletons/order-skeletons/OrderDetailsSkeleton'
 import { useCart } from '@/contexts/CartContext'
-import { useEffect, useState, useCallback } from 'react'
+import { useEffect, useCallback } from 'react'
 import { useCatalog } from '@/hooks/useCatalog'
 import { css } from '@styled-system/css'
 import { CheckCircle } from 'lucide-react'
 import { Button } from '@/components/ui/button'
-import { useRouter, usePathname } from 'next/navigation'
-
-interface OrderResponse {
-  data: any
-  error?: string
-}
+import { useRouter } from 'next/navigation'
+import { Skeleton } from '@/components/ui/skeleton'
 
 export function OrderConfirmation() {
   const { state, clearCart } = useCart()
-  const [orderResponse, setOrderResponse] = useState<OrderResponse | null>(null)
-  const [loading, setLoading] = useState(false)
-  const { getVariantImageUrl } = useCatalog()
+  const { getVariantImageUrl, isLoading: catalogLoading } = useCatalog()
   const router = useRouter()
-  const pathname = usePathname()
-
-  const calculateOrder = async () => {
-    setLoading(true)
-    try {
-      const lineItems = state.items.map(item => ({
-        quantity: String(item.quantity),
-        catalogObjectId: item.id,
-        appliedTaxes: item.taxIds?.map(taxId => ({
-          taxUid: taxId,
-          uid: taxId
-        })) || []
-      }))
-
-      const response = await fetch('/api/square/orders/calculate', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          order: {
-            discounts: [],
-            locationId: "LZQE34F36831W",
-            lineItems,
-            pricingOptions: {
-              autoApplyDiscounts: true,
-              autoApplyTaxes: true,
-            },
-          },
-        }),
-      })
-
-      const data = await response.json()
-      setOrderResponse({ data })
-    } catch (error) {
-      setOrderResponse({ data: null, error: 'Failed to calculate order' })
-    } finally {
-      setLoading(false)
-    }
-  }
 
   const handleContinueShopping = useCallback(() => {
     router.replace('/menu?clear=true')
   }, [router])
-
-  useEffect(() => {
-    if (state.items.length > 0) {
-      calculateOrder()
-    }
-  }, [state.items])
 
   if (state.items.length === 0) {
     return (
@@ -99,8 +48,6 @@ export function OrderConfirmation() {
       </Box>
     )
   }
-
-  const order = orderResponse?.data?.order
 
   return (
     <Box className={css({
@@ -159,34 +106,31 @@ export function OrderConfirmation() {
         })} gap="4">
           <Heading level={3}>Order Items</Heading>
           <VStack gap="3" w="100%">
-            {loading ? (
+            {catalogLoading ? (
               <VStack gap="3" w="100%">
                 {Array.from({ length: state.items.length }).map((_, i) => (
                   <Box
                     key={i}
                     className={css({
-                      h: '100px',
-                      w: '100%',
-                      bg: 'surface.variant',
-                      opacity: '0.7'
+                      p: '3',
+                      bg: 'surface.container.low',
+                      borderRadius: 'lg',
+                      boxShadow: 'sm',
+                      display: 'flex',
+                      alignItems: 'center',
+                      gap: '4',
                     })}
-                  />
+                  >
+                    <Skeleton css={{ width: '60px', height: '60px', borderRadius: 'md' }} />
+                    <VStack gap="2" css={{ flex: '1' }}>
+                      <Skeleton css={{ width: '150px', height: '20px' }} />
+                      <Skeleton css={{ width: '100px', height: '16px' }} />
+                    </VStack>
+                    <Skeleton css={{ width: '80px', height: '24px' }} />
+                  </Box>
                 ))}
               </VStack>
-            ) : orderResponse?.error ? (
-              <VStack 
-                gap="4"
-                className={css({
-                  p: '4',
-                  bg: 'surface.error.container',
-                  borderRadius: 'lg',
-                  boxShadow: 'md',
-                })}
-              >
-                <Heading level={3} className={css({ color: 'error' })}>Error</Heading>
-                <Paragraph className={css({ color: 'error' })}>{orderResponse.error}</Paragraph>
-              </VStack>
-            ) : order?.lineItems?.map((item: any) => (
+            ) : state.order?.lineItems?.map((item: any) => (
               <OrderItemCard 
                 key={item.uid} 
                 item={item} 
@@ -198,17 +142,11 @@ export function OrderConfirmation() {
 
         {/* Summary Section */}
         <VStack gap="6">
-          {loading ? (
-            <VStack gap="4" w="100%">
-            </VStack>
-          ) : orderResponse?.error ? (
-            <VStack>
-              <Heading level={4} className={css({ color: 'error' })}>Error</Heading>
-              <Paragraph className={css({ color: 'error' })}>{orderResponse.error}</Paragraph>
-            </VStack>
-          ) : order ? (
+          {catalogLoading ? (
+            <OrderDetailsSkeleton />
+          ) : state.order ? (
             <>
-              <OrderDetails order={order} />
+              <OrderDetails order={state.order} />
               <Button 
                 variant="primary" 
                 onClick={handleContinueShopping}

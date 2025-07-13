@@ -1,6 +1,7 @@
 import { VStack, HStack, Box } from '@styled-system/jsx'
 import { Heading, Paragraph } from '@/components/ui/typography'
 import { css } from '@styled-system/css'
+import { pill } from '@styled-system/recipes'
 
 interface OrderDetailsProps {
   order: {
@@ -57,25 +58,9 @@ export const OrderDetails = ({ order }: OrderDetailsProps) => {
 
         {/* Discount pill */}
         {hasDiscount && (
-          <Box
-            w="100%"
-            p="2"
-            className={css({
-              borderRadius: 'full',
-              bg: 'success.50',
-              border: '1px solid',
-              borderColor: 'success',
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'space-between',
-              gap: '2',
-              mt: '1',
-            })}
-          >
-            <Paragraph size="sm" color="success">
-              Discount
-            </Paragraph>
-            <Paragraph size="sm" color="success">
+          <Box className={pill({ variant: 'discount' })}>
+            <Paragraph size="sm">Discount</Paragraph>
+            <Paragraph size="sm">
               -{formatMoney(order.totalDiscountMoney.amount)}
             </Paragraph>
           </Box>
@@ -83,25 +68,9 @@ export const OrderDetails = ({ order }: OrderDetailsProps) => {
 
         {/* Tax pill */}
         {hasTax && (
-          <Box
-            w="100%"
-            p="2"
-            className={css({
-              borderRadius: 'full',
-              bg: 'surface.container.low',
-              border: '1px solid',
-              borderColor: 'surface.container.highest',
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'space-between',
-              gap: '2',
-              mt: hasDiscount ? '2' : '1',
-            })}
-          >
-            <Paragraph size="sm" color="secondary">
-              Sales Tax
-            </Paragraph>
-            <Paragraph size="sm" color="secondary">
+          <Box className={pill({ variant: 'tax' })} mt={hasDiscount ? '2' : '1'}>
+            <Paragraph size="sm">Sales Tax</Paragraph>
+            <Paragraph size="sm">
               {formatMoney(order.totalTaxMoney.amount)}
             </Paragraph>
           </Box>

@@ -11,12 +11,13 @@ interface UseOrderCalculationProps {
   items: CartItem[]
   debounceMs?: number
 }
-
+ 
 export function useOrderCalculation({ items, debounceMs = 300 }: UseOrderCalculationProps) {
   const [orderResponse, setOrderResponse] = useState<OrderResponse | null>(null)
   const [loading, setLoading] = useState(false)
 
   // Memoize line items transformation
+  //converting your cart shape to the Square API shape (so transformation only runs when items change )
   const lineItems = useMemo(() => items.map(item => ({
     quantity: String(item.quantity),
     catalogObjectId: item.id,
@@ -26,7 +27,6 @@ export function useOrderCalculation({ items, debounceMs = 300 }: UseOrderCalcula
     })) || [],
   })), [items])
 
-  // Memoize the request payload
   const requestPayload = useMemo(() => ({
     order: {
       locationId: 'LZQE34F36831W',
@@ -40,7 +40,8 @@ export function useOrderCalculation({ items, debounceMs = 300 }: UseOrderCalcula
   }), [lineItems])
 
   // Create debounced calculate function
-  const debouncedCalculate = useCallback(
+  // Queues a single call until user stops interactin
+  const debouncedCalculate = useCallback( //debounce function is stable across renders (important for useEffect)
     debounce(async (payload) => {
       setLoading(true)
       try {
@@ -73,7 +74,7 @@ export function useOrderCalculation({ items, debounceMs = 300 }: UseOrderCalcula
 
     // Cleanup
     return () => {
-      debouncedCalculate.cancel()
+      debouncedCalculate.cancel() // cancel the debounced function when the component unmounts
     }
   }, [items, requestPayload, debouncedCalculate])
 

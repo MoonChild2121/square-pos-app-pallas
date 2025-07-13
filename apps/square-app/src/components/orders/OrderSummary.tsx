@@ -1,11 +1,10 @@
 'use client'
 
-import { useCart } from '@/contexts/CartContext'
 import { Box } from '@styled-system/jsx'
 import { css } from '@styled-system/css'
-import { OrderDetails } from '@/components/cart/OrderDetails'
+import { OrderDetails } from '@/components/orders/OrderDetails'
 import Paragraph from '@/components/ui/typography/paragraph'
-import { useOrderCalculation } from '@/hooks/useOrderCalculation'
+import { useCart } from '@/contexts/CartContext'
 
 const stickySummaryCss = css({
   position: 'sticky',
@@ -18,12 +17,19 @@ const emptyOrder = {
   totalDiscountMoney: { amount: 0 },
 }
 
-export default function OrderSummary() {
+interface OrderCalc {
+  order: any;
+  loading: boolean;
+  error?: string;
+}
+
+interface OrderSummaryProps {
+  orderCalc: OrderCalc;
+}
+
+export default function OrderSummary({ orderCalc }: OrderSummaryProps) {
   const { state } = useCart()
-  const { order, loading, error } = useOrderCalculation({
-    items: state.items,
-    debounceMs: 300
-  })
+  const { order, error } = orderCalc
 
   if (state.items.length === 0) return null
 
