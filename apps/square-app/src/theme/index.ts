@@ -1,7 +1,7 @@
 import { cardBox } from './recipes/card'
 import { paragraph, heading } from './recipes/typography'
 import { searchBox } from './recipes/searchBox'
-import { cartItem } from './recipes/cart'
+import { cartItem, cartContainer } from './recipes/cart'
 import { productCard } from './recipes/productCard'
 import { header } from './recipes/header'
 import { pill } from './recipes/pill'
@@ -14,6 +14,7 @@ export const recipes = {
   heading,
   searchBox,
   cartItem,
+  cartContainer,
   productCard,
   header,
   pill,

@@ -1,120 +1,169 @@
-// Import necessary React hooks and types
+'use client'
+
+// React + context hooks
 import { createContext, useContext, useReducer, ReactNode, useEffect, useMemo, useCallback } from 'react'
 
-// Define the structure of a cart item
+// Define a cart item structure
 export interface CartItem {
-  id: string        // Unique identifier for the item
-  name: string      // Display name of the item
-  price: number     // Price of the item
-  quantity: number  // How many of this item are in the cart
-  imageUrl?: string // Optional image URL
-  taxIds?: string[] // Optional array of tax IDs applicable to this item
+  id: string
+  name: string
+  price: number // already divided from cents
+  quantity: number
+  imageUrl?: string
+  taxIds?: string[]
+  discountIds?: string[]
 }
 
-// Define the structure of our cart's state
+// Define what the entire cart state looks like
 interface CartState {
-  items: CartItem[] // Array of items in the cart
-  order?: any       // The calculated order from Square API
+  items: CartItem[]
+  order: any | null // will be filled after tax/discount calculations
+  orderTaxIds: string[]
+  orderDiscountIds: string[]
 }
 
-// Define all possible actions that can modify the cart
+// All possible actions you can perform on the cart
 type CartAction =
-  | { type: 'ADD_ITEM'; payload: CartItem }                              // Add a new item or increment existing
-  | { type: 'REMOVE_ITEM'; payload: string }                            // Remove item by ID
-  | { type: 'UPDATE_QUANTITY'; payload: { id: string; quantity: number } } // Update item quantity
-  | { type: 'CLEAR_CART' }                                              // Remove all items
-  | { type: 'LOAD_CART'; payload: CartState }                          // Load saved cart state
-  | { type: 'SET_ORDER'; payload: any }                                // Set the calculated order
+  | { type: 'ADD_ITEM'; payload: CartItem }
+  | { type: 'REMOVE_ITEM'; payload: string }
+  | { type: 'UPDATE_QUANTITY'; payload: { id: string; quantity: number } }
+  | { type: 'UPDATE_ITEM_TAXES'; payload: { id: string; taxIds: string[] } }
+  | { type: 'UPDATE_ITEM_DISCOUNTS'; payload: { id: string; discountIds: string[] } }
+  | { type: 'UPDATE_ORDER_TAXES'; payload: string[] }
+  | { type: 'UPDATE_ORDER_DISCOUNTS'; payload: string[] }
+  | { type: 'SET_ORDER'; payload: any }
+  | { type: 'CLEAR_CART' }
+  | { type: 'LOAD_CART'; payload: CartState }
 
-// Key used for storing cart data in localStorage
+// LocalStorage key used for persistence
 const CART_STORAGE_KEY = 'square_app_cart'
 
-// Initial empty cart state
+// Default initial state
 const initialState: CartState = {
   items: [],
-  order: undefined,
+  order: null,
+  orderTaxIds: [],
+  orderDiscountIds: []
 }
 
-// Helper function to load cart data from localStorage
-// Returns initial state if running on server or no stored cart exists
-const loadStoredCart = (): CartState => {
-  if (typeof window === 'undefined') return initialState
-  const storedCart = localStorage.getItem(CART_STORAGE_KEY)
-  return storedCart ? JSON.parse(storedCart) : initialState
-}
-
-// Cart reducer function - handles all cart state modifications
-function cartReducer(state: CartState, action: CartAction): CartState {
+// Reducer: defines how state updates based on action type
+const cartReducer = (state: CartState, action: CartAction): CartState => {
   let newState: CartState
 
   switch (action.type) {
     case 'ADD_ITEM': {
-      // Check if item already exists in cart
-      const existingItemIndex = state.items.findIndex(
-        (item) => item.id === action.payload.id
-      )
-
-      // Ensure price is always stored as a number
-      const itemToAdd = {
-        ...action.payload,
-        price: typeof action.payload.price === 'string' ? parseFloat(action.payload.price) : action.payload.price
-      }
-
-      if (existingItemIndex > -1) {
-        // If item exists, increment its quantity
-        const newItems = [...state.items]
-        newItems[existingItemIndex] = {
-          ...newItems[existingItemIndex],
-          quantity: newItems[existingItemIndex].quantity + 1
+      const existingItem = state.items.find(item => item.id === action.payload.id)
+      if (existingItem) {
+        // If item exists, increase quantity
+        newState = {
+          ...state,
+          items: state.items.map(item =>
+            item.id === action.payload.id
+              ? { ...item, quantity: item.quantity + 1 }
+              : item
+          ),
         }
-        newState = { ...state, items: newItems }
       } else {
-        // If item is new, add it to the cart
-        newState = { ...state, items: [...state.items, itemToAdd] }
+        // Add new item with quantity 1
+        newState = {
+          ...state,
+          items: [...state.items, { ...action.payload, quantity: 1 }],
+        }
       }
       break
     }
-    
+
     case 'REMOVE_ITEM':
-      // Filter out the item with matching ID
       newState = {
         ...state,
-        items: state.items.filter((item) => item.id !== action.payload),
+        items: state.items.filter(item => item.id !== action.payload),
       }
       break
 
-    case 'UPDATE_QUANTITY':
-      // Update quantity for specific item
+    case 'UPDATE_QUANTITY': {
+      if (action.payload.quantity <= 0) {
+        // Remove item if quantity drops to 0
+        newState = {
+          ...state,
+          items: state.items.filter(item => item.id !== action.payload.id),
+        }
+      } else {
+        // Update item quantity
+        newState = {
+          ...state,
+          items: state.items.map(item =>
+            item.id === action.payload.id
+              ? { ...item, quantity: action.payload.quantity }
+              : item
+          ),
+        }
+      }
+      break
+    }
+
+    case 'UPDATE_ITEM_TAXES':
+      // add taxIds to the item
       newState = {
         ...state,
-        items: state.items.map((item) =>
+        items: state.items.map(item =>
           item.id === action.payload.id
-            ? { ...item, quantity: action.payload.quantity }
+            ? { ...item, taxIds: action.payload.taxIds }
             : item
         ),
       }
       break
 
-    case 'CLEAR_CART':
-      // Reset cart to initial empty state
-      newState = initialState
+    case 'UPDATE_ITEM_DISCOUNTS':
+      // add discountIds to the item
+      newState = {
+        ...state,
+        items: state.items.map(item =>
+          item.id === action.payload.id
+            ? { ...item, discountIds: action.payload.discountIds }
+            : item
+        ),
+      }
       break
 
-    case 'LOAD_CART':
-      // Replace current cart with loaded state
-      newState = action.payload
+    case 'UPDATE_ORDER_TAXES':
+      // add taxIds to the order
+      newState = {
+        ...state,
+        orderTaxIds: action.payload,
+      }
+      break
+
+    case 'UPDATE_ORDER_DISCOUNTS':
+      // add discountIds to the order
+      newState = {
+        ...state,
+        orderDiscountIds: action.payload,
+      }
       break
 
     case 'SET_ORDER':
-      // Set the calculated order
-      newState = { ...state, order: action.payload }
+      // set the order
+      newState = {
+        ...state,
+        order: action.payload,
+      }
+      break
+
+    case 'LOAD_CART':
+      // load the cart from localStorage
+      newState = action.payload
+      break
+
+    case 'CLEAR_CART':
+      // clear the cart
+      newState = initialState
       break
 
     default:
       return state
   }
 
-  // Persist cart state to localStorage after each change
+  // Sync updated state to localStorage
   if (typeof window !== 'undefined') {
     localStorage.setItem(CART_STORAGE_KEY, JSON.stringify(newState))
   }
@@ -122,62 +171,89 @@ function cartReducer(state: CartState, action: CartAction): CartState {
   return newState
 }
 
-// Create separate contexts for different parts of the cart
+// Contexts to provide cart state and actions separately
 const CartStateContext = createContext<CartState | undefined>(undefined)
+
 const CartActionsContext = createContext<{
   addItem: (item: CartItem) => void
   removeItem: (id: string) => void
   updateQuantity: (id: string, quantity: number) => void
+  updateItemTaxes: (id: string, taxIds: string[]) => void
+  updateItemDiscounts: (id: string, discountIds: string[]) => void
+  updateOrderTaxes: (taxIds: string[]) => void
+  updateOrderDiscounts: (discountIds: string[]) => void
   clearCart: () => void
   setOrder: (order: any) => void
 } | undefined>(undefined)
 
-// Main Cart Provider component
+// Load cart from localStorage on first render (client-only)
+function loadStoredCart(): CartState {
+  if (typeof window === 'undefined') return initialState
+  const storedCart = localStorage.getItem(CART_STORAGE_KEY)
+  return storedCart ? JSON.parse(storedCart) : initialState
+}
+
+// React context provider to wrap the app
 export function CartProvider({ children }: { children: ReactNode }) {
-  // Initialize cart reducer with empty state
   const [state, dispatch] = useReducer(cartReducer, initialState)
 
-  // Load saved cart data when component mounts
+  // Load cart from localStorage when the app mounts
   useEffect(() => {
     const storedCart = loadStoredCart()
     dispatch({ type: 'LOAD_CART', payload: storedCart })
   }, [])
 
-  // Memoized cart action handlers
-  const addItem = useCallback((item: CartItem) => {
-    dispatch({ type: 'ADD_ITEM', payload: item })
-  }, [])
+  // All dispatch wrappers are memoized for stable identity
+  const addItem = useCallback((item: CartItem) => 
+    dispatch({ type: 'ADD_ITEM', payload: item }), [])
 
-  const removeItem = useCallback((id: string) => {
-    dispatch({ type: 'REMOVE_ITEM', payload: id })
-  }, [])
+  const removeItem = useCallback((id: string) => 
+    dispatch({ type: 'REMOVE_ITEM', payload: id }), [])
 
-  const updateQuantity = useCallback((id: string, quantity: number) => {
-    if (quantity <= 0) {
-      removeItem(id)  // Remove item if quantity is 0 or negative
-    } else {
-      dispatch({ type: 'UPDATE_QUANTITY', payload: { id, quantity } })
-    }
-  }, [removeItem])
+  const updateQuantity = useCallback((id: string, quantity: number) =>
+    dispatch({ type: 'UPDATE_QUANTITY', payload: { id, quantity } }), [])
 
-  const clearCart = useCallback(() => {
-    dispatch({ type: 'CLEAR_CART' })
-  }, [])
+  const updateItemTaxes = useCallback((id: string, taxIds: string[]) =>
+    dispatch({ type: 'UPDATE_ITEM_TAXES', payload: { id, taxIds } }), [])
 
-  const setOrder = useCallback((order: any) => {
-    dispatch({ type: 'SET_ORDER', payload: order })
-  }, [])
+  const updateItemDiscounts = useCallback((id: string, discountIds: string[]) =>
+    dispatch({ type: 'UPDATE_ITEM_DISCOUNTS', payload: { id, discountIds } }), [])
 
-  // Memoize actions object to prevent unnecessary re-renders
+  const updateOrderTaxes = useCallback((taxIds: string[]) =>
+    dispatch({ type: 'UPDATE_ORDER_TAXES', payload: taxIds }), [])
+
+  const updateOrderDiscounts = useCallback((discountIds: string[]) =>
+    dispatch({ type: 'UPDATE_ORDER_DISCOUNTS', payload: discountIds }), [])
+
+  const clearCart = useCallback(() => 
+    dispatch({ type: 'CLEAR_CART' }), [])
+
+  const setOrder = useCallback((order: any) => 
+    dispatch({ type: 'SET_ORDER', payload: order }), [])
+
+  // Bundle actions in one memoized object
   const actions = useMemo(() => ({
     addItem,
     removeItem,
     updateQuantity,
+    updateItemTaxes,
+    updateItemDiscounts,
+    updateOrderTaxes,
+    updateOrderDiscounts,
     clearCart,
     setOrder,
-  }), [addItem, removeItem, updateQuantity, clearCart, setOrder])
+  }), [ 
+    addItem,
+    removeItem, 
+    updateQuantity,
+    updateItemTaxes,
+    updateItemDiscounts,
+    updateOrderTaxes,
+    updateOrderDiscounts,
+    clearCart,
+    setOrder,
+  ])
 
-  // Provide cart data through context hierarchy
   return (
     <CartStateContext.Provider value={state}>
       <CartActionsContext.Provider value={actions}>
@@ -187,30 +263,27 @@ export function CartProvider({ children }: { children: ReactNode }) {
   )
 }
 
-// Custom hooks to access different parts of the cart
+// Hook to access cart state (readonly)
 export function useCartState() {
-  const context = useContext(CartStateContext)
-  if (context === undefined) {
+  const state = useContext(CartStateContext)
+  if (state === undefined) {
     throw new Error('useCartState must be used within a CartProvider')
   }
-  return context
+  return state
 }
 
+// Hook to access cart actions (mutations)
 export function useCartActions() {
-  const context = useContext(CartActionsContext)
-  if (context === undefined) {
+  const actions = useContext(CartActionsContext)
+  if (actions === undefined) {
     throw new Error('useCartActions must be used within a CartProvider')
   }
-  return context
+  return actions
 }
 
-// Legacy hook that combines all cart functionality
+// Optional helper to access everything in one object
 export function useCart() {
   const state = useCartState()
   const actions = useCartActions()
-  
-  return {
-    state,
-    ...actions
-  }
-} 
+  return { state, ...actions }
+}

@@ -21,11 +21,13 @@ export function CartToggle({ isOpen, onToggle }: CartToggleProps) {
         bottom: '4',
         right: '4',
         borderRadius: 'full',
-        display: { base: 'flex', lg: 'none' },
+        display: 'flex',
         alignItems: 'center',
         gap: '2',
         zIndex: '50',
         boxShadow: 'lg',
+        transform: isOpen ? 'scale(0)' : 'scale(1)',
+        transition: 'transform 0.2s ease-in-out',
       })}
     >
       <ShoppingCart size={20} />

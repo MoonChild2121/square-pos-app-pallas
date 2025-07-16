@@ -3,7 +3,7 @@ import { MenuDashboard } from '@/containers/menu/MenuDashboard'
 import { fetchCatalog } from '@/hooks/useCatalog'
 import { getServerSession } from 'next-auth'
 import { authOptions } from '@/app/api/auth/[...nextauth]/route'
-import { redirect } from 'next/navigation' //Next.js App Router utility that performs server-side redirects
+import { redirect } from 'next/navigation'
 
 // Configure route segment
 export const revalidate = 300 // revalidate every 5 minutes
@@ -19,6 +19,8 @@ async function getInitialData() {
 
   return {
     catalog: data.items,
+    taxes: data.taxes,
+    discounts: data.discounts,
     images: data.images
   }
 }

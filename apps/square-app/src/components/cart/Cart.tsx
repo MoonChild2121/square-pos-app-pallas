@@ -1,16 +1,16 @@
 'use client'
 
 import { memo, useEffect } from 'react'
-import { Box } from '@styled-system/jsx'
+import { Box, VStack } from '@styled-system/jsx'
 import { useCartState, useCartActions } from '@/contexts/CartContext'
 import CartItem from './CartItem'
 import { Button } from '@/components/ui/button'
 import { useRouter } from 'next/navigation'
-import Heading from '@/components/ui/typography/heading'
 import OrderSummary from '../orders/OrderSummary'
 import { OrderSummarySkeleton } from '../skeletons/order-skeletons/OrderSummarySkeleton'
 import { css } from '@styled-system/css'
 import { useOrderCalculation } from '@/hooks/useOrderCalculation'
+import OrderModifierModal from '@/components/modals/OrderModifierModal'
 
 // Memoized cart items list component
 const CartItemsList = memo(function CartItemsList({ items }: { items: any[] }) {
@@ -42,27 +42,37 @@ const CheckoutButton = memo(function CheckoutButton({
 }) {
   const router = useRouter()
   
+  const handleCheckout = () => {
+    console.log('navigating to checkout')
+    router.push('/checkout')
+  }
+
   return (
-    <Box className="cartContainer__footer">
-      <Button 
-        width="full" 
-        disabled={disabled}
-        isLoading={loading}
-        onClick={() => router.push('/checkout')}
-      >
-        Proceed to Checkout
-      </Button>
-    </Box>
+    <Button 
+      width="full" 
+      disabled={disabled}
+      isLoading={loading}
+      onClick={handleCheckout}
+    >
+      Proceed to Checkout
+    </Button>
   )
 })
 
-const Cart = memo(function Cart() {
+interface CartProps {
+  isOpen: boolean
+  onClose: () => void
+}
+
+const Cart = memo(function Cart({ isOpen }: CartProps) {
   const state = useCartState()
-  const { setOrder } = useCartActions()
+  const { setOrder, updateOrderTaxes, updateOrderDiscounts } = useCartActions()
   const isEmpty = state.items.length === 0
   const orderCalc = useOrderCalculation({
     items: state.items,
-    debounceMs: 300
+    debounceMs: 300,
+    orderTaxIds: state.orderTaxIds,
+    orderDiscountIds: state.orderDiscountIds
   })
 
   // Store the calculated order in the cart context
@@ -74,23 +84,22 @@ const Cart = memo(function Cart() {
 
   return (
     <Box className={css({
+      position: 'fixed',
+      top: 0,
+      right: 0,
+      bottom: 0,
+      width: '400px',
+      maxWidth: '100%',
       display: 'flex',
       flexDirection: 'column',
-      h: '100%',
-      width: '100%',
       bg: 'surface.container',
-      borderRadius: 'lg',
-      p: '1',
-    })}
-    >
-      <Box mb="2" className={css({
-        display: 'flex',
-        alignItems: 'center',
-        justifyContent: 'space-between',
-        textAlign: 'center',
-      })}>
-        <Heading level={4}>Cart Items</Heading>
-      </Box>
+      borderRadius: { base: 0, md: 'lg 0 0 lg' },
+      boxShadow: '2xl',
+      transform: isOpen ? 'translateX(0)' : 'translateX(100%)',
+      transition: 'transform 0.3s ease-in-out',
+      zIndex: 50,
+      p: '4',
+    })}>
       <CartItemsList items={state.items} />
       <Box mb="2">
         {orderCalc.loading ? (
@@ -99,12 +108,18 @@ const Cart = memo(function Cart() {
           <OrderSummary orderCalc={orderCalc} />
         )}
       </Box>
-      <Box mt="2">
+      <VStack gap="2" mt="2">
+        <OrderModifierModal
+          selectedTaxIds={state.orderTaxIds}
+          selectedDiscountIds={state.orderDiscountIds}
+          onUpdateTaxes={updateOrderTaxes}
+          onUpdateDiscounts={updateOrderDiscounts}
+        />
         <CheckoutButton 
           disabled={isEmpty} 
           loading={orderCalc.loading}
         />
-      </Box>
+      </VStack>
     </Box>
   )
 })

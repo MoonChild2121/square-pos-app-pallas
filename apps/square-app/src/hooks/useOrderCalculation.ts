@@ -10,38 +10,85 @@ interface OrderResponse {
 interface UseOrderCalculationProps {
   items: CartItem[]
   debounceMs?: number
+  orderTaxIds?: string[]
+  orderDiscountIds?: string[]
+}
+
+// Helper function to generate short unique IDs
+function generateShortId(prefix: string, itemId: string, modifierId: string): string {
+  // Take first 8 chars of each ID to keep it short but still unique
+  const shortItemId = itemId.slice(0, 8)
+  const shortModifierId = modifierId.slice(0, 8)
+  return `${prefix}_${shortItemId}_${shortModifierId}`
 }
  
-export function useOrderCalculation({ items, debounceMs = 300 }: UseOrderCalculationProps) {
+export function useOrderCalculation({ 
+  items, 
+  debounceMs = 300,
+  orderTaxIds = [],
+  orderDiscountIds = []
+}: UseOrderCalculationProps) {
   const [orderResponse, setOrderResponse] = useState<OrderResponse | null>(null)
   const [loading, setLoading] = useState(false)
 
   // Memoize line items transformation
-  //converting your cart shape to the Square API shape (so transformation only runs when items change )
   const lineItems = useMemo(() => items.map(item => ({
     quantity: String(item.quantity),
     catalogObjectId: item.id,
     appliedTaxes: item.taxIds?.map(taxId => ({
       taxUid: taxId,
-      uid: taxId,
+      uid: generateShortId('tax', item.id, taxId),
+    })) || [],
+    appliedDiscounts: item.discountIds?.map(discountId => ({
+      discountUid: discountId,
+      uid: generateShortId('dis', item.id, discountId),
     })) || [],
   })), [items])
+
+  // Create arrays of unique taxes and discounts
+  const { taxes, discounts } = useMemo(() => {
+    const uniqueTaxes = new Set<string>()
+    const uniqueDiscounts = new Set<string>()
+
+    // Add item-level modifiers
+    items.forEach(item => {
+      item.taxIds?.forEach(taxId => uniqueTaxes.add(taxId))
+      item.discountIds?.forEach(discountId => uniqueDiscounts.add(discountId))
+    })
+
+    // Add order-level modifiers
+    orderTaxIds.forEach(taxId => uniqueTaxes.add(taxId))
+    orderDiscountIds.forEach(discountId => uniqueDiscounts.add(discountId))
+
+    return {
+      taxes: Array.from(uniqueTaxes).map(taxId => ({
+        uid: taxId,
+        catalogObjectId: taxId,
+        scope: orderTaxIds.includes(taxId) ? 'ORDER' : 'LINE_ITEM',
+        type: 'ADDITIVE'
+      })),
+      discounts: Array.from(uniqueDiscounts).map(discountId => ({
+        uid: discountId,
+        catalogObjectId: discountId,
+        scope: orderDiscountIds.includes(discountId) ? 'ORDER' : 'LINE_ITEM'
+      }))
+    }
+  }, [items, orderTaxIds, orderDiscountIds])
 
   const requestPayload = useMemo(() => ({
     order: {
       locationId: 'LZQE34F36831W',
-      discounts: [],
-      pricingOptions: {
-        autoApplyDiscounts: true,
-        autoApplyTaxes: true,
-      },
       lineItems,
+      taxes,
+      discounts,
+      pricingOptions: {
+        autoApplyDiscounts: false,
+        autoApplyTaxes: false,
+      },
     },
-  }), [lineItems])
+  }), [lineItems, taxes, discounts])
 
-  // Create debounced calculate function
-  // Queues a single call until user stops interactin
-  const debouncedCalculate = useCallback( //debounce function is stable across renders (important for useEffect)
+  const debouncedCalculate = useCallback(
     debounce(async (payload) => {
       setLoading(true)
       try {
@@ -64,7 +111,6 @@ export function useOrderCalculation({ items, debounceMs = 300 }: UseOrderCalcula
     []
   )
 
-  // Effect to trigger calculation when items change
   useEffect(() => {
     if (items.length > 0) {
       debouncedCalculate(requestPayload)
@@ -72,16 +118,14 @@ export function useOrderCalculation({ items, debounceMs = 300 }: UseOrderCalcula
       setOrderResponse(null)
     }
 
-    // Cleanup
     return () => {
-      debouncedCalculate.cancel() // cancel the debounced function when the component unmounts
+      debouncedCalculate.cancel()
     }
   }, [items, requestPayload, debouncedCalculate])
 
   return {
     orderResponse,
     loading,
-    // Keep previous data while loading
     order: loading ? orderResponse?.data?.order : orderResponse?.data?.order,
     error: orderResponse?.error
   }

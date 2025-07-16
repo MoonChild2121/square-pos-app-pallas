@@ -49,13 +49,6 @@ export default function SearchBar({ onSearch }: SearchBarProps) {
               variant="text"
               size="sm"
               onClick={handleClear}
-              className={css({
-                p: '0',
-                minW: '0',
-                h: 'auto',
-                color: 'text.secondary',
-                _hover: { color: 'text' }
-              })}
             >
               <X size={25} />
             </Button>

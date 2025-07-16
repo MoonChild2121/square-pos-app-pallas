@@ -7,7 +7,8 @@ import Heading from '@/components/ui/typography/heading'
 import { Minus, Plus, Trash2 } from 'lucide-react'
 import { useCartActions } from '@/contexts/CartContext'
 import { cartItem } from '@styled-system/recipes'
-import { css } from '@styled-system/css'
+import ModifierModal from '@/components/modals/ItemModal'
+import { useCatalog } from '@/hooks/useCatalog'
 
 interface Props {
   id: string
@@ -16,6 +17,7 @@ interface Props {
   quantity: number
   imageUrl?: string
   taxIds?: string[]
+  discountIds?: string[]
 }
 
 const CartItem = memo(function CartItem({
@@ -24,10 +26,12 @@ const CartItem = memo(function CartItem({
   price,
   quantity,
   imageUrl,
-  taxIds,
+  taxIds = [],
+  discountIds = []
 }: Props) {
   const { updateQuantity } = useCartActions()
-  const { root, image, content, title, controls, button, deleteButton, contentWrapper } = cartItem()
+  const { taxes, discounts } = useCatalog()
+  const { root, image, content, title, controls, button, deleteButton, contentWrapper, modifierInfo } = cartItem()
 
   const handleDecrease = useCallback(() => {
     updateQuantity(id, quantity - 1)
@@ -40,6 +44,10 @@ const CartItem = memo(function CartItem({
   const handleDelete = useCallback(() => {
     updateQuantity(id, 0)
   }, [id, updateQuantity])
+
+  // Get selected tax and discount details
+  const selectedTax = taxes.find(tax => tax.id === taxIds[0])
+  const selectedDiscount = discounts.find(discount => discount.id === discountIds[0])
 
   return (
     <Box pb="1">
@@ -63,11 +71,30 @@ const CartItem = memo(function CartItem({
           {/* Item Details */}
           <VStack className={content}>
             <Heading level={6}>{name}</Heading>
-            <Paragraph size="sm">${price.toFixed(2)}</Paragraph>
+            <Paragraph size="sm" textStyle="bold">${price.toFixed(2)}</Paragraph>
+            {/* Tax and Discount Info */}
+            {(selectedTax || selectedDiscount) && (
+              <Box className={modifierInfo}>
+                {selectedTax && (
+                  <Paragraph size="sm">Tax: {selectedTax.taxData.name} ({selectedTax.taxData.percentage}%)</Paragraph>
+                )}
+                {selectedDiscount && (
+                  <Paragraph size="sm">
+                    Discount: {selectedDiscount.discountData.name}
+                    {selectedDiscount.discountData.percentage ? ` (${selectedDiscount.discountData.percentage}%)` : ''}
+                  </Paragraph >
+                )}
+              </Box>
+            )}
           </VStack>
 
           {/* Quantity Controls */}
           <HStack className={controls}>
+            <ModifierModal 
+              itemId={id} 
+              selectedTaxIds={taxIds}
+              selectedDiscountIds={discountIds}
+            />
             <Box onClick={handleDecrease} className={button}>
               <Minus size={20} />
             </Box>

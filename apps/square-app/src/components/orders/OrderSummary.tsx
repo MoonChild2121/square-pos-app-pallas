@@ -15,10 +15,47 @@ const emptyOrder = {
   totalMoney: { amount: 0 },
   totalTaxMoney: { amount: 0 },
   totalDiscountMoney: { amount: 0 },
+  netAmounts: {
+    totalMoney: { amount: 0 },
+    taxMoney: { amount: 0 },
+    discountMoney: { amount: 0 },
+  }
+}
+
+interface Money {
+  amount: number;
+  currency?: string;
+}
+
+interface Tax {
+  uid: string;
+  name: string;
+  percentage: number;
+  appliedMoney: Money;
+}
+
+interface Discount {
+  uid: string;
+  name: string;
+  percentage: number;
+  appliedMoney: Money;
+}
+
+interface Order {
+  totalMoney: Money;
+  totalTaxMoney: Money;
+  totalDiscountMoney: Money;
+  netAmounts: {
+    totalMoney: Money;
+    taxMoney: Money;
+    discountMoney: Money;
+  };
+  taxes?: Tax[];
+  discounts?: Discount[];
 }
 
 interface OrderCalc {
-  order: any;
+  order: Order;
   loading: boolean;
   error?: string;
 }
@@ -42,7 +79,7 @@ export default function OrderSummary({ orderCalc }: OrderSummaryProps) {
   }
 
   return (
-    <Box className={stickySummaryCss}>
+    <Box className={`${stickySummaryCss} cartContainer__summary`}>
       <OrderDetails order={order || emptyOrder} />
     </Box>
   )

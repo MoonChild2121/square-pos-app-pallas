@@ -20,7 +20,7 @@ export function OrderConfirmation() {
   const router = useRouter()
 
   const handleContinueShopping = useCallback(() => {
-    router.replace('/menu?clear=true')
+    router.push('/menu?clear=true')
   }, [router])
 
   if (state.items.length === 0) {

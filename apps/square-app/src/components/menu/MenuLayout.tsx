@@ -6,7 +6,7 @@ import { css } from '@styled-system/css'
 import { Header } from '@/components/layout/Header'
 import MenuBoxGrid from '@/components/menu/MenuBoxGrid'
 import ProductGrid from '@/components/product/ProductGrid'
-import SearchBar from '@/components/SearchBar'
+import SearchBar from '@/components/search/SearchBar'
 import Cart from '@/components/cart/Cart'
 import { CartToggle } from '@/components/cart/CartToggle'
 
@@ -87,53 +87,63 @@ export const MenuLayout = memo(function MenuLayout({
 
   if (loading) return <div>Loading...</div>
 
-  return (
-    <Flex w="100%" h="100vh" className={css({ overflow: 'hidden' })}>
-      {/* Main */}
-      <Flex direction="column" flex="1" className={css({ 
-        p: '4', 
-        gap: '4',
-        maxW: { base: '100%', lg: isCartOpen ? 'calc(100% - 400px)' : '100%' },
-        transition: 'max-width 0.3s ease-in-out',
-      })}>
-        <Header />
-        <MenuSection
-          menuItems={menuItems}
-          selectedItem={selectedItem}
-          onSelectItem={onSelectItem}
-          onSearch={onSearch}
-        />
-        <ProductSection products={products} />
-      </Flex>
+ return (
+  <Box 
+    position="relative" 
+    w="100%" 
+    h="100vh" 
+    className={css({ overflow: 'hidden' })}
+  >
+    {/* Main Content */}
+    <Flex direction="column" className={css({ 
+      p: '4', 
+      gap: '4',
+      h: '100%',
+    })}>
+      <Header />
+      <MenuSection
+        menuItems={menuItems}
+        selectedItem={selectedItem}
+        onSelectItem={onSelectItem}
+        onSearch={onSearch}
+      />
+      <ProductSection products={products} />
+    </Flex>
 
-      {/* Cart Toggle Button */}
-      <CartToggle isOpen={isCartOpen} onToggle={() => setIsCartOpen(!isCartOpen)} />
-
-      {/* Cart */}
+    {/*Overlay - place AFTER content but BEFORE Cart */}
+    {isCartOpen && (
       <Box
         className={css({
-          position: { base: 'fixed', lg: 'relative' },
-          top: { base: 0, lg: 'auto' },
-          right: { base: 0, lg: 'auto' },
-          bottom: { base: 0, lg: 'auto' },
-          w: { base: '100%', md: '400px' },
-          maxW: '100%',
-          p: '4',
-          bg: 'surface.container',
-          borderRadius: { base: 'lg lg 0 0', lg: 'lg' },
-          boxShadow: 'lg',
-          height: '100%',
-          transform: {
-            base: isCartOpen ? 'translateX(0)' : 'translateX(100%)',
-            lg: 'none'
-          },
-          transition: 'transform 0.3s ease-in-out',
-          zIndex: { base: 40, lg: 'auto' },
-          overflowY: 'auto',
+          position: 'fixed',
+          inset: 0,
+          bg: 'fill', 
+          zIndex: 40,
+          transition: 'opacity 0.3s ease-in-out',
         })}
-      >
-        <Cart />
-      </Box>
-    </Flex>
-  )
+        onClick={() => setIsCartOpen(false)}
+      />
+    )}
+
+    {/* Cart must have higher z-index */}
+    <CartToggle isOpen={isCartOpen} onToggle={() => setIsCartOpen(!isCartOpen)} />
+
+    <Box
+      className={css({
+        position: 'fixed',
+        top: 0,
+        right: 0,
+        h: '100%',
+        w: { base: '100%', md: '400px' },
+        bg: 'white',
+        zIndex: 50, // higher than overlay
+        transform: isCartOpen ? 'translateX(0)' : 'translateX(100%)',
+        transition: 'transform 0.3s ease-in-out',
+        boxShadow: 'lg',
+      })}
+    >
+      <Cart isOpen={isCartOpen} onClose={() => setIsCartOpen(false)} />
+    </Box>
+  </Box>
+)
+
 }) 

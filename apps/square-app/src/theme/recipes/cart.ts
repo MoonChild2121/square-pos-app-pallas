@@ -4,7 +4,7 @@ import { defineSlotRecipe } from '@pandacss/dev'
 export const cartItem = defineSlotRecipe({
   className: 'cartItem',
   description: 'Multi-part styles for a cart item component',
-  slots: ['root', 'image', 'content', 'title', 'modifier', 'controls', 'button', 'deleteButton', 'contentWrapper'],
+  slots: ['root', 'image', 'content', 'title', 'modifier', 'controls', 'button', 'deleteButton', 'contentWrapper', 'modifierInfo'],
   base: {
     root: {
       display: 'flex',
@@ -42,6 +42,7 @@ export const cartItem = defineSlotRecipe({
       alignItems: 'flex-start',
       display: 'flex',
       flexDirection: 'column',
+      gap: '1',
     },
     title: {
       whiteSpace: 'nowrap',
@@ -51,6 +52,13 @@ export const cartItem = defineSlotRecipe({
       fontWeight: 'medium',
     },
     modifier: {
+    },
+    modifierInfo: {
+      display: 'flex',
+      flexDirection: 'column',
+      gap: '0.5',
+      fontSize: 'xs',
+      color: 'text.secondary',
     },
     controls: {
       px: '1',
@@ -64,8 +72,8 @@ export const cartItem = defineSlotRecipe({
       fontSize: 'sm',
     },
     button: {
-      color: 'fill',
-      bg: 'bgSolid.text',
+      color: 'primary.bg',
+      bg: 'primary',
       borderRadius: 'full',
       p: '1',
       display: 'flex',
@@ -73,7 +81,7 @@ export const cartItem = defineSlotRecipe({
       alignItems: 'center',
       cursor: 'pointer',
       _hover: {
-        bg: 'fill.secondary',
+        bg: 'primary.hover',
       }
     },
     deleteButton: {
@@ -104,6 +112,7 @@ export const cartContainer = defineSlotRecipe({
       display: 'flex',
       flexDirection: 'column',
       h: '100%',
+      w: '100%',
       gap: '4',
     },
     header: {
@@ -122,6 +131,7 @@ export const cartContainer = defineSlotRecipe({
     summary: {
       borderTop: '1px solid',
       borderColor: 'surface.container.highest',
+      w: '100%',
       pt: '4',
       pb: '4',
       px: '4',
@@ -154,6 +164,7 @@ export const cartContainer = defineSlotRecipe({
           display: 'flex',
           flexDirection: 'column',
           gap: '4',
+          w: '100%',
           minH: '120px',
           bg: 'surface.container',
           borderRadius: 'lg',

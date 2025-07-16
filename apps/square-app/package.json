@@ -20,6 +20,8 @@
     "@pallas-ui/panda-preset": "workspace:*",
     "@pallas-ui/sidebar": "workspace:*",
     "@pallas-ui/style-context": "workspace:*",
+    "@radix-ui/react-alert-dialog": "^1.1.11",
+    "@radix-ui/react-select": "2.1.3",
     "@radix-ui/react-slot": "^1.0.2",
     "@supabase/supabase-js": "^2.50.2",
     "@tanstack/react-query": "^5.81.5",
