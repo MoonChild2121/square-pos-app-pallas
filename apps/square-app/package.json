@@ -40,6 +40,8 @@
     "square": "^43.0.0"
   },
   "devDependencies": {
+    "@pallas-ui/typescript-config": "workspace:*",
+    "@pallas-ui/style-context": "workspace:*",
     "@eslint/eslintrc": "^3",
     "@pandacss/dev": "^0.54.0",
     "@types/jsonwebtoken": "^9.0.10",

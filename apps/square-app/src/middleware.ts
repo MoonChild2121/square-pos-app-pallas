@@ -18,6 +18,7 @@ export async function middleware(request: NextRequest) {
 
   // Handle protected routes - redirect to login if no token
   if (isProtectedRoute && !token) {
+    console.log('Protected route, no token found');
     const redirectUrl = new URL('/login', request.url);
     redirectUrl.searchParams.set('callbackUrl', pathname); //sets callback as a query parameter 
     return NextResponse.redirect(redirectUrl);

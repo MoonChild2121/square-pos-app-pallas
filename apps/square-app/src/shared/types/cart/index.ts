@@ -40,8 +40,12 @@ export interface CartToggleProps {
   onToggle: () => void;
 }
 
-export interface CartViewProps {
+export interface CartContainerProps {
   isOpen: boolean;
+  onClose: () => void;
+}
+
+export interface CartViewProps extends CartContainerProps {
   items: any[];
   isEmpty: boolean;
   orderCalc: any;
@@ -50,5 +54,9 @@ export interface CartViewProps {
   onCheckout: () => void;
   onUpdateTaxes: (ids: string[]) => void;
   onUpdateDiscounts: (ids: string[]) => void;
-  onClose: () => void;
-} 
+}
+
+export interface CartContainerProps {
+  isOpen: boolean
+  onClose: () => void
+}

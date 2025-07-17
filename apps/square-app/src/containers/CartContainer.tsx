@@ -6,9 +6,9 @@ import { useOrderCalculation } from '@/shared/hooks/useOrderCalculation'
 import { useRouter } from 'next/navigation'
 import { CartView } from '@/components/cart/CartView'
 import { DEBOUNCE_MS } from '@/shared/constants'
-import { CartViewProps } from '@/shared/types/cart/index'
+import { CartContainerProps } from '@/shared/types/cart/index'
 
-export const CartContainer = memo(function CartContainer({ isOpen, onClose }: CartViewProps) {
+export const CartContainer = memo(function CartContainer({ isOpen, onClose }: CartContainerProps) {
   const state = useCartState()
   const { setOrder, updateOrderTaxes, updateOrderDiscounts } = useCartActions()
   const isEmpty = state.items.length === 0
