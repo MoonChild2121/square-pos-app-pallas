@@ -7,8 +7,12 @@ import { useCartActions } from '@/shared/contexts/CartContext'
 import ProductCard from '@/components/product/ProductCard'
 import { Product, ProductGridProps } from '@/shared/types/product'
 
-const ProductGrid = memo(function ProductGrid({ products }: ProductGridProps) {
+const ProductGrid = memo(function ProductGrid({ products, loading }: ProductGridProps) {
   const { addItem } = useCartActions()
+
+  if (loading) {
+    return <div>Loading...</div>
+  }
 
   const handleAddToCart = useCallback((product: Product) => {
     addItem({

@@ -8,6 +8,7 @@ import { REVALIDATE_INTERVAL, STALE_TIME, GC_TIME } from '@/shared/constants'
 // Create a mapping of variant IDs to image IDs
 function createVariantImageMap(items: CatalogItem[]): Record<string, string[]> {
   return items.reduce((acc, item) => {
+    if (!item.itemData) return acc;
     const itemImageIds = item.itemData.imageIds || [];
     item.itemData.variations.forEach(variation => {
       acc[variation.id] = variation.itemVariationData.imageIds || itemImageIds;
@@ -113,7 +114,7 @@ export function useCatalog({ initialData }: UseCatalogOptions = {}) {
   };
 
   const getItemModifiers = (item: CatalogItem): ModifierData[] => {
-    if (!item.itemData.modifierListInfo) return [];
+    if (!item.itemData || !item.itemData.modifierListInfo) return [];
     return item.itemData.modifierListInfo.flatMap(info => {
       const modifiers = modifierMap[info.modifierListId] || [];
       return modifiers;

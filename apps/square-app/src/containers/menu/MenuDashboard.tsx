@@ -4,6 +4,7 @@ import { useState, useMemo, useCallback, useEffect, memo } from 'react'
 import { MenuLayout } from '@/components/menu/MenuLayout'
 import { Utensils } from 'lucide-react'
 import { useCatalog } from '@/shared/hooks/useCatalog'
+import { useSearchCatalog } from '@/shared/hooks/useSearchCatalog'
 import { useCart } from '@/shared/contexts/CartContext'
 import { useSearchParams, useRouter } from 'next/navigation'
 import { Product } from '@/shared/types/product'
@@ -15,6 +16,13 @@ const MemoizedMenuLayout = memo(MenuLayout)
 export function MenuDashboard({ initialData }: MenuDashboardProps) {
   const [selectedItem, setSelectedItem] = useState<string>('all')
   const [searchTerm, setSearchTerm] = useState('')
+  const { products: searchedProducts, isLoading: isSearchLoading } = useSearchCatalog(searchTerm)
+
+  // Memoize the searchedProducts and isSearchLoading to avoid unnecessary re-renders
+  const memoizedSearch = useMemo(() => ({
+    searchedProducts,
+    isSearchLoading
+  }), [searchedProducts, isSearchLoading])
   
   const { items = [], imageData = {}, getItemModifiers } = useCatalog({
     initialData: {
@@ -70,7 +78,7 @@ export function MenuDashboard({ initialData }: MenuDashboardProps) {
         return item.itemData.variations.map(variation => {
           if (!variation?.itemVariationData) return null
           
-          const itemImageId = item.itemData.imageIds?.[0]
+          const itemImageId = item.itemData?.imageIds?.[0]
           const variationImageId = variation.itemVariationData.imageIds?.[0]
           const imageUrl = imageData[variationImageId || ''] || imageData[itemImageId || ''] || '/placeholder-image.jpg'
 
@@ -79,7 +87,7 @@ export function MenuDashboard({ initialData }: MenuDashboardProps) {
             name: variation.itemVariationData.name || '',
             price: variation.itemVariationData.priceMoney,
             imageUrl,
-            taxIds: item.itemData.taxIds || [],
+            taxIds: item.itemData?.taxIds || [],
             modifiers: getItemModifiers(item)
           } as Product
         }).filter((variant): variant is Product => variant !== null) // Type guard to remove nulls
@@ -89,6 +97,8 @@ export function MenuDashboard({ initialData }: MenuDashboardProps) {
         variant.name.toLowerCase().includes(searchTerm.toLowerCase())
       )
   }, [items, selectedItem, imageData, searchTerm, getItemModifiers]) as Product[]
+
+  const products = searchTerm ? memoizedSearch.searchedProducts : productVariants
 
   const handleSelectItem = useCallback((id: string) => {
     setSelectedItem(id)
@@ -104,8 +114,8 @@ export function MenuDashboard({ initialData }: MenuDashboardProps) {
       selectedItem={selectedItem}
       onSelectItem={handleSelectItem}
       onSearch={handleSearch}
-      loading={false}
-      products={productVariants}
+      loading={memoizedSearch.isSearchLoading}
+      products={products}
     />
   )
 } 

@@ -15,7 +15,7 @@ function getBaseProductId(cartItemId: string): string {
   // If the ID contains a modifier (format: productId-modifierId)
   // return only the productId part
   const parts = cartItemId.split('-')
-  return parts[0]
+  return parts[0] || ''
 }
 
 export function useOrderCalculation({ 

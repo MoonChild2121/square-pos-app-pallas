@@ -1,6 +1,6 @@
 'use client'
 
-import { useCallback, useState } from 'react'
+import { useCallback, useEffect, useState } from 'react'
 import { HStack, Box } from '@styled-system/jsx'
 import { Input } from '@/components/ui/input'
 import { Search, X } from 'lucide-react'
@@ -24,7 +24,14 @@ export default function SearchBar({ onSearch }: SearchBarProps) {
     [onSearch]
   )
 
+  useEffect(() => {
+    return () => {
+      debouncedSearch.cancel()
+    }
+  }, [debouncedSearch]) 
+
   const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    e.preventDefault()
     const value = e.target.value
     setSearchTerm(value)
     debouncedSearch(value)
@@ -47,6 +54,7 @@ export default function SearchBar({ onSearch }: SearchBarProps) {
         <Input.Postfix>
           {searchTerm && (
             <Button
+              type="button"
               variant="text"
               size="sm"
               onClick={handleClear}

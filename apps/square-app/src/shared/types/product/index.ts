@@ -14,5 +14,6 @@ export interface Product {
 
 export interface ProductGridProps {
   products: Product[];
+  loading?: boolean;
 }
 

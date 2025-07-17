@@ -35,8 +35,9 @@ const MenuSection = memo(function MenuSection({
 
 // Memoized product section component
 const ProductSection = memo(function ProductSection({
-  products
-}: Pick<MenuLayoutProps, 'products'>) {
+  products,
+  loading
+}: Pick<MenuLayoutProps, 'products' | 'loading'>) {
   return (
     <Box
       className={css({
@@ -48,7 +49,7 @@ const ProductSection = memo(function ProductSection({
         '&::-webkit-scrollbar': { display: 'none' },
       })}
     >
-      <ProductGrid products={products} />
+      <ProductGrid products={products} loading={loading} />
     </Box>
   )
 })
@@ -63,11 +64,9 @@ export const MenuLayout = memo(function MenuLayout({
 }: MenuLayoutProps) {
   const [isCartOpen, setIsCartOpen] = useState(false)
 
-  if (loading) return <div>Loading...</div>
-
   return (
-    <Box 
-      position="relative" 
+    <Box
+      position="relative"
       w="100%" 
       h="100vh" 
       className={css({ overflow: 'hidden' })}
@@ -85,7 +84,7 @@ export const MenuLayout = memo(function MenuLayout({
           onSelectItem={onSelectItem}
           onSearch={onSearch}
         />
-        <ProductSection products={products} />
+        <ProductSection products={products} loading={loading} />
       </Flex>
 
       {/* Overlay - using recipe */}

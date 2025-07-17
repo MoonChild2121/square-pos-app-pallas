@@ -1,7 +1,8 @@
 import { SquareClient, SquareEnvironment } from 'square'
 import { getServerSession } from 'next-auth'
 import { authOptions } from '../../auth/[...nextauth]/route'
-import JSONbig from 'json-bigint'
+// eslint-disable-next-line @typescript-eslint/no-var-requires
+const JSONbigFactory = require('json-bigint')
 import { NextResponse } from 'next/server'
 import { headers } from 'next/headers'
 
@@ -35,6 +36,9 @@ export async function GET() {
       environment: SquareEnvironment.Sandbox,
     })
 
+    // Create a JSONbig instance with useNativeBigInt: true
+    const JSONbigNative = JSONbigFactory({ useNativeBigInt: true })
+
     // Fetch catalog items, taxes, discounts, images, and modifiers in parallel
     const [catalogResponse, taxResponse, discountResponse, imagesResponse, modifierResponse] = await Promise.all([
       client.catalog.list({ types: 'ITEM' }),
@@ -54,22 +58,22 @@ export async function GET() {
     })
 
     // Process catalog items
-    const serializedCatalog = JSONbig({ useNativeBigInt: true }).stringify(catalogResponse.data)
+    const serializedCatalog = JSONbigNative.stringify(catalogResponse.data)
     const catalogData = JSON.parse(serializedCatalog)
     const items = catalogData.filter((item: any) => item.type === 'ITEM')
 
     // Process tax items
-    const serializedTaxes = JSONbig({ useNativeBigInt: true }).stringify(taxResponse.data)
+    const serializedTaxes = JSONbigNative.stringify(taxResponse.data)
     const taxData = JSON.parse(serializedTaxes)
     const taxes = taxData.filter((item: any) => item.type === 'TAX')
 
     // Process discount items
-    const serializedDiscounts = JSONbig({ useNativeBigInt: true }).stringify(discountResponse.data)
+    const serializedDiscounts = JSONbigNative.stringify(discountResponse.data)
     const discountData = JSON.parse(serializedDiscounts)
     const discounts = discountData.filter((item: any) => item.type === 'DISCOUNT')
 
     // Process image data
-    const serializedImages = JSONbig({ useNativeBigInt: true }).stringify(imagesResponse.data)
+    const serializedImages = JSONbigNative.stringify(imagesResponse.data)
     const imagesData = JSON.parse(serializedImages)
     const imageMap = imagesData.reduce((acc: Record<string, string>, obj: any) => {
       if (obj.type === 'IMAGE' && obj.imageData?.url) {
@@ -79,7 +83,7 @@ export async function GET() {
     }, {})
 
     // Process modifier data
-    const serializedModifiers = JSONbig({ useNativeBigInt: true }).stringify(modifierResponse.data)
+    const serializedModifiers = JSONbigNative.stringify(modifierResponse.data)
     const modifierData = JSON.parse(serializedModifiers)
     const modifiers = modifierData.filter((item: any) => item.type === 'MODIFIER')
 
