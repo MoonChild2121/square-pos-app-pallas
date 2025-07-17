@@ -9,6 +9,7 @@ import { useCartActions } from '@/contexts/CartContext'
 import { cartItem } from '@styled-system/recipes'
 import ModifierModal from '@/components/modals/ItemModal'
 import { useCatalog } from '@/hooks/useCatalog'
+import { css } from '@styled-system/css'
 
 interface Props {
   id: string
@@ -18,6 +19,11 @@ interface Props {
   imageUrl?: string
   taxIds?: string[]
   discountIds?: string[]
+  selectedModifier?: {
+    id: string;
+    name: string;
+    price: number;
+  }
 }
 
 const CartItem = memo(function CartItem({
@@ -27,14 +33,19 @@ const CartItem = memo(function CartItem({
   quantity,
   imageUrl,
   taxIds = [],
-  discountIds = []
+  discountIds = [],
+  selectedModifier
 }: Props) {
   const { updateQuantity } = useCartActions()
   const { taxes, discounts } = useCatalog()
   const { root, image, content, title, controls, button, deleteButton, contentWrapper, modifierInfo } = cartItem()
 
   const handleDecrease = useCallback(() => {
-    updateQuantity(id, quantity - 1)
+    if (quantity > 1) {
+      updateQuantity(id, quantity - 1)
+    } else {
+      updateQuantity(id, 0) // This will remove the item
+    }
   }, [id, quantity, updateQuantity])
 
   const handleIncrease = useCallback(() => {
@@ -48,6 +59,9 @@ const CartItem = memo(function CartItem({
   // Get selected tax and discount details
   const selectedTax = taxes.find(tax => tax.id === taxIds[0])
   const selectedDiscount = discounts.find(discount => discount.id === discountIds[0])
+
+  // Calculate total item price including modifier
+  const totalItemPrice = price * quantity
 
   return (
     <Box pb="1">
@@ -70,8 +84,23 @@ const CartItem = memo(function CartItem({
         <Box className={contentWrapper}>
           {/* Item Details */}
           <VStack className={content}>
-            <Heading level={6}>{name}</Heading>
-            <Paragraph size="sm" textStyle="bold">${price.toFixed(2)}</Paragraph>
+            <Heading level={6}>
+              {name}
+              {selectedModifier && (
+                <span className={css({ color: 'text.secondary', fontSize: 'sm' })}>
+                  {' - '}{selectedModifier.name}
+                </span>
+              )}
+            </Heading>
+            <Paragraph size="sm" textStyle="bold">
+              ${totalItemPrice.toFixed(2)}
+              {selectedModifier && selectedModifier.price > 0 && (
+                <span className={css({ color: 'text.secondary', fontSize: 'xs' })}>
+                  {' '}(+${selectedModifier.price.toFixed(2)} each)
+                </span>
+              )}
+            </Paragraph>
+            
             {/* Tax and Discount Info */}
             {(selectedTax || selectedDiscount) && (
               <Box className={modifierInfo}>
@@ -82,7 +111,7 @@ const CartItem = memo(function CartItem({
                   <Paragraph size="sm">
                     Discount: {selectedDiscount.discountData.name}
                     {selectedDiscount.discountData.percentage ? ` (${selectedDiscount.discountData.percentage}%)` : ''}
-                  </Paragraph >
+                  </Paragraph>
                 )}
               </Box>
             )}

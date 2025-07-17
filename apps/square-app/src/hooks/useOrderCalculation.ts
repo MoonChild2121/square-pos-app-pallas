@@ -21,7 +21,15 @@ function generateShortId(prefix: string, itemId: string, modifierId: string): st
   const shortModifierId = modifierId.slice(0, 8)
   return `${prefix}_${shortItemId}_${shortModifierId}`
 }
- 
+
+// Helper to extract base product ID from composite cart item ID
+function getBaseProductId(cartItemId: string): string {
+  // If the ID contains a modifier (format: productId-modifierId)
+  // return only the productId part
+  const parts = cartItemId.split('-')
+  return parts[0]
+}
+
 export function useOrderCalculation({ 
   items, 
   debounceMs = 300,
@@ -32,18 +40,30 @@ export function useOrderCalculation({
   const [loading, setLoading] = useState(false)
 
   // Memoize line items transformation
-  const lineItems = useMemo(() => items.map(item => ({
-    quantity: String(item.quantity),
-    catalogObjectId: item.id,
-    appliedTaxes: item.taxIds?.map(taxId => ({
-      taxUid: taxId,
-      uid: generateShortId('tax', item.id, taxId),
-    })) || [],
-    appliedDiscounts: item.discountIds?.map(discountId => ({
-      discountUid: discountId,
-      uid: generateShortId('dis', item.id, discountId),
-    })) || [],
-  })), [items])
+  const lineItems = useMemo(() => items.map(item => {
+    // Get the base product ID for the catalog reference
+    const baseProductId = getBaseProductId(item.id)
+    
+    return {
+      quantity: String(item.quantity),
+      catalogObjectId: baseProductId, // Use base product ID here
+      appliedTaxes: item.taxIds?.map(taxId => ({
+        taxUid: taxId,
+        uid: generateShortId('tax', item.id, taxId),
+      })) || [],
+      appliedDiscounts: item.discountIds?.map(discountId => ({
+        discountUid: discountId,
+        uid: generateShortId('dis', item.id, discountId),
+      })) || [],
+      // Add modifiers if present
+      ...(item.selectedModifier && {
+        modifiers: [{
+          catalogObjectId: item.selectedModifier.id,
+          uid: generateShortId('mod', item.id, item.selectedModifier.id),
+        }],
+      }),
+    }
+  }), [items])
 
   // Create arrays of unique taxes and discounts
   const { taxes, discounts } = useMemo(() => {
@@ -92,6 +112,7 @@ export function useOrderCalculation({
     debounce(async (payload) => {
       setLoading(true)
       try {
+        console.log('Calculating order with payload:', JSON.stringify(payload, null, 2))
         const response = await fetch('/api/square/orders/calculate', {
           method: 'POST',
           headers: {
@@ -101,8 +122,10 @@ export function useOrderCalculation({
         })
 
         const data = await response.json()
+        console.log('Order calculation response:', data)
         setOrderResponse({ data })
       } catch (err) {
+        console.error('Order calculation error:', err)
         setOrderResponse({ data: null, error: 'Failed to load order summary' })
       } finally {
         setLoading(false)

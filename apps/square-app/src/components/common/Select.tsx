@@ -24,21 +24,22 @@ export function TaxSelect({ itemId, selectedTaxIds = [], isOrderLevel = false }:
 
   const handleTaxChange = (value: string) => {
     if (isOrderLevel) {
-      updateOrderTaxes([value])
+      updateOrderTaxes(value === 'none' ? [] : [value])
     } else {
-      updateItemTaxes(itemId, [value])
+      updateItemTaxes(itemId, value === 'none' ? [] : [value])
     }
   }
 
   return (
     <Box>
       <Heading level={6} className="mb-2">Applicable Taxes</Heading>
-      <Select.Root value={selectedTaxIds?.[0] || ''} onValueChange={handleTaxChange}>
+      <Select.Root value={selectedTaxIds?.[0] || 'none'} onValueChange={handleTaxChange}>
         <Select.Trigger style={{ width: '100%' }}>
           <Select.Value placeholder="Select taxes" />
         </Select.Trigger>
         <Select.Content>
           <Select.Group>
+            <Select.Item value="none">None</Select.Item>
             {taxes.map((tax) => (
               <Select.Item key={tax.id} value={tax.id}>
                 {tax.taxData.name} ({tax.taxData.percentage}%)
@@ -57,21 +58,22 @@ export function DiscountSelect({ itemId, selectedDiscountIds = [], isOrderLevel 
 
   const handleDiscountChange = (value: string) => {
     if (isOrderLevel) {
-      updateOrderDiscounts([value])
+      updateOrderDiscounts(value === 'none' ? [] : [value])
     } else {
-      updateItemDiscounts(itemId, [value])
+      updateItemDiscounts(itemId, value === 'none' ? [] : [value])
     }
   }
 
   return (
     <Box>
       <Heading level={6} className="mb-2">Available Discounts</Heading>
-      <Select.Root value={selectedDiscountIds?.[0] || ''} onValueChange={handleDiscountChange}>
+      <Select.Root value={selectedDiscountIds?.[0] || 'none'} onValueChange={handleDiscountChange}>
         <Select.Trigger style={{ width: '100%' }}>
           <Select.Value placeholder="Select discounts" />
         </Select.Trigger>
         <Select.Content>
           <Select.Group>
+            <Select.Item value="none">None</Select.Item>
             {discounts.map((discount) => (
               <Select.Item key={discount.id} value={discount.id}>
                 {discount.discountData.name} 

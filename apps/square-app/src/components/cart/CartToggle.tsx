@@ -10,7 +10,8 @@ interface CartToggleProps {
 
 export function CartToggle({ isOpen, onToggle }: CartToggleProps) {
   const { state } = useCart()
-  const itemCount = state.items.length
+  // Calculate total quantity of all items
+  const totalQuantity = state.items.reduce((total, item) => total + item.quantity, 0)
 
   return (
     <Button
@@ -18,30 +19,36 @@ export function CartToggle({ isOpen, onToggle }: CartToggleProps) {
       onClick={onToggle}
       className={css({
         position: 'fixed',
-        bottom: '4',
-        right: '4',
+        bottom: '6',
+        right: '6',
         borderRadius: 'full',
         display: 'flex',
         alignItems: 'center',
-        gap: '2',
+        gap: '3',
         zIndex: '50',
-        boxShadow: 'lg',
+        boxShadow: 'xl',
         transform: isOpen ? 'scale(0)' : 'scale(1)',
         transition: 'transform 0.2s ease-in-out',
+        p: '6',
+        _hover: {
+          transform: isOpen ? 'scale(0)' : 'scale(1.05)',
+        }
       })}
     >
-      <ShoppingCart size={20} />
-      {itemCount > 0 && (
+      <ShoppingCart size={24} />
+      {totalQuantity > 0 && (
         <span className={css({
           bg: 'primary.fg',
           color: 'primary.bg',
           borderRadius: 'full',
-          px: '2',
-          py: '0.5',
-          fontSize: 'sm',
+          px: '3',
+          py: '1',
+          fontSize: 'md',
           fontWeight: 'bold',
+          minWidth: '6',
+          textAlign: 'center',
         })}>
-          {itemCount}
+          {totalQuantity}
         </span>
       )}
     </Button>

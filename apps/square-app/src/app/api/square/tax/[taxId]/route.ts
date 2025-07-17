@@ -25,7 +25,6 @@ export async function GET(
     });
 
     if (response.object?.type !== 'TAX') {
-      console.log('Tax object response:', JSONbig({ useNativeBigInt: true }).stringify(response.object));
       return NextResponse.json({ error: 'Tax not found' }, { status: 404 });
     }
 
@@ -33,7 +32,6 @@ export async function GET(
     const serializedData = JSONbig({ useNativeBigInt: true }).stringify(response);
     const parsedData = JSON.parse(serializedData);
     
-    console.log('Tax object found:', parsedData.object);
     return NextResponse.json(parsedData);
   } catch (error: any) {
     console.error('Error fetching tax:', error);

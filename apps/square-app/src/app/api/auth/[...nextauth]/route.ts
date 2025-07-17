@@ -48,7 +48,6 @@ export const authOptions: NextAuthOptions = {
       token: {
         url: `${SQUARE_SANDBOX_URL}/oauth2/token`,
         async request({params }) {
-          console.log('Requesting token with code:', params.code);
 
           // Make a custom POST request to Square's token endpoint
           const response = await fetch(`${SQUARE_SANDBOX_URL}/oauth2/token`, {
@@ -67,7 +66,6 @@ export const authOptions: NextAuthOptions = {
           });
 
           const tokens = await response.json(); // Parse the response
-          console.log('Token Response:', tokens);
 
           if (!response.ok) {
             console.error('Token Error:', tokens);

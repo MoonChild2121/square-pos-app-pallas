@@ -20,12 +20,6 @@ export async function GET() {
     // Use either session token or bearer token
     const accessToken = session?.accessToken || bearerToken
 
-    console.log('Catalog API: Auth check', {
-      hasSessionToken: !!session?.accessToken,
-      hasBearerToken: !!bearerToken,
-      finalTokenExists: !!accessToken
-    })
-
     if (!accessToken) {
       console.error('Catalog API: No access token found', {
         sessionExists: !!session,
@@ -41,12 +35,13 @@ export async function GET() {
       environment: SquareEnvironment.Sandbox,
     })
 
-    // Fetch catalog items, taxes, discounts, and images in parallel
-    const [catalogResponse, taxResponse, discountResponse, imagesResponse] = await Promise.all([
+    // Fetch catalog items, taxes, discounts, images, and modifiers in parallel
+    const [catalogResponse, taxResponse, discountResponse, imagesResponse, modifierResponse] = await Promise.all([
       client.catalog.list({ types: 'ITEM' }),
       client.catalog.list({ types: 'TAX' }),
       client.catalog.list({ types: 'DISCOUNT' }),
       client.catalog.list({ types: 'IMAGE' }),
+      client.catalog.list({ types: 'MODIFIER' }),
     ]).catch(error => {
       console.error('Catalog API: Square API call failed', {
         error: error.message,
@@ -83,18 +78,17 @@ export async function GET() {
       return acc
     }, {})
 
-    console.log('Catalog API: Successfully processed data', {
-      itemCount: items.length,
-      taxCount: taxes.length,
-      discountCount: discounts.length,
-      imageCount: Object.keys(imageMap).length
-    })
+    // Process modifier data
+    const serializedModifiers = JSONbig({ useNativeBigInt: true }).stringify(modifierResponse.data)
+    const modifierData = JSON.parse(serializedModifiers)
+    const modifiers = modifierData.filter((item: any) => item.type === 'MODIFIER')
 
     return NextResponse.json({ 
       items, 
       taxes,
       discounts,
-      images: imageMap 
+      images: imageMap,
+      modifiers
     })
   } catch (error: any) {
     console.error('Catalog API: Unhandled error', {

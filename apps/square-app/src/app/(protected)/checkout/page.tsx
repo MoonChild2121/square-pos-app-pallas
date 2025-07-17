@@ -1,7 +1,7 @@
 'use client'
 
-import { OrderConfirmation } from '@/components/checkout/OrderConfirmation'
+import { OrderConfirmationContainer } from '@/containers/OrderConfirmationContainer'
 
-export default function CheckoutPage() {
-  return <OrderConfirmation />
-} 
+export default function OrderConfirmationPage() {
+  return <OrderConfirmationContainer />
+}

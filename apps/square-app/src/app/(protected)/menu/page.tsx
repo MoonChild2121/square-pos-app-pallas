@@ -21,7 +21,8 @@ async function getInitialData() {
     catalog: data.items,
     taxes: data.taxes,
     discounts: data.discounts,
-    images: data.images
+    images: data.images,
+    modifiers: data.modifiers
   }
 }
 

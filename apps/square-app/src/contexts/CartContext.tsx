@@ -5,13 +5,18 @@ import { createContext, useContext, useReducer, ReactNode, useEffect, useMemo, u
 
 // Define a cart item structure
 export interface CartItem {
-  id: string
+  id: string // This will now be a composite of product ID and modifier ID
   name: string
   price: number // already divided from cents
   quantity: number
   imageUrl?: string
   taxIds?: string[]
   discountIds?: string[]
+  selectedModifier?: {
+    id: string;
+    name: string;
+    price: number;
+  }
 }
 
 // Define what the entire cart state looks like
@@ -46,39 +51,55 @@ const initialState: CartState = {
   orderDiscountIds: []
 }
 
+// Helper function to generate a unique cart item ID
+function generateCartItemId(productId: string, selectedModifier?: CartItem['selectedModifier']): string {
+  if (!selectedModifier) return productId;
+  return `${productId}-${selectedModifier.id}`;
+}
+
 // Reducer: defines how state updates based on action type
 const cartReducer = (state: CartState, action: CartAction): CartState => {
   let newState: CartState
 
   switch (action.type) {
     case 'ADD_ITEM': {
-      const existingItem = state.items.find(item => item.id === action.payload.id)
-      if (existingItem) {
-        // If item exists, increase quantity
+      // Generate composite ID based on product ID and modifier
+      const itemId = generateCartItemId(action.payload.id, action.payload.selectedModifier);
+      
+      // Find existing item with same product and modifier combination
+      const existingItemIndex = state.items.findIndex(item => 
+        generateCartItemId(item.id, item.selectedModifier) === itemId
+      );
+
+      if (existingItemIndex !== -1) {
+        // If item exists with same modifier, increase quantity
+        const updatedItems = [...state.items];
+        updatedItems[existingItemIndex] = {
+          ...updatedItems[existingItemIndex],
+          quantity: updatedItems[existingItemIndex].quantity + action.payload.quantity
+        };
+        
         newState = {
           ...state,
-          items: state.items.map(item =>
-            item.id === action.payload.id
-              ? { ...item, quantity: item.quantity + 1 }
-              : item
-          ),
+          items: updatedItems
         }
       } else {
-        // Add new item with quantity 1
+        // Add new item with composite ID
         newState = {
           ...state,
-          items: [...state.items, { ...action.payload, quantity: 1 }],
+          items: [...state.items, { ...action.payload, id: itemId }],
         }
       }
       break
     }
 
-    case 'REMOVE_ITEM':
+    case 'REMOVE_ITEM': {
       newState = {
         ...state,
         items: state.items.filter(item => item.id !== action.payload),
       }
       break
+    }
 
     case 'UPDATE_QUANTITY': {
       if (action.payload.quantity <= 0) {

@@ -6,17 +6,7 @@ import { Utensils } from 'lucide-react'
 import { useCatalog } from '@/hooks/useCatalog'
 import { useCart } from '@/contexts/CartContext'
 import { useSearchParams, useRouter } from 'next/navigation'
-
-interface InitialData {
-  catalog: any[]
-  taxes: any[]
-  discounts: any[]
-  images: Record<string, string>
-}
-
-interface MenuDashboardProps {
-  initialData: InitialData
-}
+import { ModifierData } from '@/types/modifiers'
 
 interface Product {
   id: string
@@ -27,6 +17,19 @@ interface Product {
   }
   imageUrl: string
   taxIds: string[]
+  modifiers?: ModifierData[]
+}
+
+interface InitialData {
+  catalog: any[]
+  taxes: any[]
+  discounts: any[]
+  images: Record<string, string>
+  modifiers: any[]
+}
+
+interface MenuDashboardProps {
+  initialData: InitialData
 }
 
 // Memoize MenuLayout to prevent unnecessary re-renders
@@ -36,12 +39,13 @@ export function MenuDashboard({ initialData }: MenuDashboardProps) {
   const [selectedItem, setSelectedItem] = useState<string>('all')
   const [searchTerm, setSearchTerm] = useState('')
   
-  const { items = [], imageData = {} } = useCatalog({
+  const { items = [], imageData = {}, getItemModifiers } = useCatalog({
     initialData: {
       items: initialData.catalog,
       taxes: initialData.taxes,
       discounts: initialData.discounts,
-      images: initialData.images
+      images: initialData.images,
+      modifiers: initialData.modifiers
     }
   })
   const { clearCart } = useCart()
@@ -98,7 +102,8 @@ export function MenuDashboard({ initialData }: MenuDashboardProps) {
             name: variation.itemVariationData.name || '',
             price: variation.itemVariationData.priceMoney,
             imageUrl,
-            taxIds: item.itemData.taxIds || []
+            taxIds: item.itemData.taxIds || [],
+            modifiers: getItemModifiers(item)
           } as Product
         }).filter((variant): variant is Product => variant !== null) // Type guard to remove nulls
       })
@@ -106,7 +111,7 @@ export function MenuDashboard({ initialData }: MenuDashboardProps) {
         !searchTerm ||
         variant.name.toLowerCase().includes(searchTerm.toLowerCase())
       )
-  }, [items, selectedItem, imageData, searchTerm]) as Product[]
+  }, [items, selectedItem, imageData, searchTerm, getItemModifiers]) as Product[]
 
   const handleSelectItem = useCallback((id: string) => {
     setSelectedItem(id)

@@ -7,8 +7,9 @@ import { Header } from '@/components/layout/Header'
 import MenuBoxGrid from '@/components/menu/MenuBoxGrid'
 import ProductGrid from '@/components/product/ProductGrid'
 import SearchBar from '@/components/search/SearchBar'
-import Cart from '@/components/cart/Cart'
 import { CartToggle } from '@/components/cart/CartToggle'
+import { ModifierData } from '@/types/modifiers'
+import { CartContainer } from '@/containers/CartContainer'
 
 interface Product {
   id: string
@@ -16,6 +17,7 @@ interface Product {
   price: { amount: number; currency: string }
   imageUrl: string
   taxIds?: string[]
+  modifiers?: ModifierData[]
 }
 
 interface MenuItem {
@@ -141,7 +143,7 @@ export const MenuLayout = memo(function MenuLayout({
         boxShadow: 'lg',
       })}
     >
-      <Cart isOpen={isCartOpen} onClose={() => setIsCartOpen(false)} />
+      <CartContainer isOpen={isCartOpen} onClose={() => setIsCartOpen(false)} />
     </Box>
   </Box>
 )

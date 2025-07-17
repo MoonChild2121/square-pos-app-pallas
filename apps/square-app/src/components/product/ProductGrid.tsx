@@ -5,47 +5,22 @@ import { Grid } from '@styled-system/jsx'
 import { css } from '@styled-system/css'
 import { useCartActions } from '@/contexts/CartContext'
 import ProductCard from '@/components/product/ProductCard'
+import { ModifierData } from '@/types/modifiers'
 
 interface Product {
   id: string
   name: string
   price: {
-    amount: number
-    currency: string
+    amount: number;
+    currency: string;
   }
   imageUrl?: string
   taxIds?: string[]
+  modifiers?: ModifierData[]
 }
 
 interface ProductGridProps {
   products: Product[]
-}
-
-// Memoized product card wrapper
-const MemoizedProductCard = memo(function MemoizedProductCard({
-  product,
-  onAddToCart
-}: {
-  product: Product
-  onAddToCart: (product: Product) => void
-}) {
-  const handleClick = useCallback(() => {
-    onAddToCart(product)
-  }, [product, onAddToCart])
-
-  return (
-    <ProductCard
-      name={product.name}
-      price={convertPrice(product.price)}
-      imageUrl={product.imageUrl}
-      onClick={handleClick}
-    />
-  )
-})
-
-// Price conversion utility
-const convertPrice = (price: { amount: number; currency: string }): number => {
-  return price.amount / 100 // Convert cents to dollars
 }
 
 const ProductGrid = memo(function ProductGrid({ products }: ProductGridProps) {
@@ -55,10 +30,15 @@ const ProductGrid = memo(function ProductGrid({ products }: ProductGridProps) {
     addItem({
       id: product.id,
       name: product.name,
-      price: convertPrice(product.price),
+      price: product.price.amount / 100,
       quantity: 1,
       imageUrl: product.imageUrl,
-      taxIds: product.taxIds
+      taxIds: product.taxIds,
+      selectedModifier: product.modifiers?.[0] ? {
+        id: product.modifiers[0].id,
+        name: product.modifiers[0].name,
+        price: product.modifiers[0].priceMoney.amount / 100
+      } : undefined
     })
   }, [addItem])
 
@@ -74,10 +54,14 @@ const ProductGrid = memo(function ProductGrid({ products }: ProductGridProps) {
       })}
     >
       {products.map((product) => (
-        <MemoizedProductCard
+        <ProductCard
           key={product.id}
-          product={product}
-          onAddToCart={handleAddToCart}
+          id={product.id}
+          name={product.name}
+          price={product.price}
+          imageUrl={product.imageUrl}
+          taxIds={product.taxIds}
+          modifiers={product.modifiers}
         />
       ))}
     </Grid>

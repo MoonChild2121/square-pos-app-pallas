@@ -1,25 +1,17 @@
-import { useState } from 'react'
+'use client'
+
 import { Button } from '@/components/ui/button'
 import Heading from '@/components/ui/typography/heading'
 import Paragraph from '@/components/ui/typography/paragraph'
 import { Box, VStack } from '@styled-system/jsx'
 import { css } from '@styled-system/css'
-import { signIn } from 'next-auth/react' //nextauth client function to trigger sign-in with a provider
 
-export function LoginForm() {
-  const [isLoading, setIsLoading] = useState(false)
+interface LoginFormProps {
+  isLoading: boolean
+  onSignIn: () => void
+}
 
-  const handleSignIn = async () => {
-    setIsLoading(true)
-    try {
-      await signIn('square', { callbackUrl: '/menu' }) //start noauth flow using swuare provider
-      // api/auth/signin/square -> redirects to square oauth page -> square redirects to app 
-    } catch (error) {
-      setIsLoading(false) // Reset if error occurs
-      console.error(error)
-    }
-  }
-
+export function LoginForm({ isLoading, onSignIn }: LoginFormProps) {
   return (
     <Box
       className={css({
@@ -29,8 +21,6 @@ export function LoginForm() {
         p: 'layout.section.md',
         maxW: '360px',
         w: '100%',
-        bg: 'surface.container',
-        boxShadow: 'lg',
         _dark: {
           bg: 'surface.spotlight',
         },
@@ -45,7 +35,7 @@ export function LoginForm() {
         </VStack>
 
         <Button
-          onClick={handleSignIn}
+          onClick={onSignIn}
           variant="primary"
           width="full"
           size="lg"

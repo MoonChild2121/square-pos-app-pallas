@@ -1,28 +1,28 @@
 'use client'
 
-import { Box, VStack, HStack } from '@styled-system/jsx'
+import { Box, VStack } from '@styled-system/jsx'
 import { Heading, Paragraph } from '@/components/ui/typography'
 import { OrderItemCard } from '../orders/OrderItemCard'
 import { OrderDetails } from '../orders/OrderDetails'
 import { OrderDetailsSkeleton } from '../skeletons/order-skeletons/OrderDetailsSkeleton'
-import { useCart } from '@/contexts/CartContext'
-import { useEffect, useCallback } from 'react'
-import { useCatalog } from '@/hooks/useCatalog'
-import { css } from '@styled-system/css'
 import { CheckCircle } from 'lucide-react'
 import { Button } from '@/components/ui/button'
-import { useRouter } from 'next/navigation'
+import { css } from '@styled-system/css'
 import { Skeleton } from '@/components/ui/skeleton'
 
-export function OrderConfirmation() {
-  const { state, clearCart } = useCart()
-  const { getVariantImageUrl, isLoading: catalogLoading } = useCatalog()
-  const router = useRouter()
+interface Props {
+  state: any
+  catalogLoading: boolean
+  getVariantImageUrl: (catalogObjectId: string) => string | undefined
+  onContinueShopping: () => void
+}
 
-  const handleContinueShopping = useCallback(() => {
-    router.push('/menu?clear=true')
-  }, [router])
-
+export function OrderConfirmationView({
+  state,
+  catalogLoading,
+  getVariantImageUrl,
+  onContinueShopping
+}: Props) {
   if (state.items.length === 0) {
     return (
       <Box className={css({
@@ -149,7 +149,7 @@ export function OrderConfirmation() {
               <OrderDetails order={state.order} />
               <Button 
                 variant="primary" 
-                onClick={handleContinueShopping}
+                onClick={onContinueShopping}
                 className={css({
                   w: '50%',
                   mt: '4',
@@ -163,4 +163,4 @@ export function OrderConfirmation() {
       </Box>
     </Box>
   )
-} 
+}
