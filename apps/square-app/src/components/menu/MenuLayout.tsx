@@ -3,38 +3,14 @@
 import { memo, useState } from 'react'
 import { Flex, Box } from '@styled-system/jsx'
 import { css } from '@styled-system/css'
+import { cartOverlay, cartSlideout } from '@styled-system/recipes'
 import { Header } from '@/components/layout/Header'
 import MenuBoxGrid from '@/components/menu/MenuBoxGrid'
 import ProductGrid from '@/components/product/ProductGrid'
 import SearchBar from '@/components/search/SearchBar'
-import { CartToggle } from '@/components/cart/CartToggle'
-import { ModifierData } from '@/types/modifiers'
+import { CartToggle } from '@/components/cart/cart-toggle/CartToggle'
+import { MenuLayoutProps } from '@/shared/types/menu'
 import { CartContainer } from '@/containers/CartContainer'
-
-interface Product {
-  id: string
-  name: string
-  price: { amount: number; currency: string }
-  imageUrl: string
-  taxIds?: string[]
-  modifiers?: ModifierData[]
-}
-
-interface MenuItem {
-  id: string
-  label: string
-  count: number
-  icon: React.ReactNode
-}
-
-interface Props {
-  menuItems: MenuItem[]
-  selectedItem: string
-  onSelectItem: (id: string) => void
-  onSearch: (term: string) => void
-  loading: boolean
-  products: Product[]
-}
 
 // Memoized menu section component
 const MenuSection = memo(function MenuSection({
@@ -42,7 +18,7 @@ const MenuSection = memo(function MenuSection({
   selectedItem,
   onSelectItem,
   onSearch
-}: Pick<Props, 'menuItems' | 'selectedItem' | 'onSelectItem' | 'onSearch'>) {
+}: Pick<MenuLayoutProps, 'menuItems' | 'selectedItem' | 'onSelectItem' | 'onSearch'>) {
   return (
     <Flex direction="column" className={css({ gap: '4' })}>
       <MenuBoxGrid
@@ -60,7 +36,7 @@ const MenuSection = memo(function MenuSection({
 // Memoized product section component
 const ProductSection = memo(function ProductSection({
   products
-}: Pick<Props, 'products'>) {
+}: Pick<MenuLayoutProps, 'products'>) {
   return (
     <Box
       className={css({
@@ -84,68 +60,50 @@ export const MenuLayout = memo(function MenuLayout({
   onSearch,
   loading,
   products,
-}: Props) {
+}: MenuLayoutProps) {
   const [isCartOpen, setIsCartOpen] = useState(false)
 
   if (loading) return <div>Loading...</div>
 
- return (
-  <Box 
-    position="relative" 
-    w="100%" 
-    h="100vh" 
-    className={css({ overflow: 'hidden' })}
-  >
-    {/* Main Content */}
-    <Flex direction="column" className={css({ 
-      p: '4', 
-      gap: '4',
-      h: '100%',
-    })}>
-      <Header />
-      <MenuSection
-        menuItems={menuItems}
-        selectedItem={selectedItem}
-        onSelectItem={onSelectItem}
-        onSearch={onSearch}
-      />
-      <ProductSection products={products} />
-    </Flex>
+  return (
+    <Box 
+      position="relative" 
+      w="100%" 
+      h="100vh" 
+      className={css({ overflow: 'hidden' })}
+    >
+      {/* Main Content */}
+      <Flex direction="column" className={css({ 
+        p: '4', 
+        gap: '4',
+        h: '100%',
+      })}>
+        <Header />
+        <MenuSection
+          menuItems={menuItems}
+          selectedItem={selectedItem}
+          onSelectItem={onSelectItem}
+          onSearch={onSearch}
+        />
+        <ProductSection products={products} />
+      </Flex>
 
-    {/*Overlay - place AFTER content but BEFORE Cart */}
-    {isCartOpen && (
+      {/* Overlay - using recipe */}
       <Box
-        className={css({
-          position: 'fixed',
-          inset: 0,
-          bg: 'fill', 
-          zIndex: 40,
-          transition: 'opacity 0.3s ease-in-out',
-        })}
+        className={cartOverlay({ isVisible: isCartOpen })}
         onClick={() => setIsCartOpen(false)}
       />
-    )}
 
-    {/* Cart must have higher z-index */}
-    <CartToggle isOpen={isCartOpen} onToggle={() => setIsCartOpen(!isCartOpen)} />
+      {/* Cart Toggle */}
+      <CartToggle isOpen={isCartOpen} onToggle={() => setIsCartOpen(!isCartOpen)} />
 
-    <Box
-      className={css({
-        position: 'fixed',
-        top: 0,
-        right: 0,
-        h: '100%',
-        w: { base: '100%', md: '400px' },
-        bg: 'white',
-        zIndex: 50, // higher than overlay
-        transform: isCartOpen ? 'translateX(0)' : 'translateX(100%)',
-        transition: 'transform 0.3s ease-in-out',
-        boxShadow: 'lg',
-      })}
-    >
-      <CartContainer isOpen={isCartOpen} onClose={() => setIsCartOpen(false)} />
+      {/* Cart Container - using recipe */}
+      <Box className={cartSlideout({ 
+        isOpen: isCartOpen, 
+        size: { base: 'mobile', md: 'desktop' } 
+      })}>
+        <CartContainer isOpen={isCartOpen} onClose={() => setIsCartOpen(false)} />
+      </Box>
     </Box>
-  </Box>
-)
-
-}) 
+  )
+})

@@ -8,39 +8,21 @@ import { OrderDetailsSkeleton } from '../skeletons/order-skeletons/OrderDetailsS
 import { CheckCircle } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { css } from '@styled-system/css'
-import { Skeleton } from '@/components/ui/skeleton'
-
-interface Props {
-  state: any
-  catalogLoading: boolean
-  getVariantImageUrl: (catalogObjectId: string) => string | undefined
-  onContinueShopping: () => void
-}
+import { orderConfirmation } from '@styled-system/recipes'
+import { OrderConfirmationViewProps } from '@/shared/types/checkout'
 
 export function OrderConfirmationView({
   state,
   catalogLoading,
   getVariantImageUrl,
   onContinueShopping
-}: Props) {
+}: OrderConfirmationViewProps) {
+  const { pageContainer, cardContainer, emptyState, successAlert, contentGrid, itemsSection } = orderConfirmation()
   if (state.items.length === 0) {
     return (
-      <Box className={css({
-        minH: '100vh',
-        bg: 'surface.container.lowest',
-        p: { base: '4', md: '6', lg: '8' },
-      })}>
+      <Box className={pageContainer}>
         <VStack 
-          gap="4" 
-          className={css({
-            bg: 'surface.container',
-            borderRadius: 'xl',
-            p: { base: '4', md: '6' },
-            boxShadow: 'md',
-            alignItems: 'center',
-            justifyContent: 'center',
-            minH: '300px'
-          })}
+          className={`${cardContainer} ${emptyState}`}
         >
           <Heading level={2}>No order found</Heading>
           <Paragraph>No items in your order</Paragraph>
@@ -50,86 +32,31 @@ export function OrderConfirmationView({
   }
 
   return (
-    <Box className={css({
-      minH: '100vh',
-      bg: 'surface.container.lowest',
-      p: { base: '4', md: '6', lg: '8' },
-    })}>
+    <Box className={pageContainer}>
       {/* Success Message */}
-      <Box className={css({
-        display: 'flex',
-        alignItems: 'center',
-        justifyContent: 'center',
-        gap: '3',
-        p: '4',
-        color: 'success.text',
-        bg: 'success.bg',
-        borderRadius: 'lg',
-        border: '1px solid',
-        borderColor: 'success.border',
-        mb: '6',
-      })}>
+      <Box className={successAlert}>
         <CheckCircle size={24}/>
-        <VStack gap="1" align="center">
+        <VStack gap="gap.inline.sm" align="center">
           <Heading level={5}>Order Placed Successfully!</Heading>
           <Paragraph>Thank you for your order. We'll process it right away.</Paragraph>
         </VStack>
       </Box>
 
       {/* Header */}
-      <Box className={css({
-        textAlign: 'center',
-        mb: { base: '6', md: '8' },
-      })}>
-        <Paragraph size="lg" className={css({ color: 'text.secondary' })}>
+      <Box>
+        <Paragraph size="base" className={css({ color: 'text.secondary' })}>
           Order #{Math.random().toString(36).substr(2, 9).toUpperCase()}
         </Paragraph>
       </Box>
 
       {/* Content Grid */}
-      <Box className={css({
-        maxW: '1200px',
-        mx: 'auto',
-        display: 'grid',
-        gridTemplateColumns: { base: '1fr', lg: '2fr 1fr' },
-        gap: { base: '6', lg: '8' },
-        alignItems: 'start',
-      })}>
+      <Box className={contentGrid}>
         {/* Items Section */}
-        <VStack className={css({
-          bg: 'surface.container',
-          borderRadius: 'xl',
-          p: { base: '4', md: '6' },
-          boxShadow: 'md',
-          maxH: 'calc(100vh - 300px)',
-          overflowY: 'auto',
-        })} gap="4">
+        <VStack className={itemsSection}>
           <Heading level={3}>Order Items</Heading>
-          <VStack gap="3" w="100%">
+          <VStack>
             {catalogLoading ? (
-              <VStack gap="3" w="100%">
-                {Array.from({ length: state.items.length }).map((_, i) => (
-                  <Box
-                    key={i}
-                    className={css({
-                      p: '3',
-                      bg: 'surface.container.low',
-                      borderRadius: 'lg',
-                      boxShadow: 'sm',
-                      display: 'flex',
-                      alignItems: 'center',
-                      gap: '4',
-                    })}
-                  >
-                    <Skeleton css={{ width: '60px', height: '60px', borderRadius: 'md' }} />
-                    <VStack gap="2" css={{ flex: '1' }}>
-                      <Skeleton css={{ width: '150px', height: '20px' }} />
-                      <Skeleton css={{ width: '100px', height: '16px' }} />
-                    </VStack>
-                    <Skeleton css={{ width: '80px', height: '24px' }} />
-                  </Box>
-                ))}
-              </VStack>
+              <Paragraph>Loading items...</Paragraph>
             ) : state.order?.lineItems?.map((item: any) => (
               <OrderItemCard 
                 key={item.uid} 
@@ -141,7 +68,7 @@ export function OrderConfirmationView({
         </VStack>
 
         {/* Summary Section */}
-        <VStack gap="6">
+        <VStack>
           {catalogLoading ? (
             <OrderDetailsSkeleton />
           ) : state.order ? (
@@ -150,10 +77,7 @@ export function OrderConfirmationView({
               <Button 
                 variant="primary" 
                 onClick={onContinueShopping}
-                className={css({
-                  w: '50%',
-                  mt: '4',
-                })}
+                className={css({ w: '50%'})}
               >
                 Continue Shopping
               </Button>

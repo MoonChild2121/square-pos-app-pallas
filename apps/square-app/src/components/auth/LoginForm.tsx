@@ -5,11 +5,7 @@ import Heading from '@/components/ui/typography/heading'
 import Paragraph from '@/components/ui/typography/paragraph'
 import { Box, VStack } from '@styled-system/jsx'
 import { css } from '@styled-system/css'
-
-interface LoginFormProps {
-  isLoading: boolean
-  onSignIn: () => void
-}
+import { LoginFormProps } from '@/shared/types/login'
 
 export function LoginForm({ isLoading, onSignIn }: LoginFormProps) {
   return (

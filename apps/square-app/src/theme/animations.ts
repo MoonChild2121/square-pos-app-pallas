@@ -10,5 +10,4 @@ export const animations = {
       left: '100%',
     },
   },
-  // ... other animations
 } 

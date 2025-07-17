@@ -1,18 +1,6 @@
 import { useCallback, useEffect, useMemo, useState } from 'react'
 import debounce from 'lodash/debounce'
-import { CartItem } from '@/contexts/CartContext'
-
-interface OrderResponse {
-  data: any
-  error?: string
-}
-
-interface UseOrderCalculationProps {
-  items: CartItem[]
-  debounceMs?: number
-  orderTaxIds?: string[]
-  orderDiscountIds?: string[]
-}
+import { OrderResponse, UseOrderCalculationProps } from '@/shared/types/orders'
 
 // Helper function to generate short unique IDs
 function generateShortId(prefix: string, itemId: string, modifierId: string): string {
@@ -112,7 +100,6 @@ export function useOrderCalculation({
     debounce(async (payload) => {
       setLoading(true)
       try {
-        console.log('Calculating order with payload:', JSON.stringify(payload, null, 2))
         const response = await fetch('/api/square/orders/calculate', {
           method: 'POST',
           headers: {
@@ -122,7 +109,6 @@ export function useOrderCalculation({
         })
 
         const data = await response.json()
-        console.log('Order calculation response:', data)
         setOrderResponse({ data })
       } catch (err) {
         console.error('Order calculation error:', err)

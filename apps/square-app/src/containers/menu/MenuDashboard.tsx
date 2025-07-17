@@ -3,34 +3,11 @@
 import { useState, useMemo, useCallback, useEffect, memo } from 'react'
 import { MenuLayout } from '@/components/menu/MenuLayout'
 import { Utensils } from 'lucide-react'
-import { useCatalog } from '@/hooks/useCatalog'
-import { useCart } from '@/contexts/CartContext'
+import { useCatalog } from '@/shared/hooks/useCatalog'
+import { useCart } from '@/shared/contexts/CartContext'
 import { useSearchParams, useRouter } from 'next/navigation'
-import { ModifierData } from '@/types/modifiers'
-
-interface Product {
-  id: string
-  name: string
-  price: {
-    amount: number
-    currency: string
-  }
-  imageUrl: string
-  taxIds: string[]
-  modifiers?: ModifierData[]
-}
-
-interface InitialData {
-  catalog: any[]
-  taxes: any[]
-  discounts: any[]
-  images: Record<string, string>
-  modifiers: any[]
-}
-
-interface MenuDashboardProps {
-  initialData: InitialData
-}
+import { Product } from '@/shared/types/product'
+import {MenuDashboardProps} from '@/shared/types/menu'
 
 // Memoize MenuLayout to prevent unnecessary re-renders
 const MemoizedMenuLayout = memo(MenuLayout)

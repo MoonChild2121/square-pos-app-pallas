@@ -1,8 +1,8 @@
 'use client'
  
 import Select from '@/components/ui/select'
-import { useCatalog } from '@/hooks/useCatalog'
-import { useCartActions } from '@/contexts/CartContext'
+import { useCatalog } from '@/shared/hooks/useCatalog'
+import { useCartActions } from '@/shared/contexts/CartContext'
 import { Box } from '@styled-system/jsx'
 import Heading from '@/components/ui/typography/heading'
 

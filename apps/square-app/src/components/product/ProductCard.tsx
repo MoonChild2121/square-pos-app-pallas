@@ -1,26 +1,15 @@
 'use client'
 
 import { memo, useMemo, useState } from 'react'
-import { Box, HStack } from '@styled-system/jsx'
+import { Box } from '@styled-system/jsx'
 import { productCard } from '@styled-system/recipes'
-import { ModifierData } from '@/types/modifiers'
-import SelectModifier from '@/components/common/SelectModifier'
-import { useCartActions, useCartState } from '@/contexts/CartContext'
+import SelectModifier from '@/components/select/SelectModifier'
+import { useCartActions, useCartState } from '@/shared/contexts/CartContext'
 import { Button } from '@/components/ui/button'
 import { Minus, Plus } from 'lucide-react'
-import { css } from '@styled-system/css'
-
-interface ProductCardProps {
-  id: string
-  name: string
-  price: {
-    amount: number;
-    currency: string;
-  }
-  imageUrl?: string
-  taxIds?: string[]
-  modifiers?: ModifierData[]
-}
+import Paragraph from '../ui/typography/paragraph'
+import Heading from '@/components/ui/typography/heading'
+import { Product } from '@/shared/types/product'
 
 const ProductCard = memo(function ProductCard({ 
   id,
@@ -29,8 +18,8 @@ const ProductCard = memo(function ProductCard({
   imageUrl,
   taxIds,
   modifiers = []
-}: ProductCardProps) {
-  const styles = useMemo(() => productCard(), [])
+}: Product) {
+  const styles = useMemo(() => productCard({ hasModifiers: modifiers.length > 0 }), [modifiers.length])
   const { addItem, updateQuantity } = useCartActions()
   const { items } = useCartState()
   
@@ -82,57 +71,57 @@ const ProductCard = memo(function ProductCard({
         <img
           src={imageUrl || '/placeholder-image.jpg'}
           alt={name}
-          style={{
-            width: '100%',
-            height: '100%',
-            objectFit: 'contain',
-          }}
         />
       </Box>
+      
       <Box className={styles.nameContainer}>  
-        <Box className={styles.name}>{name}</Box>
-        <Box className={styles.price}>${(price.amount / 100).toFixed(2)}</Box>
-        {modifiers && modifiers.length > 0 && (
-        <Box p="2">
-          <SelectModifier
-            modifiers={modifiers}
-            value={selectedModifierId}
-            onChange={setSelectedModifierId}
-          />
+        <Box className={styles.name}>
+          <Heading level={6}>{name}</Heading>
         </Box>
-      )}
-      <Box p="2">
-        {cartItem ? (
-        <HStack 
-          justify="space-between" 
-          align="center"
-          className={css({
-            borderRadius: 'full',
-            bg: 'fill.secondary',
-          })}
-        >
-          <Button
-            shape="circle"
-            onClick={handleDecrease}
-          >
-            <Minus size={15} />
-          </Button>
-          <Box>{cartItem.quantity}</Box>
-          <Button
-            shape="circle"
-            onClick={handleIncrease}
-          >
-            <Plus size={15} />
-          </Button>
-          
-        </HStack>
-
-        ) : (
-          <Button onClick={handleAddToCart} width="full">
-            Add to Cart
-          </Button>
+        
+        <Box className={styles.price}>
+          <Paragraph size="compact" textStyle="bold">
+            ${(price.amount / 100).toFixed(2)}
+          </Paragraph>
+        </Box>
+        
+        {modifiers && modifiers.length > 0 && (
+          <Box className={styles.modifierContainer}>
+            <SelectModifier
+              modifiers={modifiers}
+              value={selectedModifierId}
+              onChange={setSelectedModifierId} 
+            />
+          </Box>
         )}
-      </Box>
+        
+        <Box className={styles.controlsContainer}>
+          {cartItem ? (
+            <Box className={styles.quantityControls}>
+              <Button
+                shape="circle"
+                onClick={handleDecrease}
+              >
+                <Minus size={15} />
+              </Button>
+              
+              <Box className={styles.quantityDisplay}>
+                {cartItem.quantity}
+              </Box>
+              
+              <Button
+                shape="circle"
+                onClick={handleIncrease}
+              >
+                <Plus size={15} />
+              </Button>
+            </Box>
+          ) : (
+            <Button onClick={handleAddToCart} width="full">
+              Add to Cart
+            </Button>
+          )}
+        </Box>
       </Box>
     </Box>
   )

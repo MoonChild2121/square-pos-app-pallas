@@ -5,28 +5,14 @@ import { Box, HStack, VStack } from '@styled-system/jsx'
 import Paragraph from '@/components/ui/typography/paragraph'
 import Heading from '@/components/ui/typography/heading'
 import { Minus, Plus, Trash2 } from 'lucide-react'
-import { useCartActions } from '@/contexts/CartContext'
+import { useCartActions } from '@/shared/contexts/CartContext'
 import { cartItem } from '@styled-system/recipes'
 import ModifierModal from '@/components/modals/ItemModal'
-import { useCatalog } from '@/hooks/useCatalog'
+import { useCatalog } from '@/shared/hooks/useCatalog'
 import { css } from '@styled-system/css'
+import { CartItem } from '@/shared/types/cart/index'
 
-interface Props {
-  id: string
-  name: string
-  price: number
-  quantity: number
-  imageUrl?: string
-  taxIds?: string[]
-  discountIds?: string[]
-  selectedModifier?: {
-    id: string;
-    name: string;
-    price: number;
-  }
-}
-
-const CartItem = memo(function CartItem({
+const CartItems = memo(function CartItem({
   id,
   name,
   price,
@@ -35,10 +21,10 @@ const CartItem = memo(function CartItem({
   taxIds = [],
   discountIds = [],
   selectedModifier
-}: Props) {
+}: CartItem) {
   const { updateQuantity } = useCartActions()
   const { taxes, discounts } = useCatalog()
-  const { root, image, content, title, controls, button, deleteButton, contentWrapper, modifierInfo } = cartItem()
+  const { root, image, content, controls, button, deleteButton, contentWrapper, modifierInfo } = cartItem()
 
   const handleDecrease = useCallback(() => {
     if (quantity > 1) {
@@ -64,7 +50,7 @@ const CartItem = memo(function CartItem({
   const totalItemPrice = price * quantity
 
   return (
-    <Box pb="1">
+    <Box pb="padding.block.sm">
       <Box className={root}>
         {/* Delete Button */}
         <Box onClick={handleDelete} className={deleteButton}>
@@ -76,7 +62,6 @@ const CartItem = memo(function CartItem({
           <img
             src={imageUrl || '/placeholder-image.jpg'}
             alt={name}
-            style={{ width: '100%', height: '100%', objectFit: 'contain' }}
           />
         </Box>
 
@@ -138,4 +123,4 @@ const CartItem = memo(function CartItem({
   )
 })
 
-export default CartItem
+export default CartItems

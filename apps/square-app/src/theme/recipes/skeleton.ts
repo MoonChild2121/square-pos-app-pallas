@@ -13,21 +13,22 @@ export const skeleton = defineRecipe({
   variants: {
     variant: {
       orderDetails: {
-        p: '4',
+        p: 'padding.block.md',
         rounded: 'xl',
         boxShadow: 'md',
         bg: 'surface.layout',
         w: 'full',
-        minW: '320px',
-        maxW: '360px',
+        minW: '100%',
+        maxW: '100%',
         alignSelf: 'flex-start',
       },
       orderSummary: {
-        p: '4',
+        p: 'padding.block.md',
         rounded: 'xl',
         boxShadow: 'md',
         w: 'full',
         maxW: '100%',
+        maxH: '100%',
         overflowX: 'hidden',
       },
       orderItem: {

@@ -1,6 +1,6 @@
 'use client';
 
-import { CartProvider } from '@/contexts/CartContext'
+import { CartProvider } from '@/shared/contexts/CartContext'
 
 export default function ProtectedLayout({ children }: { children: React.ReactNode }) {
 

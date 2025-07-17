@@ -1,7 +1,7 @@
 'use client'
  
 import Select from '@/components/ui/select'
-import { ModifierData } from '@/types/modifiers'
+import { ModifierData } from '@/shared/types/modifiers'
 import { css } from '@styled-system/css'
 
 interface SelectModifierProps {

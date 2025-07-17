@@ -1,12 +1,8 @@
 import { Button } from '@/components/ui/button'
 import { ShoppingCart } from 'lucide-react'
 import { css } from '@styled-system/css'
-import { useCart } from '@/contexts/CartContext'
-
-interface CartToggleProps {
-  isOpen: boolean
-  onToggle: () => void
-}
+import { useCart } from '@/shared/contexts/CartContext'
+import { CartToggleProps } from '@/shared/types/cart'
 
 export function CartToggle({ isOpen, onToggle }: CartToggleProps) {
   const { state } = useCart()

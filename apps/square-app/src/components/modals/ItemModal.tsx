@@ -3,16 +3,11 @@
 import Modal from '@/components/ui/modal/modal'
 import { useState } from 'react'
 import { Edit } from 'lucide-react'
-import { TaxSelect, DiscountSelect } from '@/components/common/Select'
+import { TaxSelect, DiscountSelect } from '@/components/select/SelectTaxDiscount'
 import { VStack } from '@styled-system/jsx'
 import { cartItem } from '@styled-system/recipes'
 import { Box } from '@styled-system/jsx'
-
-interface ModifierModalProps {
-  itemId: string
-  selectedTaxIds?: string[]
-  selectedDiscountIds?: string[]
-}
+import { ModifierModalProps } from '@/shared/types/modals'
 
 export default function ModifierModal({ itemId, selectedTaxIds = [], selectedDiscountIds = [] }: ModifierModalProps) {
   const [open, setOpen] = useState(false)
@@ -30,7 +25,7 @@ export default function ModifierModal({ itemId, selectedTaxIds = [], selectedDis
             <Modal.Title>Add Modifiers</Modal.Title>
             <Modal.Description>Select applicable taxes and discounts.</Modal.Description>
           </Modal.Header>
-          <VStack gap="4" py="4">
+          <VStack gap="gap.inline.sm" py="padding.block.sm">
             <TaxSelect itemId={itemId} selectedTaxIds={selectedTaxIds} />
             <DiscountSelect itemId={itemId} selectedDiscountIds={selectedDiscountIds} />
           </VStack>

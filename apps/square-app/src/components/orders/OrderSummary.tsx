@@ -4,12 +4,8 @@ import { Box } from '@styled-system/jsx'
 import { css } from '@styled-system/css'
 import { OrderDetails } from '@/components/orders/OrderDetails'
 import Paragraph from '@/components/ui/typography/paragraph'
-import { useCart } from '@/contexts/CartContext'
-
-const stickySummaryCss = css({
-  position: 'sticky',
-  bottom: 0,
-})
+import { useCart } from '@/shared/contexts/CartContext'
+import { OrderSummaryProps } from '@/shared/types/orders'
 
 const emptyOrder = {
   totalMoney: { amount: 0 },
@@ -22,65 +18,32 @@ const emptyOrder = {
   }
 }
 
-interface Money {
-  amount: number;
-  currency?: string;
-}
-
-interface Tax {
-  uid: string;
-  name: string;
-  percentage: number;
-  appliedMoney: Money;
-}
-
-interface Discount {
-  uid: string;
-  name: string;
-  percentage: number;
-  appliedMoney: Money;
-}
-
-interface Order {
-  totalMoney: Money;
-  totalTaxMoney: Money;
-  totalDiscountMoney: Money;
-  netAmounts: {
-    totalMoney: Money;
-    taxMoney: Money;
-    discountMoney: Money;
-  };
-  taxes?: Tax[];
-  discounts?: Discount[];
-}
-
-interface OrderCalc {
-  order: Order;
-  loading: boolean;
-  error?: string;
-}
-
-interface OrderSummaryProps {
-  orderCalc: OrderCalc;
-}
-
 export default function OrderSummary({ orderCalc }: OrderSummaryProps) {
   const { state } = useCart()
   const { order, error } = orderCalc
-
+  
+  const stickySummaryCss = css({
+    position: 'sticky',
+    bottom: 0,
+    w: '100%', 
+    display: 'flex',
+    justifyContent: 'center',
+    alignItems: 'center',
+  })
+  
   if (state.items.length === 0) return null
 
   if (error) {
     return (
-      <Box className={`${stickySummaryCss} cartContainer__summary error`}>
+      <Box className={stickySummaryCss}>
         <Paragraph color="error">{error}</Paragraph>
       </Box>
     )
   }
 
   return (
-    <Box className={`${stickySummaryCss} cartContainer__summary`}>
-      <OrderDetails order={order || emptyOrder} />
+    <Box className={stickySummaryCss} >
+      <OrderDetails order={order || emptyOrder} fullWidth />
     </Box>
   )
 }

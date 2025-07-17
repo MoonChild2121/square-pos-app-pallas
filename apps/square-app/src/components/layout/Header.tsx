@@ -1,17 +1,17 @@
 'use client'
 
 import { Box, HStack } from '@styled-system/jsx'
-import Avatar from '@/components/ui/avatar'
 import { Button } from '@/components/ui/button'
 import { useSession, signOut } from 'next-auth/react'
 import { header } from '@styled-system/recipes'
 import { pill } from '@styled-system/recipes'
+import { LogOut } from 'lucide-react'
+import Heading from '@/components/ui/typography/heading'
 
 export function Header() {
   const { data: session } = useSession()
   const merchantName = session?.user?.name || 'Merchant'
-  const avatarUrl = (session?.user as any)?.image || ''
-  const { root, container, user, name, button } = header()
+  const { root, container} = header()
 
   const handleSignOut = () => {
     signOut({ callbackUrl: '/login' })
@@ -20,17 +20,11 @@ export function Header() {
   return (
     <Box className={root}>
       <HStack className={container}>
-        <HStack className={user}>
-          <Avatar.Root className={header().avatar}>
-            <Avatar.Image src={avatarUrl} />
-            <Avatar.Fallback>{merchantName?.slice(0, 2).toUpperCase()}</Avatar.Fallback>
-          </Avatar.Root>
-          <Box className={pill({ variant: 'layout' })}> 
-            {merchantName}
+          <Box className={pill({ variant: 'layout' })} > 
+            <Heading level={5}>{merchantName}</Heading>
             </Box>
-        </HStack>
-        <Button className={pill({ variant: 'primary' })} onClick={handleSignOut} >
-          Sign Out
+        <Button variant="primary" shape="circle" size="icon" onClick={handleSignOut} >
+            <LogOut />          
         </Button>
       </HStack>
     </Box>

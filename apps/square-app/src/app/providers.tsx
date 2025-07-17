@@ -3,14 +3,15 @@
 import { SessionProvider } from 'next-auth/react';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { useState } from 'react';
-import { CartProvider } from '@/contexts/CartContext';
+import { CartProvider } from '@/shared/contexts/CartContext';
+import { STALE_TIME, GC_TIME } from '@/shared/constants'
 
 export function Providers({ children }: { children: React.ReactNode }) {
   const [queryClient] = useState(() => new QueryClient({
     defaultOptions: {
       queries: {
-        staleTime: 1000 * 60 * 5, // 5 minutes
-        gcTime: 1000 * 60 * 60 * 24, // 24 hours
+        staleTime: STALE_TIME, // 5 minutes
+        gcTime: GC_TIME, // 24 hours
         refetchOnWindowFocus: false,
         refetchOnMount: false,
       },

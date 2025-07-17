@@ -3,15 +3,9 @@
 import { Box, VStack } from '@styled-system/jsx'
 import  Modal from '@/components/ui/modal/modal'
 import { Button } from '@/components/ui/button'
-import { TaxSelect, DiscountSelect } from '@/components/common/Select'
+import { TaxSelect, DiscountSelect } from '@/components/select/SelectTaxDiscount'
 import { Settings } from 'lucide-react'
-
-interface OrderModifierModalProps {
-  selectedTaxIds: string[]
-  selectedDiscountIds: string[]
-  onUpdateTaxes: (taxIds: string[]) => void
-  onUpdateDiscounts: (discountIds: string[]) => void
-}
+import { OrderModifierModalProps } from '@/shared/types/modals'
 
 export default function OrderModifierModal({
   selectedTaxIds,
@@ -24,7 +18,7 @@ export default function OrderModifierModal({
       <Modal.Trigger asChild>
         <Button variant="outlined" width="full">
           <Settings size={20} />
-          <Box ml="2">Order Modifiers</Box>
+          <Box ml="padding.inline.sm">Order Modifiers</Box>
         </Button>
       </Modal.Trigger>
       <Modal.Content>
@@ -34,7 +28,7 @@ export default function OrderModifierModal({
             Apply taxes and discounts to the entire order
           </Modal.Description>
         </Modal.Header>
-        <VStack gap="4" py="4">
+        <VStack gap="gap.inline.sm" py="padding.block.sm">
           <TaxSelect
             itemId="order"
             selectedTaxIds={selectedTaxIds}

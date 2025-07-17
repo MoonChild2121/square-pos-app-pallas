@@ -4,11 +4,11 @@ import { defineSlotRecipe } from '@pandacss/dev'
 export const header = defineSlotRecipe({
   className: 'header',
   description: 'App header with user info and sign out button',
-  slots: ['root', 'container', 'user', 'avatar', 'name', 'button'],
+  slots: ['root', 'container', 'user'],
   base: {
     root: {
-      px: { base: '4', md: '6' },
-      py: { base: '3', md: '4' },
+      px: { base: 'padding.block.sm', md: 'padding.block.lg' },
+      py: { base: 'padding.inline.sm', md: 'padding.inline.lg' },
       borderRadius: 'lg',
       bg: 'surface.container',
     },
@@ -17,17 +17,8 @@ export const header = defineSlotRecipe({
       alignItems: 'center',
       justifyContent: 'space-between',
       w: '100%',
-      flexDirection: { base: 'column', sm: 'row' }, // Stack on mobile
-      gap: { base: '3', sm: '0' }, // Add spacing when stacked
-    },
-    user: {
-      display: 'flex',
-      alignItems: 'center',
-      gap: { base: '2', md: '4' },
-      mb: { base: '2', sm: '0' },
-    },
-    avatar: {
-      size: {base: 'md', md: 'lg'},
+      flexDirection: { base: 'column', sm: 'row' }, 
+      gap: { base: 'gap.inline.lg', sm: '0' }, 
     },
   },
 })

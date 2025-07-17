@@ -8,6 +8,7 @@ import debounce from 'lodash/debounce'
 import { searchBox } from '@styled-system/recipes'
 import { Button } from '@/components/ui/button'
 import { css } from '@styled-system/css'
+import { DEBOUNCE_MS } from '@/shared/constants'
 
 interface SearchBarProps {
   onSearch: (searchTerm: string) => void;
@@ -19,7 +20,7 @@ export default function SearchBar({ onSearch }: SearchBarProps) {
   const debouncedSearch = useCallback(
     debounce((term: string) => {
       onSearch(term)
-    }, 300),
+    }, DEBOUNCE_MS),
     [onSearch]
   )
 

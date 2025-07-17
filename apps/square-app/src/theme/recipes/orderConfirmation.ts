@@ -1,54 +1,61 @@
 import { defineSlotRecipe } from '@pandacss/dev'
 
 export const orderConfirmation = defineSlotRecipe({
-  className: 'orderConfirmation',
-  description: 'Order confirmation page layout with header, items list, and summary',
-  slots: ['root', 'header', 'content', 'itemsSection', 'summarySection', 'successMessage'],
+  className: 'containerLayout',
+  description: 'Slot-based layout structure for page containers, cards, alerts, and content areas',
+  slots: [
+    'pageContainer',
+    'cardContainer',
+    'contentGrid',
+    'successAlert',
+    'itemsSection',
+    'emptyState',
+  ],
   base: {
-    root: {
+    pageContainer: {
       minH: '100vh',
       bg: 'surface.container.lowest',
-      p: { base: '4', md: '6', lg: '8' },
+      p: { base: 'padding.block.md', md: 'padding.block.lg', lg: 'padding.block.xl' },
     },
-    header: {
-      textAlign: 'center',
-      mb: { base: '6', md: '8' },
+    cardContainer: {
+      bg: 'surface.container',
+      borderRadius: 'xl',
+      p: { base: 'padding.block.md', md: 'padding.block.lg' },
+      boxShadow: 'md',
     },
-    content: {
+    contentGrid: {
       maxW: '1200px',
       mx: 'auto',
       display: 'grid',
       gridTemplateColumns: { base: '1fr', lg: '2fr 1fr' },
-      gap: { base: '6', lg: '8' },
+      gap: { base: 'gap.inline.md', lg: 'gap.inline.lg' },
       alignItems: 'start',
+    },
+    successAlert: {
+      display: 'flex',
+      alignItems: 'center',
+      justifyContent: 'center',
+      gap: 'gap.inline.sm',
+      p: 'padding.block.md',
+      color: 'success.text',
+      bg: 'success.bg',
+      borderRadius: 'lg',
+      border: '1px solid',
+      borderColor: 'success.border',
+      mb: 'padding.block.lg',
     },
     itemsSection: {
       bg: 'surface.container',
       borderRadius: 'xl',
-      p: { base: '4', md: '6' },
+      p: { base: 'padding.block.md', md: 'padding.block.lg' },
       boxShadow: 'md',
+      maxH: 'calc(100vh - 300px)',
+      overflowY: 'auto',
     },
-    summarySection: {
-      bg: 'surface.container',
-      borderRadius: 'xl',
-      p: { base: '4', md: '6' },
-      boxShadow: 'md',
-      position: { lg: 'sticky' },
-      top: { lg: '6' },
-      maxH: { lg: 'calc(100vh - 12rem)' },
-      overflowY: { lg: 'auto' },
-    },
-    successMessage: {
-      display: 'flex',
+    emptyState: {
       alignItems: 'center',
       justifyContent: 'center',
-      gap: '3',
-      p: '4',
-      bg: 'success.50',
-      borderRadius: 'lg',
-      border: '1px solid',
-      borderColor: 'success.200',
-      mb: '6',
+      minH: '300px',
     },
   },
-}) 
+})

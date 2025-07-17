@@ -3,21 +3,9 @@
 import { memo, useCallback } from 'react'
 import { Box, HStack } from '@styled-system/jsx'
 import { css } from '@styled-system/css'
-import Heading from '@/components/ui/typography/heading'
 import MenuBox from './MenuBox'
-
-interface MenuItem {
-  id: string
-  label: string
-  count: number
-  icon?: React.ReactNode
-}
-
-interface MenuBoxGridProps {
-  items: MenuItem[]
-  selectedCategory: string
-  onCategorySelect: (categoryId: string) => void
-}
+import type { MenuItem } from '@/shared/types/menu'
+import { MenuBoxGridProps } from '@/shared/types/menu'
 
 // Memoized individual menu item component
 const MenuItem = memo(function MenuItem({
@@ -55,7 +43,7 @@ const MenuBoxGrid = memo(function MenuBoxGrid({
       {/* Scrollable horizontal list */}
       <Box
         className={css({
-          p: '4',
+          p: 'padding.block.sm',
           overflowX: 'auto',
           whiteSpace: 'nowrap',
           scrollbarWidth: 'none',
@@ -64,7 +52,7 @@ const MenuBoxGrid = memo(function MenuBoxGrid({
           },
         })}
       >
-        <HStack gap="4" w="max-content">
+        <HStack gap="gap.inline.sm" w="max-content">
           {items.map((item) => (
             <MenuItem
               key={item.id}

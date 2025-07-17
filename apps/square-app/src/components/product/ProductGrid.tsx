@@ -3,25 +3,9 @@
 import { memo, useCallback } from 'react'
 import { Grid } from '@styled-system/jsx'
 import { css } from '@styled-system/css'
-import { useCartActions } from '@/contexts/CartContext'
+import { useCartActions } from '@/shared/contexts/CartContext'
 import ProductCard from '@/components/product/ProductCard'
-import { ModifierData } from '@/types/modifiers'
-
-interface Product {
-  id: string
-  name: string
-  price: {
-    amount: number;
-    currency: string;
-  }
-  imageUrl?: string
-  taxIds?: string[]
-  modifiers?: ModifierData[]
-}
-
-interface ProductGridProps {
-  products: Product[]
-}
+import { Product, ProductGridProps } from '@/shared/types/product'
 
 const ProductGrid = memo(function ProductGrid({ products }: ProductGridProps) {
   const { addItem } = useCartActions()
@@ -46,8 +30,8 @@ const ProductGrid = memo(function ProductGrid({ products }: ProductGridProps) {
     <Grid
       className={css({
         gridTemplateColumns: 'repeat(auto-fill, minmax(160px, 1fr))',
-        gap: '4',
-        p: '4',
+        gap: 'gap.inline.sm',
+        p: 'padding.block.sm',
         w: '100%',
         overflowY: 'auto',
         scrollbarGutter: 'stable',

@@ -1,12 +1,13 @@
 import { Suspense } from 'react' 
 import { MenuDashboard } from '@/containers/menu/MenuDashboard'
-import { fetchCatalog } from '@/hooks/useCatalog'
+import { fetchCatalog } from '@/shared/hooks/useCatalog'
 import { getServerSession } from 'next-auth'
 import { authOptions } from '@/app/api/auth/[...nextauth]/route'
 import { redirect } from 'next/navigation'
+import { REVALIDATE_INTERVAL } from '@/shared/constants'
 
 // Configure route segment
-export const revalidate = 300 // revalidate every 5 minutes
+export const revalidate = REVALIDATE_INTERVAL // revalidate every 5 minutes
 
 async function getInitialData() {
   const session = await getServerSession(authOptions)
