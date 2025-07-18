@@ -7,7 +7,7 @@ import { authOptions } from '../../../auth/[...nextauth]/route'
 import { headers } from 'next/headers'
 
 export async function POST(req: NextRequest): Promise<NextResponse> {
-  const { keywords } = await req.json()
+  const { keywords, categoryId } = await req.json()
 
   // Try to get token from session first
   const session = await getServerSession(authOptions)
@@ -32,13 +32,21 @@ export async function POST(req: NextRequest): Promise<NextResponse> {
   });
 
   try {
+    const query: any = {
+      textQuery: {
+        keywords,
+      },
+    };
+
+    if (categoryId) {
+      query.itemQuery = {
+        category_ids: [categoryId],
+      };
+    }
+
     const response = await client.catalog.search({
       objectTypes: ['ITEM_VARIATION', 'IMAGE'],
-      query: {
-        textQuery: {
-          keywords,
-        },
-      },
+      query,
       includeRelatedObjects: true,
     });
 

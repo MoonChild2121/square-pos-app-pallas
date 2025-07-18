@@ -4,7 +4,7 @@ import { useEffect, useCallback } from 'react'
 import { useCart } from '@/shared/contexts/CartContext'
 import { useCatalog } from '@/shared/hooks/useCatalog'
 import { useRouter } from 'next/navigation'
-import { OrderConfirmationView } from '@/components/checkout/OrderConfirmationView'
+import { OrderConfirmationView } from '@/components/composites/checkout/OrderConfirmationView'
 
 export function OrderConfirmationContainer() {
   const { state, clearCart } = useCart()

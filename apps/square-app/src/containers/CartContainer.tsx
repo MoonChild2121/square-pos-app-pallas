@@ -4,7 +4,7 @@ import { useEffect, memo } from 'react'
 import { useCartState, useCartActions } from '@/shared/contexts/CartContext'
 import { useOrderCalculation } from '@/shared/hooks/useOrderCalculation'
 import { useRouter } from 'next/navigation'
-import { CartView } from '@/components/cart/CartView'
+import { CartView } from '@/components/composites/cart/CartView'
 import { DEBOUNCE_MS } from '@/shared/constants'
 import { CartContainerProps } from '@/shared/types/cart/index'
 

@@ -1,7 +1,7 @@
 'use client'
 
 import { useState, useMemo, useCallback, useEffect, memo } from 'react'
-import { MenuLayout } from '@/components/menu/MenuLayout'
+import { MenuLayout } from '@/components/composites/menu/MenuLayout'
 import { Utensils } from 'lucide-react'
 import { useCatalog } from '@/shared/hooks/useCatalog'
 import { useSearchCatalog } from '@/shared/hooks/useSearchCatalog'
@@ -16,7 +16,7 @@ const MemoizedMenuLayout = memo(MenuLayout)
 export function MenuDashboard({ initialData }: MenuDashboardProps) {
   const [selectedItem, setSelectedItem] = useState<string>('all')
   const [searchTerm, setSearchTerm] = useState('')
-  const { products: searchedProducts, isLoading: isSearchLoading } = useSearchCatalog(searchTerm)
+  const { products: searchedProducts, isLoading: isSearchLoading } = useSearchCatalog(searchTerm, selectedItem === 'all' ? undefined : selectedItem)
 
   // Memoize the searchedProducts and isSearchLoading to avoid unnecessary re-renders
   const memoizedSearch = useMemo(() => ({

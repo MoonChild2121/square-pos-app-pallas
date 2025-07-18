@@ -2,7 +2,7 @@
 
 import { useState } from 'react'
 import { signIn } from 'next-auth/react'
-import { LoginForm } from '@/components/auth/LoginForm'
+import { LoginForm } from '@/components/composites/auth/LoginForm'
 import { Flex } from '@styled-system/jsx'
 
 export function LoginFormContainer() {

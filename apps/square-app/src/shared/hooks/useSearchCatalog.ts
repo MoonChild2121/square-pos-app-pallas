@@ -14,7 +14,7 @@ const getBaseUrl = () => {
   return ''
 }
 
-const fetchSearch = async (searchTerm: string): Promise<SearchCatalogResponse> => {
+const fetchSearch = async (searchTerm: string, categoryId?: string): Promise<SearchCatalogResponse> => {
   const baseUrl = getBaseUrl()
   const url = `${baseUrl}/api/square/catalog/search`
 
@@ -23,7 +23,7 @@ const fetchSearch = async (searchTerm: string): Promise<SearchCatalogResponse> =
     headers: {
       'Content-Type': 'application/json',
     },
-    body: JSON.stringify({ keywords: [searchTerm] }),
+    body: JSON.stringify({ keywords: [searchTerm], categoryId }),
   })
 
   const responseText = await response.text()
@@ -56,10 +56,10 @@ function createModifierMap(modifiers: Modifier[] = []): Record<string, ModifierD
   }, {} as Record<string, ModifierData[]>)
 }
 
-export function useSearchCatalog(searchTerm: string) {
+export function useSearchCatalog(searchTerm: string, categoryId?: string) {
   const { data, isLoading, error } = useQuery({
-    queryKey: ['search', searchTerm],
-    queryFn: () => fetchSearch(searchTerm),
+    queryKey: ['search', searchTerm, categoryId],
+    queryFn: () => fetchSearch(searchTerm, categoryId),
     staleTime: STALE_TIME,
     gcTime: GC_TIME,
     enabled: searchTerm.length >= 2,
