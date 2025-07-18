@@ -32,6 +32,10 @@ export interface OrderItemCardProps {
     totalTaxMoney: { amount: number };
     totalDiscountMoney: { amount: number };
     totalMoney: { amount: number };
+    modifiers?: {
+      name: string;
+      basePriceMoney: { amount: number };
+  }[];
   };
   imageUrl?: string;
 }

@@ -63,6 +63,8 @@ export interface Product {
   imageUrl?: string;
   taxIds?: string[];
   modifiers?: ModifierData[];
+  categoryId?: string;
+  categoryName?: string;
 }
 
 

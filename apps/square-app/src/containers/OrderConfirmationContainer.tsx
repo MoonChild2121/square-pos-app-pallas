@@ -8,8 +8,13 @@ import { OrderConfirmationView } from '@/components/composites/checkout/OrderCon
 
 export function OrderConfirmationContainer() {
   const { state, clearCart } = useCart()
-  const { getVariantImageUrl, isLoading: catalogLoading } = useCatalog()
+  const { products, isLoading: catalogLoading } = useCatalog()
   const router = useRouter()
+
+  const getVariantImageUrl = useCallback((variantId: string): string | undefined => {
+    const product = products.find(p => p.id === variantId);
+    return product?.imageUrl;
+  }, [products]);
 
   const handleContinueShopping = useCallback(() => {
     router.push('/menu?clear=true')

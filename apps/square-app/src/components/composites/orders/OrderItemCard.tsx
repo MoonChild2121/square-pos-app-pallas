@@ -38,6 +38,12 @@ export const OrderItemCard = ({ item, imageUrl }: OrderItemCardProps) => {
           </Paragraph>
         </HStack>
 
+        {item.modifiers?.map(modifier => (
+          <Paragraph size="compact" key={modifier.name}>
+            {modifier.name}: {formatMoney(modifier.basePriceMoney.amount)}
+          </Paragraph>
+        ))}
+
         {item.totalTaxMoney.amount > 0 && (
           <Paragraph size="compact" >
             Tax: {formatMoney(item.totalTaxMoney.amount)}

@@ -41,8 +41,8 @@ export function TaxSelect({ itemId, selectedTaxIds = [], isOrderLevel = false }:
           <Select.Group>
             <Select.Item value="none">None</Select.Item>
             {taxes.map((tax) => (
-              <Select.Item key={tax.id} value={tax.id}>
-                {tax.taxData.name} ({tax.taxData.percentage}%)
+              <Select.Item key={tax.uid} value={tax.uid}>
+                {tax.name} ({tax.percentage}%)
               </Select.Item>
             ))}
           </Select.Group>
@@ -75,9 +75,9 @@ export function DiscountSelect({ itemId, selectedDiscountIds = [], isOrderLevel 
           <Select.Group>
             <Select.Item value="none">None</Select.Item>
             {discounts.map((discount) => (
-              <Select.Item key={discount.id} value={discount.id}>
-                {discount.discountData.name} 
-                {discount.discountData.percentage ? ` (${discount.discountData.percentage}%)` : ''}
+              <Select.Item key={discount.uid} value={discount.uid}>
+                {discount.name}
+                {discount.percentage ? ` (${discount.percentage}%)` : ''}
               </Select.Item>
             ))}
           </Select.Group>

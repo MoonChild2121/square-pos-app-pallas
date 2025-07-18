@@ -1,5 +1,6 @@
 import type { ReactNode } from 'react';
-import { Product } from '@/shared/types/base'
+import { Product } from '@/shared/types/base';
+import { CatalogData } from '@/shared/services/catalog/interface';
 
 export interface MenuBoxProps {
   label: string;
@@ -32,14 +33,6 @@ export interface MenuLayoutProps {
   products: Product[];
 }
 
-interface MenuInitialData {
-  catalog: any[]
-  taxes: any[]
-  discounts: any[]
-  images: Record<string, string>
-  modifiers: any[]
-}
-
 export interface MenuDashboardProps {
-  initialData: MenuInitialData
+  initialData: CatalogData
 }

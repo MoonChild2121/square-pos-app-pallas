@@ -1,7 +1,7 @@
 import { Suspense } from 'react' 
 import { MenuDashboard } from '@/containers/menu/MenuDashboard'
-import { fetchCatalog } from '@/shared/hooks/useCatalog'
 import { getServerSession } from 'next-auth'
+import { getCatalogService } from '@/shared/services/service-factory'
 import { authOptions } from '@/app/api/auth/[...nextauth]/route'
 import { redirect } from 'next/navigation'
 import { REVALIDATE_INTERVAL } from '@/shared/constants'
@@ -16,15 +16,12 @@ async function getInitialData() {
     redirect('/api/auth/signin')
   }
 
-  const data = await fetchCatalog(session.accessToken)
+  const catalogService = getCatalogService()
+  const data = await catalogService.getCatalog(session.accessToken)
 
-  return {
-    catalog: data.items,
-    taxes: data.taxes,
-    discounts: data.discounts,
-    images: data.images,
-    modifiers: data.modifiers
-  }
+  // The service returns the data in the clean `CatalogData` format,
+  // which is exactly what the MenuDashboard now expects for its initialData prop.
+  return data;
 }
 
 export default async function MenuPage() {

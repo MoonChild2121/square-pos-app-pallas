@@ -43,8 +43,8 @@ const CartItems = memo(function CartItem({
   }, [id, updateQuantity])
 
   // Get selected tax and discount details
-  const selectedTax = taxes.find(tax => tax.id === taxIds[0])
-  const selectedDiscount = discounts.find(discount => discount.id === discountIds[0])
+  const selectedTax = taxes.find(tax => tax.uid === taxIds[0])
+  const selectedDiscount = discounts.find(discount => discount.uid === discountIds[0])
 
   // Calculate total item price including modifier
   const totalItemPrice = price * quantity
@@ -90,12 +90,12 @@ const CartItems = memo(function CartItem({
             {(selectedTax || selectedDiscount) && (
               <Box className={modifierInfo}>
                 {selectedTax && (
-                  <Paragraph size="sm">Tax: {selectedTax.taxData.name} ({selectedTax.taxData.percentage}%)</Paragraph>
+                  <Paragraph size="sm">Tax: {selectedTax.name} ({selectedTax.percentage}%)</Paragraph>
                 )}
                 {selectedDiscount && (
                   <Paragraph size="sm">
-                    Discount: {selectedDiscount.discountData.name}
-                    {selectedDiscount.discountData.percentage ? ` (${selectedDiscount.discountData.percentage}%)` : ''}
+                    Discount: {selectedDiscount.name}
+                    {selectedDiscount.percentage ? ` (${selectedDiscount.percentage}%)` : ''}
                   </Paragraph>
                 )}
               </Box>

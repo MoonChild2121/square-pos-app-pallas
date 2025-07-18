@@ -9,7 +9,7 @@ import { CheckCircle } from 'lucide-react'
 import { Button } from '@/components/primitives/ui/button'
 import { css } from '@styled-system/css'
 import { orderConfirmation } from '@styled-system/recipes'
-import { OrderConfirmationViewProps } from '@/shared/types/checkout'
+import { OrderConfirmationViewProps } from '@/components/composites/checkout/types'
 
 export function OrderConfirmationView({
   state,
