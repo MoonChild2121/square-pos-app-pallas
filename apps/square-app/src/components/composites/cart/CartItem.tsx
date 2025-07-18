@@ -11,6 +11,7 @@ import ModifierModal from '@/components/composites/modals/ItemModal'
 import { useCatalog } from '@/shared/hooks/useCatalog'
 import { css } from '@styled-system/css'
 import { CartItem } from '@/shared/types/cart/index'
+import { formatMoney } from '@/shared/utils/helpers'
 
 const CartItems = memo(function CartItem({
   id,
@@ -78,10 +79,10 @@ const CartItems = memo(function CartItem({
               )}
             </Heading>
             <Paragraph size="sm" textStyle="bold">
-              ${totalItemPrice.toFixed(2)}
+              {formatMoney(totalItemPrice)}
               {selectedModifier && selectedModifier.price > 0 && (
                 <span className={css({ color: 'text.secondary', fontSize: 'xs' })}>
-                  {' '}(+${selectedModifier.price.toFixed(2)} each)
+                  {' '}(+{formatMoney(selectedModifier.price)} each)
                 </span>
               )}
             </Paragraph>

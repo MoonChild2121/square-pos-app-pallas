@@ -103,7 +103,7 @@ export class SquareCatalogService implements ICatalogService {
 
     return item.itemData.variations.map(variation => {
       const price: Money = {
-        amount: Number(variation.itemVariationData.priceMoney.amount) / 100,
+        amount: Number(variation.itemVariationData.priceMoney.amount),
         currency: variation.itemVariationData.priceMoney.currency,
       };
 
@@ -184,7 +184,7 @@ export class SquareCatalogService implements ICatalogService {
           '/placeholder-image.jpg';
 
         const price: Money = {
-            amount: Number(item.itemVariationData.priceMoney.amount) / 100,
+            amount: Number(item.itemVariationData.priceMoney.amount),
             currency: item.itemVariationData.priceMoney.currency,
         };
 

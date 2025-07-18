@@ -10,6 +10,7 @@ import { Minus, Plus } from 'lucide-react'
 import Paragraph from '@/components/primitives/ui/typography/paragraph'
 import Heading from '@/components/primitives/ui/typography/heading'
 import { Product } from '@/shared/types/base'
+import { formatMoney } from '@/shared/utils/helpers'
 
 const ProductCard = memo(function ProductCard({ 
   id,
@@ -41,14 +42,14 @@ const ProductCard = memo(function ProductCard({
     addItem({
       id,
       name,
-      price: totalPrice.amount / 100,
+      price: totalPrice.amount,
       quantity: 1,
       imageUrl,
       taxIds,
       selectedModifier: modifier ? {
         id: modifier.id,
         name: modifier.name,
-        price: modifier.priceMoney.amount / 100
+        price: modifier.priceMoney.amount
       } : undefined
     })
   }
@@ -81,7 +82,7 @@ const ProductCard = memo(function ProductCard({
         
         <Box className={styles.price}>
           <Paragraph size="compact" textStyle="bold">
-            ${(price.amount / 100).toFixed(2)}
+            {formatMoney(price.amount)}
           </Paragraph>
         </Box>
         

@@ -80,13 +80,13 @@ export function MenuDashboard({ initialData }: MenuDashboardProps) {
 
   // The products to display are either the search results or the filtered catalog
   const products = useMemo(() => {
-    if (searchTerm) {
-      return searchedProducts;
-    }
+    const productsToFilter = searchTerm ? searchedProducts : allProducts;
+
     if (selectedItem === 'all') {
-      return allProducts;
+      return productsToFilter;
     }
-    return allProducts.filter(p => p.categoryId === selectedItem);
+
+    return productsToFilter.filter(p => p.categoryId === selectedItem);
   }, [searchTerm, selectedItem, allProducts, searchedProducts]);
 
 
