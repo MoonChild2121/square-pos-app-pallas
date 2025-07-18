@@ -5,6 +5,7 @@ import { STALE_TIME, GC_TIME } from '@/shared/constants'
 import JSONBig from 'json-bigint'
 import { useMemo } from 'react'
 import { ModifierData } from '../types/modifiers'
+import { useCatalog } from './useCatalog'
 
 const getBaseUrl = () => {
   if (typeof window === 'undefined') {
@@ -63,11 +64,14 @@ export function useSearchCatalog(searchTerm: string) {
     gcTime: GC_TIME,
     enabled: searchTerm.length >= 2,
   })
+  const { getItemModifiers: getCatalogModifiers } = useCatalog()
 
   const products = useMemo(() => {
     if (!data || !data.objects) {
       return []
     }
+
+    console.log('Search data:', data)
 
     const relatedObjects = data.relatedObjects || []
 
@@ -77,17 +81,6 @@ export function useSearchCatalog(searchTerm: string) {
       }
       return acc
     }, {} as Record<string, string>)
-
-    const modifierMap = createModifierMap(
-      relatedObjects.filter(obj => obj.type === 'MODIFIER') as Modifier[],
-    )
-
-    const getItemModifiers = (item: CatalogItem): ModifierData[] => {
-      if (!item.itemData?.modifierListInfo) return []
-      return item.itemData.modifierListInfo.flatMap(info => {
-        return modifierMap[info.modifierListId] || []
-      })
-    }
 
     return data.objects
       .map((item): Product | null => {
@@ -107,17 +100,20 @@ export function useSearchCatalog(searchTerm: string) {
           imageMap[itemImageId || ''] ||
           '/placeholder-image.jpg'
 
+        const modifiers = getCatalogModifiers(relatedItem)
+        console.log('Modifiers for item', relatedItem.itemData.name, modifiers)
+
         return {
           id: item.id,
           name: item.itemVariationData.name || '',
           price: item.itemVariationData.priceMoney,
           imageUrl,
           taxIds: relatedItem.itemData.taxIds || [],
-          modifiers: getItemModifiers(relatedItem),
+          modifiers,
         }
       })
       .filter((p): p is Product => p !== null)
-  }, [data])
+  }, [data, getCatalogModifiers])
 
   // Memoize the return value to prevent unnecessary re-renders
   return useMemo(() => ({

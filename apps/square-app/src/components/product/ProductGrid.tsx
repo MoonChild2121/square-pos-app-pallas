@@ -6,12 +6,13 @@ import { css } from '@styled-system/css'
 import { useCartActions } from '@/shared/contexts/CartContext'
 import ProductCard from '@/components/product/ProductCard'
 import { Product, ProductGridProps } from '@/shared/types/product'
+import Heading from '@/components/ui/typography/heading'
 
 const ProductGrid = memo(function ProductGrid({ products, loading }: ProductGridProps) {
   const { addItem } = useCartActions()
 
   if (loading) {
-    return <div>Loading...</div>
+    return <Heading level={5} color="disabled">Searching...</Heading>
   }
 
   const handleAddToCart = useCallback((product: Product) => {
