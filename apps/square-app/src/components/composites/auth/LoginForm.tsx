@@ -5,7 +5,7 @@ import Heading from '@/components/primitives/ui/typography/heading'
 import Paragraph from '@/components/primitives/ui/typography/paragraph'
 import { Box, VStack } from '@styled-system/jsx'
 import { css } from '@styled-system/css'
-import { LoginFormProps } from '@/shared/types/login'
+import { LoginFormProps } from '@/components/composites/auth/types'
 
 export function LoginForm({ isLoading, onSignIn }: LoginFormProps) {
   return (

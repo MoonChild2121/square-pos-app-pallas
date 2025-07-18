@@ -31,22 +31,24 @@ const cartReducer = (state: CartState, action: CartAction): CartState => {
       const itemId = generateCartItemId(action.payload.id, action.payload.selectedModifier);
       
       // Find existing item with same product and modifier combination
-      const existingItemIndex = state.items.findIndex(item => 
-        generateCartItemId(item.id, item.selectedModifier) === itemId
-      );
+      const existingItemIndex = state.items.findIndex(item => item.id === itemId);
 
       if (existingItemIndex !== -1) {
-        // If item exists with same modifier, increase quantity
+        // If item exists, update its quantity and other details
         const updatedItems = [...state.items];
-        updatedItems[existingItemIndex] = {
-          ...updatedItems[existingItemIndex],
-          quantity: updatedItems[existingItemIndex].quantity + action.payload.quantity
-        };
-        
+        if (updatedItems[existingItemIndex]) {
+          updatedItems[existingItemIndex] = {
+            ...updatedItems[existingItemIndex],
+            quantity: updatedItems[existingItemIndex].quantity + action.payload.quantity,
+            id: itemId,
+            name: updatedItems[existingItemIndex].name ?? '',
+            price: updatedItems[existingItemIndex].price ?? 0, // If price is required
+          };
+        }
         newState = {
           ...state,
-          items: updatedItems
-        }
+          items: updatedItems,
+        };
       } else {
         // Add new item with composite ID
         newState = {

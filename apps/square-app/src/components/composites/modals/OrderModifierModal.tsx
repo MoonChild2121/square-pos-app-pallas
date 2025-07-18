@@ -5,7 +5,7 @@ import  Modal from '@/components/primitives/ui/modal/modal'
 import { Button } from '@/components/primitives/ui/button'
 import { TaxSelect, DiscountSelect } from '@/components/composites/select/SelectTaxDiscount'
 import { Settings } from 'lucide-react'
-import { OrderModifierModalProps } from '@/shared/types/modals'
+import { OrderModifierModalProps } from '@/components/composites/modals/types'
 
 export default function OrderModifierModal({
   selectedTaxIds,

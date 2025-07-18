@@ -55,8 +55,3 @@ export interface CartViewProps extends CartContainerProps {
   onUpdateTaxes: (ids: string[]) => void;
   onUpdateDiscounts: (ids: string[]) => void;
 }
-
-export interface CartContainerProps {
-  isOpen: boolean
-  onClose: () => void
-}

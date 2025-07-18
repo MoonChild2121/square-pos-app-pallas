@@ -1,6 +1,6 @@
 import { useQuery } from '@tanstack/react-query';
 import { Modifier, CatalogItem, CatalogResponse } from '@/shared/types/catalog'
-import type { ModifierData } from '@/shared/types/modifiers'
+import type { ModifierData } from '@/shared/types/base'
 import { REVALIDATE_INTERVAL, STALE_TIME, GC_TIME } from '@/shared/constants'
 
 // modeling structure of square catalog api response

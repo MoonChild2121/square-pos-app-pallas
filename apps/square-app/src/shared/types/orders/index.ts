@@ -1,4 +1,5 @@
 import type { CartItem } from '../cart'
+import {Money, Tax, Discount} from '@/shared/types/base'
 
 export interface OrderDetailsProps {
   order: {
@@ -33,25 +34,6 @@ export interface OrderItemCardProps {
     totalMoney: { amount: number };
   };
   imageUrl?: string;
-}
-
-export interface Money {
-  amount: number;
-  currency?: string;
-}
-
-export interface Tax {
-  uid: string;
-  name: string;
-  percentage: number;
-  appliedMoney: Money;
-}
-
-export interface Discount {
-  uid: string;
-  name: string;
-  percentage: number;
-  appliedMoney: Money;
 }
 
 export interface Order {

@@ -1,10 +1,10 @@
 import { useQuery } from '@tanstack/react-query'
-import { Product } from '@/shared/types/product'
+import { Product } from '@/shared/types/base'
 import { CatalogItem, Modifier, SearchCatalogResponse } from '@/shared/types/catalog'
 import { STALE_TIME, GC_TIME } from '@/shared/constants'
 import JSONBig from 'json-bigint'
 import { useMemo } from 'react'
-import { ModifierData } from '../types/modifiers'
+import { ModifierData } from '@/shared/types/base'
 import { useCatalog } from './useCatalog'
 
 const getBaseUrl = () => {

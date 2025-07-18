@@ -1,16 +1,4 @@
-import { ModifierData } from '@/shared/types/modifiers'
-
-export interface ItemVariation {
-  id: string;
-  itemVariationData: {
-    name: string;
-    priceMoney: {
-      amount: number;
-      currency: string;
-    };
-    imageIds?: string[];
-  };
-}
+import { ItemVariation, ModifierData, TaxItem, DiscountItem } from '@/shared/types/base'
 
 export interface Modifier {
   id: string;
@@ -52,35 +40,6 @@ export interface CatalogItem {
   modifierData?: ModifierData
   taxData?: any
   discountData?: any
-}
-
-export interface TaxItem {
-  id: string;
-  type: string;
-  taxData: {
-    name: string;
-    calculationPhase: string;
-    inclusionType: string;
-    percentage: string;
-    appliesToCustomAmounts: boolean;
-    enabled: boolean;
-  };
-}
-
-export interface DiscountItem {
-  id: string;
-  type: string;
-  discountData: {
-    name: string;
-    discountType: string;
-    percentage?: string;
-    amountMoney?: {
-      amount: number;
-      currency: string;
-    };
-    pinRequired: boolean;
-    modifyTaxBasis: boolean;
-  };
 }
 
 export interface CatalogResponse {

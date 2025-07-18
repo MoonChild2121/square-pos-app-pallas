@@ -9,7 +9,7 @@ import { Button } from '@/components/primitives/ui/button'
 import { Minus, Plus } from 'lucide-react'
 import Paragraph from '@/components/primitives/ui/typography/paragraph'
 import Heading from '@/components/primitives/ui/typography/heading'
-import { Product } from '@/shared/types/product'
+import { Product } from '@/shared/types/base'
 
 const ProductCard = memo(function ProductCard({ 
   id,

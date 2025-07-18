@@ -1,5 +1,5 @@
 import type { ReactNode } from 'react';
-import { Product } from '@/shared/types/product'
+import { Product } from '@/shared/types/base'
 
 export interface MenuBoxProps {
   label: string;

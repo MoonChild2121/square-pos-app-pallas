@@ -5,7 +5,8 @@ import { Grid } from '@styled-system/jsx'
 import { css } from '@styled-system/css'
 import { useCartActions } from '@/shared/contexts/CartContext'
 import ProductCard from '@/components/composites/product/ProductCard'
-import { Product, ProductGridProps } from '@/shared/types/product'
+import { Product } from '@/shared/types/base'
+import { ProductGridProps } from './types'
 import Heading from '@/components/primitives/ui/typography/heading'
 
 const ProductGrid = memo(function ProductGrid({ products, loading }: ProductGridProps) {

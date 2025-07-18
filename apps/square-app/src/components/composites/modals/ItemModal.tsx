@@ -7,7 +7,7 @@ import { TaxSelect, DiscountSelect } from '@/components/composites/select/Select
 import { VStack } from '@styled-system/jsx'
 import { cartItem } from '@styled-system/recipes'
 import { Box } from '@styled-system/jsx'
-import { ModifierModalProps } from '@/shared/types/modals'
+import { ModifierModalProps } from '@/components/composites/modals/types'
 
 export default function ModifierModal({ itemId, selectedTaxIds = [], selectedDiscountIds = [] }: ModifierModalProps) {
   const [open, setOpen] = useState(false)
