@@ -10,7 +10,7 @@ export const cartItem = defineSlotRecipe({
       display: 'flex',
       gap: 'gap.inline.sm',
       bg: 'surface.layout',
-      p: 'padding.block.sm',
+      p: 'padding.inline.sm',
       borderRadius: 'lg',
       w: '100%',
       position: 'relative',
@@ -24,7 +24,6 @@ export const cartItem = defineSlotRecipe({
       justifyContent: 'space-between',
     },
     image: {
-      p: 'padding.block.sm',
       display: 'flex',
       alignItems: 'center',
       justifyContent: 'center',
@@ -32,7 +31,7 @@ export const cartItem = defineSlotRecipe({
       height: '80px',
       flexShrink: 0,
       bg: 'white',
-      borderRadius: 'md',
+      borderRadius: 'lg',
     },
     content: {
       maxW: 'calc(100% - 40px)', // Space for delete button
@@ -41,7 +40,6 @@ export const cartItem = defineSlotRecipe({
       alignItems: 'flex-start',
       display: 'flex',  
       flexDirection: 'column',
-      gap: 'gap.inline.sm',
     },
     title: {
       whiteSpace: 'nowrap',
@@ -53,7 +51,7 @@ export const cartItem = defineSlotRecipe({
     modifierInfo: {
       display: 'flex',
       flexDirection: 'column',
-      gap: 'gap.inline.sm',
+      gap: 'padding.block.sm',
       color: 'text.secondary',
     },
     controls: {
@@ -82,15 +80,14 @@ export const cartItem = defineSlotRecipe({
     deleteButton: {
       color: 'text.secondary',
       borderRadius: 'full',
-      p: 'padding.block.sm',
       display: 'flex',
       justifyContent: 'center',
       alignItems: 'center',
       cursor: 'pointer',
       transition: 'all 0.2s',
       position: 'absolute',
-      top: 'layout.internal.sm',
-      right: 'layout.internal.sm',
+      top: 'padding.inline.sm',
+      right: 'padding.inline.sm',
       _hover: {
         transform: 'scale(1.1)',
       }

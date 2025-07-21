@@ -7,7 +7,6 @@ import { useCatalog } from '@/shared/hooks/useCatalog'
 import { useSearchCatalog } from '@/shared/hooks/useSearchCatalog'
 import { useCart } from '@/shared/contexts/CartContext'
 import { useSearchParams, useRouter } from 'next/navigation'
-import { Product } from '@/shared/types/base'
 import { MenuDashboardProps } from '@/shared/types/menu'
 
 const MemoizedMenuLayout = memo(MenuLayout)

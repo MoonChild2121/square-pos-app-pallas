@@ -20,7 +20,7 @@ const MenuSection = memo(function MenuSection({
   onSearch
 }: Pick<MenuLayoutProps, 'menuItems' | 'selectedItem' | 'onSelectItem' | 'onSearch'>) {
   return (
-    <Flex direction="column" className={css({ gap: '4' })}>
+    <Flex direction="column" gap='layout.section.sm'>
       <MenuBoxGrid
         items={menuItems}
         selectedCategory={selectedItem}
@@ -44,7 +44,6 @@ const ProductSection = memo(function ProductSection({
         flex: '1',
         overflowY: 'auto',
         minHeight: 0,
-        pr: '2',
         scrollbarWidth: 'none',
         '&::-webkit-scrollbar': { display: 'none' },
       })}
@@ -73,8 +72,8 @@ export const MenuLayout = memo(function MenuLayout({
     >
       {/* Main Content */}
       <Flex direction="column" className={css({ 
-        p: '4', 
-        gap: '4',
+        p: 'padding.block.md', 
+        gap: 'layout.section.sm',
         h: '100%',
       })}>
         <Header />

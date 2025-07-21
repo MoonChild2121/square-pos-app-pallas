@@ -36,11 +36,10 @@ const ProductGrid = memo(function ProductGrid({ products, loading }: ProductGrid
     <Grid
       className={css({
         gridTemplateColumns: 'repeat(auto-fill, minmax(160px, 1fr))',
-        gap: 'gap.inline.sm',
-        p: 'padding.block.sm',
+        gap: 'layout.internal.sm',
+        py: 'padding.block.md',
         w: '100%',
         overflowY: 'auto',
-        scrollbarGutter: 'stable',
       })}
     >
       {products.map((product) => (

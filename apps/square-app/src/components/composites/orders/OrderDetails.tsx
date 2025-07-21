@@ -13,12 +13,13 @@ export const OrderDetails = ({ order, fullWidth = false }: OrderDetailsProps) =>
 
   return (
     <VStack
-      gap="gap.inline.md"
       className={css({
         p: 'padding.block.md',
         bg: 'surface.container',
         borderRadius: 'lg',
-        boxShadow: 'md',
+        border: '1px solid',
+        borderColor: 'border',
+        boxShadow: 'sm',
         ...(fullWidth ? {
           w: '100%',
         } : {
@@ -28,14 +29,15 @@ export const OrderDetails = ({ order, fullWidth = false }: OrderDetailsProps) =>
       })}
     >
       <Heading level={4}>Order Summary</Heading>
-      <VStack gap="gap.inline.xs" w="100%">
+      <VStack w="100%">
         {/* Subtotal */}
         <HStack justify="space-between" w="100%">
           <Paragraph size="compact">Subtotal</Paragraph>
           <Paragraph size="compact">{formatMoney(subtotal)}</Paragraph>
         </HStack>
 
-        {/* Discount pill */}
+        <Box>
+          {/* Discount pill */}
         {hasDiscount && (
           <Box className={pill({ variant: 'discount' })}>
             <Paragraph size="compact">Discount</Paragraph>
@@ -54,6 +56,7 @@ export const OrderDetails = ({ order, fullWidth = false }: OrderDetailsProps) =>
             </Paragraph>
           </Box>
         )}
+        </Box>
 
         {/* Total */}
         <HStack
@@ -62,8 +65,6 @@ export const OrderDetails = ({ order, fullWidth = false }: OrderDetailsProps) =>
           className={css({
             borderTop: '1px solid',
             borderColor: 'surface.container.highest',
-            pt: 'padding.block.sm',
-            mt: 'padding.block.sm',
           })}
         >
           <Heading level={5}>Total</Heading>

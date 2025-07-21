@@ -29,7 +29,7 @@ export const CartView = memo(function CartView({
       isOpen, 
       size: { base: 'mobile', md: 'desktop' } 
     })}>
-      <Flex justify="flex-end" align="center" gap="gap.inline.sm">
+      <Flex justify="flex-end" align="center">
         <Button
           variant="text"
           size="icon"
@@ -39,7 +39,6 @@ export const CartView = memo(function CartView({
           <X size={20} />
         </Button></Flex>
         
-
       {/* Items */}
       <Box className={cartContent({ isEmpty })}>
         {isEmpty ? (
@@ -52,14 +51,14 @@ export const CartView = memo(function CartView({
       {/* Summary & Controls */}
       {!isEmpty && (
         <Box className={cartControls({ hasItems: true })}>
-          <Box mb="gap.inline.sm">
+          <Box pb="layout.internal.sm">
             {orderCalc.loading ? (
               <OrderSummarySkeleton />
             ) : (
               <OrderSummary orderCalc={orderCalc} />
             )}
           </Box>
-          <VStack gap="gap.inline.sm">
+          <VStack gap="layout.internal.sm">
             <OrderModifierModal
               selectedTaxIds={selectedTaxIds}
               selectedDiscountIds={selectedDiscountIds}
@@ -67,6 +66,7 @@ export const CartView = memo(function CartView({
               onUpdateDiscounts={onUpdateDiscounts}
             />
             <Button 
+              variant="outlined"
               width="full"
               isLoading={orderCalc.loading}
               onClick={onCheckout}

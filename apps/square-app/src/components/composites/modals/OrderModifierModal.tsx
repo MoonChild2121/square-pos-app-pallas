@@ -4,7 +4,7 @@ import { Box, VStack } from '@styled-system/jsx'
 import  Modal from '@/components/primitives/ui/modal/modal'
 import { Button } from '@/components/primitives/ui/button'
 import { TaxSelect, DiscountSelect } from '@/components/composites/select/SelectTaxDiscount'
-import { Settings } from 'lucide-react'
+import { Edit } from 'lucide-react'
 import { OrderModifierModalProps } from '@/components/composites/modals/types'
 
 export default function OrderModifierModal({
@@ -16,8 +16,8 @@ export default function OrderModifierModal({
   return (
     <Modal.Root>
       <Modal.Trigger asChild>
-        <Button variant="outlined" width="full">
-          <Settings size={20} />
+        <Button variant="primary" width="full">
+          <Edit size={20} />
           <Box ml="padding.inline.sm">Order Modifiers</Box>
         </Button>
       </Modal.Trigger>

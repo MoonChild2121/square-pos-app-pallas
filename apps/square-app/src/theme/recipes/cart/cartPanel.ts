@@ -14,7 +14,7 @@ export const cartSlideout = defineRecipe({
     boxShadow: '2xl',
     transition: 'transform 0.3s ease-in-out',
     zIndex: 50,
-    p: 'padding.block.lg',
+    p: 'padding.block.md',
   },
   variants: {
     isOpen: {
@@ -77,7 +77,11 @@ export const cartContent = defineRecipe({
   base: {
     flex: '1',
     overflowY: 'auto',
-    pb: 'padding.block.lg',
+    scrollbarWidth: 'none',       // Firefox
+    msOverflowStyle: 'none',      // IE/Edge
+    '&::-webkit-scrollbar': {
+      display: 'none',            // Chrome/Safari
+    },
   },
   variants: {
     isEmpty: {
@@ -100,7 +104,6 @@ export const cartControls = defineRecipe({
   className: 'cartControls',
   description: 'Cart summary and checkout controls',
   base: {
-    mt: 'padding.block.sm',
   },
   variants: {
     hasItems: {
@@ -117,28 +120,3 @@ export const cartControls = defineRecipe({
   }
 })
 
-// Alternative approach using cva (class-variance-authority) style
-export const cartVariants = {
-  slideout: {
-    base: 'fixed top-0 right-0 bottom-0 flex flex-col bg-surface-container shadow-2xl transition-transform duration-300 ease-in-out z-50 p-padding-block-lg',
-    variants: {
-      isOpen: {
-        true: 'translate-x-0',
-        false: 'translate-x-full'
-      },
-      size: {
-        mobile: 'w-full max-w-full rounded-none',
-        desktop: 'w-400px max-w-full rounded-l-lg'
-      }
-    }
-  },
-  overlay: {
-    base: 'fixed inset-0 bg-fill z-40 transition-opacity duration-300 ease-in-out',
-    variants: {
-      isVisible: {
-        true: 'opacity-100 pointer-events-auto',
-        false: 'opacity-0 pointer-events-none'
-      }
-    }
-  }
-}

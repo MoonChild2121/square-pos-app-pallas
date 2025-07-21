@@ -43,7 +43,7 @@ const MenuBoxGrid = memo(function MenuBoxGrid({
       {/* Scrollable horizontal list */}
       <Box
         className={css({
-          p: 'padding.block.sm',
+          py: 'padding.block.md',
           overflowX: 'auto',
           whiteSpace: 'nowrap',
           scrollbarWidth: 'none',
@@ -52,7 +52,7 @@ const MenuBoxGrid = memo(function MenuBoxGrid({
           },
         })}
       >
-        <HStack gap="gap.inline.sm" w="max-content">
+        <HStack gap="layout.internal.sm" w="max-content">
           {items.map((item) => (
             <MenuItem
               key={item.id}

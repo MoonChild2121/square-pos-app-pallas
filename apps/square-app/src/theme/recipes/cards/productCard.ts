@@ -40,7 +40,6 @@ export const productCard = defineSlotRecipe({
     root: {
       ...baseCardStyles,
       ...hoverScaleStyles,
-      pt: 'padding.block.sm',
     },
     image: {
       borderRadius: 'xl',
@@ -60,14 +59,15 @@ export const productCard = defineSlotRecipe({
       bg: 'fill.secondary',
     },
     name: {
-      mb: 'padding.block.sm',
       whiteSpace: 'nowrap',
       overflow: 'hidden',
       textOverflow: 'ellipsis',
+      m: 'padding.block.sm',
     },
     price: {
       borderBottom: '1px solid',
       borderColor: 'border',
+      m: 'padding.block.sm',
     },
     modifierContainer: {
       ...containerPadding,
@@ -117,8 +117,8 @@ export const menuCard = defineRecipe({
     isSelected: {
       true: {
         bg: 'primary.bg',
-        color: 'primary.fg',
-        boxShadow: 'lg',
+        color: 'text',
+        boxShadow: 'sm',
         _hover: {
           bg: 'primary.bg',
           transform: 'scale(1.02)', // Preserve the scale on hover
@@ -137,7 +137,6 @@ export const menuCard = defineRecipe({
       isSelected: true,
       css: {
         bg: 'primary.bg',
-        transform: 'scale(1.02)',
       },
     },
   ],

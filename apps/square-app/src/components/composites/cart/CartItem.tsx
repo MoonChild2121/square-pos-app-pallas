@@ -78,7 +78,7 @@ const CartItems = memo(function CartItem({
                 </span>
               )}
             </Heading>
-            <Paragraph size="sm" textStyle="bold">
+            <Paragraph size="compact" textStyle="bold">
               {formatMoney(totalItemPrice)}
               {selectedModifier && selectedModifier.price > 0 && (
                 <span className={css({ color: 'text.secondary', fontSize: 'xs' })}>
@@ -91,10 +91,10 @@ const CartItems = memo(function CartItem({
             {(selectedTax || selectedDiscount) && (
               <Box className={modifierInfo}>
                 {selectedTax && (
-                  <Paragraph size="sm">Tax: {selectedTax.name} ({selectedTax.percentage}%)</Paragraph>
+                  <Paragraph size="subscript">Tax: {selectedTax.name} ({selectedTax.percentage}%)</Paragraph>
                 )}
                 {selectedDiscount && (
-                  <Paragraph size="sm">
+                  <Paragraph size="subscript">
                     Discount: {selectedDiscount.name}
                     {selectedDiscount.percentage ? ` (${selectedDiscount.percentage}%)` : ''}
                   </Paragraph>
@@ -111,11 +111,11 @@ const CartItems = memo(function CartItem({
               selectedDiscountIds={discountIds}
             />
             <Box onClick={handleDecrease} className={button}>
-              <Minus size={20} />
+              <Minus size={17} />
             </Box>
             <Paragraph>{quantity}</Paragraph>
             <Box onClick={handleIncrease} className={button}>
-              <Plus size={20} />
+              <Plus size={17} />
             </Box>
           </HStack>
         </Box>

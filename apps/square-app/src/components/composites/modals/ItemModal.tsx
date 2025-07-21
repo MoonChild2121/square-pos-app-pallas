@@ -18,7 +18,7 @@ export default function ModifierModal({ itemId, selectedTaxIds = [], selectedDis
     <>
       <Modal.Root open={open} onOpenChange={setOpen}>
         <Modal.Trigger asChild>
-            <Box className={button}> <Edit size={20} /></Box>
+            <Box className={button}> <Edit size={17} /></Box>
         </Modal.Trigger>
         <Modal.Content>
           <Modal.Header>

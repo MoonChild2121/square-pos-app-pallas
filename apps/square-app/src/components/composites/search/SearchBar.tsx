@@ -1,7 +1,7 @@
 'use client'
 
 import { useCallback, useEffect, useState } from 'react'
-import { HStack, Box } from '@styled-system/jsx'
+import { HStack } from '@styled-system/jsx'
 import { Input } from '@/components/primitives/ui/input'
 import { Search, X } from 'lucide-react'
 import debounce from 'lodash/debounce'
@@ -43,9 +43,9 @@ export default function SearchBar({ onSearch }: SearchBarProps) {
   }
 
   return (
-    <HStack align="flex-start" gap="1.5" pl="4"> 
-      <Input className={searchBox()} size="lg" shape="rounded">
-      <Search size={20} className={css({ mr: '2' })}/>
+    <HStack align="flex-start"> 
+      <Input className={searchBox()} size="lg">
+      <Search size={20} className={css({ mr: 'gap.inline.sm' })}/>
         <Input.Text 
           placeholder="Search" 
           value={searchTerm}
@@ -59,7 +59,7 @@ export default function SearchBar({ onSearch }: SearchBarProps) {
               size="sm"
               onClick={handleClear}
             >
-              <X size={25} />
+              <X size={20} />
             </Button>
           )}
         </Input.Postfix>
