@@ -7,7 +7,7 @@ import { redirect } from 'next/navigation'
 import { REVALIDATE_INTERVAL } from '@/shared/constants'
 
 // Configure route segment
-export const revalidate = REVALIDATE_INTERVAL // revalidate every 5 minutes
+export const revalidate = REVALIDATE_INTERVAL 
 
 async function getInitialData() {
   const session = await getServerSession(authOptions)

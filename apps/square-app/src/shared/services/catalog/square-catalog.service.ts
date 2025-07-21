@@ -24,12 +24,12 @@ const getBaseUrl = () => {
   }
   return '';
 };
-
+// SquareCatalogService implements the ICatalogService interface
 export class SquareCatalogService implements ICatalogService {
-  private variantImageMap: Record<string, string[]> = {};
-  private modifierMap: Record<string, ModifierData[]> = {};
-  private imageMap: Record<string, string> = {};
-
+  private variantImageMap: Record<string, string[]> = {}; // Maps variantId -> imageIds
+  private modifierMap: Record<string, ModifierData[]> = {}; // Maps modifierListId -> ModifierData[]
+  private imageMap: Record<string, string> = {}; // Maps imageId -> imageUrl
+// Fetch the catalog data from the API  
   private async fetchCatalogData(accessToken?: string): Promise<CatalogResponse> {
     const baseUrl = getBaseUrl();
     const url = `${baseUrl}/api/square/catalog`;
@@ -50,10 +50,11 @@ export class SquareCatalogService implements ICatalogService {
     return response.json();
   }
 
+  // Fetch the search data from the API
   private async fetchSearchData(
-    searchTerm: string,
-    categoryId?: string,
-    accessToken?: string
+    searchTerm: string, // The keyword to search for
+    categoryId?: string, // A category to scope the search
+    accessToken?: string // The user's access token for authentication
   ): Promise<SearchCatalogResponse> {
     const baseUrl = getBaseUrl();
     const url = `${baseUrl}/api/square/catalog/search`;
@@ -73,6 +74,7 @@ export class SquareCatalogService implements ICatalogService {
     return JSONBig.parse(responseText);
   }
 
+  // Initialize the maps from the catalog data
   private initializeMaps(catalog: CatalogResponse): void {
     this.imageMap = catalog.images || {};
     
@@ -95,6 +97,7 @@ export class SquareCatalogService implements ICatalogService {
     }, {} as Record<string, ModifierData[]>);
   }
 
+  // Transform the catalog item to a product
   private transformCatalogItemToProduct(item: CatalogItem): Product[] {
     if (!item.itemData || !item.itemData.variations) return [];
 
@@ -120,6 +123,7 @@ export class SquareCatalogService implements ICatalogService {
     });
   }
 
+  // Get the catalog data from the API
   async getCatalog(accessToken?: string): Promise<CatalogData> {
     const rawData = await this.fetchCatalogData(accessToken);
     this.initializeMaps(rawData);
@@ -149,7 +153,8 @@ export class SquareCatalogService implements ICatalogService {
     return { products, taxes, discounts };
   }
 
-  async searchProducts(
+  // Search the catalog for products
+  async searchProducts( // async so that it can wait for the data to be fetched
     searchTerm: string,
     categoryId?: string,
     accessToken?: string
@@ -202,6 +207,7 @@ export class SquareCatalogService implements ICatalogService {
       .filter((p): p is Product => p !== null);
   }
 
+  // Get the variant image URL
   getVariantImageUrl(variantId: string): string | undefined {
     const imageIds = this.variantImageMap[variantId];
     if (!imageIds?.length) return undefined;
@@ -209,12 +215,14 @@ export class SquareCatalogService implements ICatalogService {
     return imageId ? this.imageMap[imageId] : undefined;
   }
 
+  // Get the product modifiers
   getProductModifiers(product: Product): ModifierData[] {
     // This is a simplified lookup. A real implementation might need
     // to re-fetch or look up based on the product's internal composition.
     return product.modifiers || [];
   }
 
+  // Get the product modifiers by item
   private getProductModifiersByItem(item: CatalogItem): ModifierData[] {
     if (!item.itemData || !item.itemData.modifierListInfo) return [];
     return item.itemData.modifierListInfo.flatMap(info => {
