@@ -36,27 +36,33 @@ export const OrderDetails = ({ order, fullWidth = false }: OrderDetailsProps) =>
           <Paragraph size="compact">{formatMoney(subtotal)}</Paragraph>
         </HStack>
 
+        {(hasDiscount || hasTax) && (
         <Box>
           {/* Discount pill */}
-        {hasDiscount && (
-          <Box className={pill({ variant: 'discount' })}>
-            <Paragraph size="compact">Discount</Paragraph>
-            <Paragraph size="compact">
-              -{formatMoney(order.totalDiscountMoney.amount)}
-            </Paragraph>
-          </Box>
-        )}
+          {hasDiscount && (
+            <Box className={pill({ variant: 'cart', colorScheme: 'success' })}>
+              <Paragraph size="compact">Discount</Paragraph>
+              <Paragraph size="compact">
+                -{formatMoney(order.totalDiscountMoney.amount)}
+              </Paragraph>
+            </Box>
+          )}
 
-        {/* Tax pill */}
-        {hasTax && (
-          <Box className={pill({ variant: 'tax' })} mt={hasDiscount ? '2' : '1'}>
-            <Paragraph size="compact">Sales Tax</Paragraph>
-            <Paragraph size="compact">
-              {formatMoney(order.totalTaxMoney.amount)}
-            </Paragraph>
-          </Box>
-        )}
+          {/* Tax pill */}
+          {hasTax && (
+            <Box
+              className={pill({ variant: 'cart', colorScheme: 'default' })}
+              mt={hasDiscount ? '2' : '1'}
+            >
+              <Paragraph size="compact">Tax</Paragraph>
+              <Paragraph size="compact">
+                {formatMoney(order.totalTaxMoney.amount)}
+              </Paragraph>
+            </Box>
+          )}
         </Box>
+      )}
+
 
         {/* Total */}
         <HStack

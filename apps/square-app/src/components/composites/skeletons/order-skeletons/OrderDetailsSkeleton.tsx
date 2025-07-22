@@ -1,4 +1,4 @@
-import { VStack, HStack } from '@styled-system/jsx'
+import { VStack, HStack, Box } from '@styled-system/jsx'
 import { Skeleton } from '@/components/primitives/ui/skeleton'
 import { pill, skeleton } from '@styled-system/recipes'
 import { css } from '@styled-system/css'
@@ -15,14 +15,14 @@ export function OrderDetailsSkeleton() {
       </HStack>
 
       {/* Discount pill */}
-      <HStack className={pill({ variant: 'discount' })}>
+      <Box className={pill({ variant: 'cart', colorScheme: 'success' })}>
         <Skeleton />
-      </HStack>
+      </Box>
 
       {/* Tax pill */}
-      <HStack className={pill({ variant: 'tax' })}>
-        <Skeleton/>
-      </HStack>
+      <Box className={pill({ variant: 'cart', colorScheme: 'default' })}>
+        <Skeleton />
+      </Box>
 
       {/* Total */}
       <HStack

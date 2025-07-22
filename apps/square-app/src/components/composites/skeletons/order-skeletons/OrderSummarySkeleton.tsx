@@ -1,4 +1,4 @@
-import { VStack, HStack } from '@styled-system/jsx'
+import { VStack, HStack, Box } from '@styled-system/jsx'
 import { pill, skeleton } from '@styled-system/recipes'
 import { Skeleton } from '@/components/primitives/ui/skeleton'
 import { css } from '@styled-system/css'
@@ -11,12 +11,17 @@ export function OrderSummarySkeleton() {
       <Heading level={4}>Order Summary</Heading>
       {/* Subtotal */}
       <HStack justify="space-between" w="100%">
-        <Skeleton className={skeleton({ variant: 'orderItem' })}  />
+        <Skeleton css={{ height: '30px' }}/>
       </HStack>
-      {/* Tax pill */}
-      <HStack className={pill({ variant: 'tax' })}>
-        <Skeleton className={skeleton({ variant: 'orderItem' })} />
-      </HStack>
+      {/* Discount pill */}
+      <Skeleton 
+        css={{ height: '40px' }} // or whatever height your pills typically are
+      />
+
+      {/* Tax pill skeleton */}
+      <Skeleton 
+        css={{ height: '40px' }}
+      />
 
       {/* Total */}
       <HStack>

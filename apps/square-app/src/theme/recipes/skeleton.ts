@@ -5,7 +5,6 @@ export const skeleton = defineRecipe({
   description: 'Styles for the Skeleton component',
   base: {
     animationStyle: 'skeleton',
-    rounded: 'md',
     bg: 'bgSolid.text',
     display: 'flex',
     flexDir: 'column',
@@ -24,7 +23,6 @@ export const skeleton = defineRecipe({
       },
       orderSummary: {
         p: 'padding.block.md',
-        rounded: 'xl',
         boxShadow: 'md',
         w: 'full',
         maxW: '100%',
@@ -32,12 +30,11 @@ export const skeleton = defineRecipe({
         overflowX: 'hidden',
       },
       orderItem: {
-        p: '3',
+        p: 'padding.inline.lg',
         display: 'flex',
         alignItems: 'center',
-        gap: '4',
+        gap: 'gap.inline.md',
         bg: 'surface.layout',
-        rounded: 'lg',
         boxShadow: 'sm',
         w: 'full',
       },
