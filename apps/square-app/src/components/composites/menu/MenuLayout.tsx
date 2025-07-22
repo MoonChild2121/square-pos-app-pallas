@@ -43,6 +43,7 @@ const ProductSection = memo(function ProductSection({
       className={css({
         flex: '1',
         overflowY: 'auto',
+        overflowX: 'hidden',
         minHeight: 0,
         scrollbarWidth: 'none',
         '&::-webkit-scrollbar': { display: 'none' },

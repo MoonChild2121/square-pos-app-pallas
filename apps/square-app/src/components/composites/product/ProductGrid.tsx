@@ -40,6 +40,7 @@ const ProductGrid = memo(function ProductGrid({ products, loading }: ProductGrid
         py: 'padding.block.md',
         w: '100%',
         overflowY: 'auto',
+        overflowX: 'hidden'
       })}
     >
       {products.map((product) => (
