@@ -171,6 +171,8 @@ const CartActionsContext = createContext<{
   updateOrderDiscounts: (discountIds: string[]) => void
   clearCart: () => void
   setOrder: (order: any) => void
+  increaseQuantity: (id: string) => void
+  decreaseQuantity: (id: string) => void
 } | undefined>(undefined)
 
 // Load cart from localStorage on first render (client-only)
@@ -197,8 +199,34 @@ export function CartProvider({ children }: { children: ReactNode }) {
   const removeItem = useCallback((id: string) => 
     dispatch({ type: 'REMOVE_ITEM', payload: id }), [])
 
-  const updateQuantity = useCallback((id: string, quantity: number) =>
-    dispatch({ type: 'UPDATE_QUANTITY', payload: { id, quantity } }), [])
+  const updateQuantity = useCallback((id: string, quantity: number) => {
+    if (quantity <= 0) {
+      dispatch({ type: 'REMOVE_ITEM', payload: id });
+    } else {
+      dispatch({ type: 'UPDATE_QUANTITY', payload: { id, quantity } });
+    }
+  }, []);
+
+  // NEW: Increase quantity by 1
+  const increaseQuantity = useCallback((id: string) => {
+    // Find the item
+    const item = state.items.find(item => item.id === id)
+    if (item) {
+      dispatch({ type: 'UPDATE_QUANTITY', payload: { id, quantity: item.quantity + 1 } })
+    }
+  }, [state.items])
+
+  // NEW: Decrease quantity by 1, remove if goes to 0
+  const decreaseQuantity = useCallback((id: string) => {
+    const item = state.items.find(item => item.id === id)
+    if (item) {
+      if (item.quantity <= 1) {
+        dispatch({ type: 'REMOVE_ITEM', payload: id })
+      } else {
+        dispatch({ type: 'UPDATE_QUANTITY', payload: { id, quantity: item.quantity - 1 } })
+      }
+    }
+  }, [state.items])
 
   const updateItemTaxes = useCallback((id: string, taxIds: string[]) =>
     dispatch({ type: 'UPDATE_ITEM_TAXES', payload: { id, taxIds } }), [])
@@ -221,7 +249,7 @@ export function CartProvider({ children }: { children: ReactNode }) {
   // Bundle actions in one memoized object
   const actions = useMemo(() => ({
     addItem,
-    removeItem,
+    removeItem, 
     updateQuantity,
     updateItemTaxes,
     updateItemDiscounts,
@@ -229,6 +257,8 @@ export function CartProvider({ children }: { children: ReactNode }) {
     updateOrderDiscounts,
     clearCart,
     setOrder,
+    increaseQuantity,
+    decreaseQuantity,
   }), [ 
     addItem,
     removeItem, 
@@ -239,6 +269,8 @@ export function CartProvider({ children }: { children: ReactNode }) {
     updateOrderDiscounts,
     clearCart,
     setOrder,
+    increaseQuantity,
+    decreaseQuantity,
   ])
 
   return (

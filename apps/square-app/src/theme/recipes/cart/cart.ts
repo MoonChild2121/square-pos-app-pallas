@@ -4,42 +4,30 @@ import { defineSlotRecipe } from '@pandacss/dev'
 export const cartItem = defineSlotRecipe({
   className: 'cartItem',
   description: 'Multi-part styles for a cart item component',
-  slots: ['root', 'image', 'content', 'title', 'controls', 'button', 'deleteButton', 'contentWrapper', 'modifierInfo'],
+  slots: ['root', 'image', 'content', 'title', 'controls', 'button', 'deleteButton', 'contentWrapper'],
   base: {
     root: {
-      display: 'flex',
-      gap: 'gap.inline.sm',
       bg: 'surface.layout',
       p: 'padding.inline.sm',
       borderRadius: 'lg',
       w: '100%',
       position: 'relative',
-      minH: '90px',
-    },
-    contentWrapper: {
-      display: 'flex',
-      flexDirection: 'column',
-      gap: 'gap.inline.sm',
-      flex: 1,
-      justifyContent: 'space-between',
     },
     image: {
-      display: 'flex',
-      alignItems: 'center',
-      justifyContent: 'center',
-      width: '80px',
+      position: 'relative',       // Required for Next.js Image fill to work
+      width: '80px',          // Fixed container size
       height: '80px',
       flexShrink: 0,
       bg: 'white',
       borderRadius: 'lg',
+      overflow: 'hidden',         // Clip overflow for clean edges
+      display: 'flex',
+      alignItems: 'center',
+      justifyContent: 'center',          
     },
     content: {
       maxW: 'calc(100% - 40px)', // Space for delete button
-      flexGrow: 1,
       overflow: 'hidden',
-      alignItems: 'flex-start',
-      display: 'flex',  
-      flexDirection: 'column',
     },
     title: {
       whiteSpace: 'nowrap',
@@ -47,12 +35,6 @@ export const cartItem = defineSlotRecipe({
       textOverflow: 'ellipsis',
       fontSize: 'sm',
       fontWeight: 'medium',
-    },
-    modifierInfo: {
-      display: 'flex',
-      flexDirection: 'column',
-      gap: 'padding.block.sm',
-      color: 'text.secondary',
     },
     controls: {
       px: 'padding.inline.sm',

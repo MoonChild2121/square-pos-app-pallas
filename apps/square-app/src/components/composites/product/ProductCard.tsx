@@ -1,8 +1,7 @@
 'use client'
 
-import { memo, useMemo, useState } from 'react'
-import { Box } from '@styled-system/jsx'
-import { productCard } from '@styled-system/recipes'
+import { memo, useState } from 'react'
+import { Box, HStack, VStack } from '@styled-system/jsx'
 import SelectModifier from '@/components/composites/select/SelectModifier'
 import { useCartActions, useCartState } from '@/shared/contexts/CartContext'
 import { Button } from '@/components/primitives/ui/button'
@@ -11,6 +10,9 @@ import Paragraph from '@/components/primitives/ui/typography/paragraph'
 import Heading from '@/components/primitives/ui/typography/heading'
 import { Product } from '@/shared/types/base'
 import { formatMoney } from '@/shared/utils/helpers'
+import Image from 'next/image'
+import { itemCard } from '@styled-system/recipes'
+import { css } from '@styled-system/css'
 
 const ProductCard = memo(function ProductCard({ 
   id,
@@ -20,8 +22,7 @@ const ProductCard = memo(function ProductCard({
   taxIds,
   modifiers = []
 }: Product) {
-  const styles = useMemo(() => productCard({ hasModifiers: modifiers.length > 0 }), [modifiers.length])
-  const { addItem, updateQuantity } = useCartActions()
+  const { addItem, increaseQuantity, decreaseQuantity } = useCartActions()
   const { items } = useCartState()
   
   // Find default modifier or first one
@@ -53,78 +54,62 @@ const ProductCard = memo(function ProductCard({
       } : undefined
     })
   }
-
-  const handleIncrease = () => {
-    if (cartItem) {
-      updateQuantity(compositeId, cartItem.quantity + 1)
-    }
-  }
-
-  const handleDecrease = () => {
-    if (cartItem && cartItem.quantity > 0) {
-      updateQuantity(compositeId, cartItem.quantity - 1)
-    }
-  }
   
   return (
-    <Box className={styles.root}>
-      <Box className={styles.image}>
-        <img
+    <Box className={itemCard()}>
+      <VStack gap='gap.inline.xs'>
+      <Box position="relative" className={css({
+        borderRadius: 'xl',
+        overflow: 'hidden',
+        aspectRatio: '4/3',
+        bg: 'bgSolid.text'
+      })}>
+        <Image
           src={imageUrl || '/placeholder-image.jpg'}
           alt={name}
+          fill
+          sizes="166px"
+          style={{ objectFit: 'contain' }}
         />
       </Box>
       
-      <Box className={styles.nameContainer}>  
-        <Box className={styles.name}>
-          <Heading level={6}>{name}</Heading>
-        </Box>
-        
-        <Box className={styles.price}>
-          <Paragraph size="compact" textStyle="bold">
-            {formatMoney(price.amount)}
-          </Paragraph>
-        </Box>
-        
-        {modifiers && modifiers.length > 0 && (
-          <Box className={styles.modifierContainer}>
-            <SelectModifier
-              modifiers={modifiers}
-              value={selectedModifierId}
-              onChange={setSelectedModifierId} 
-            />
-          </Box>
-        )}
-        
-        <Box className={styles.controlsContainer}>
-          {cartItem ? (
-            <Box className={styles.quantityControls}>
-              <Button
-                shape="circle"
-                onClick={handleDecrease}
-              >
-                <Minus size={15} />
-              </Button>
-              
-              <Box className={styles.quantityDisplay}>
-                {cartItem.quantity}
-              </Box>
-              
-              <Button
-                shape="circle"
-                onClick={handleIncrease}
-              >
-                <Plus size={15} />
-              </Button>
-            </Box>
-          ) : (
-            <Button onClick={handleAddToCart} width="full">
-              Add to Cart
-            </Button>
-          )}
-        </Box>
-      </Box>
+        <Heading level={6} >{name}</Heading>
+
+      <Paragraph size="compact" textStyle="bold"
+      className={css({
+        borderBottom: '1px solid',
+        borderColor: 'fill',
+      })}>
+        {formatMoney(price.amount)}
+      </Paragraph>
+
+      {modifiers.length > 0 && (
+        <SelectModifier
+          modifiers={modifiers}
+          value={selectedModifierId}
+          onChange={setSelectedModifierId}
+        />
+      )}
+
+      {cartItem ? (
+        <HStack justify="space-between">
+          <Button shape="circle" onClick={() => decreaseQuantity(compositeId)}>
+            <Minus size={15} />
+          </Button>
+          <Box>{cartItem.quantity}</Box>
+          <Button shape="circle" onClick={() => increaseQuantity(compositeId)}>
+            <Plus size={15} />
+          </Button>
+        </HStack>
+      ) : (
+        <Button onClick={handleAddToCart} width="full">
+          Add to Cart
+        </Button>
+      )}
+      </VStack>
+      
     </Box>
+
   )
 })
 

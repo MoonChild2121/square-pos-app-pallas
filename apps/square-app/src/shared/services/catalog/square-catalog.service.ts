@@ -16,6 +16,7 @@ import {
   SearchCatalogResponse,
 } from '@/shared/types/catalog';
 import JSONBig from 'json-bigint';
+import { fetchSquareCatalog, fetchSquareSearch } from './logic';
 
 // Helper to get the base URL for API calls
 const getBaseUrl = () => {
@@ -29,14 +30,28 @@ export class SquareCatalogService implements ICatalogService {
   private variantImageMap: Record<string, string[]> = {}; // Maps variantId -> imageIds
   private modifierMap: Record<string, ModifierData[]> = {}; // Maps modifierListId -> ModifierData[]
   private imageMap: Record<string, string> = {}; // Maps imageId -> imageUrl
-// Fetch the catalog data from the API  
-  private async fetchCatalogData(accessToken?: string): Promise<CatalogResponse> {
+  // Fetch the catalog data from the API
+  private async fetchCatalogData(
+    accessToken?: string
+  ): Promise<CatalogResponse> {
+    // On the server, call the logic function directly
+    if (typeof window === 'undefined') {
+      if (!accessToken) {
+        throw new Error(
+          'SquareCatalogService: Access token is required for server-side fetching.'
+        );
+      }
+      // The raw data from the logic function is already in the shape of CatalogResponse
+      return fetchSquareCatalog(accessToken);
+    }
+
+    // On the client, fetch from the API route
     const baseUrl = getBaseUrl();
     const url = `${baseUrl}/api/square/catalog`;
     const response = await fetch(url, {
       headers: {
         'Cache-Control': 'max-age=3600',
-        ...(accessToken && { 'Authorization': `Bearer ${accessToken}` })
+        ...(accessToken && { Authorization: `Bearer ${accessToken}` }),
       },
     });
 
@@ -56,13 +71,24 @@ export class SquareCatalogService implements ICatalogService {
     categoryId?: string, // A category to scope the search
     accessToken?: string // The user's access token for authentication
   ): Promise<SearchCatalogResponse> {
+    // On the server, call the logic function directly
+    if (typeof window === 'undefined') {
+      if (!accessToken) {
+        throw new Error(
+          'SquareCatalogService: Access token is required for server-side searching.'
+        );
+      }
+      return fetchSquareSearch(accessToken, [searchTerm], categoryId);
+    }
+
+    // On the client, fetch from the API route
     const baseUrl = getBaseUrl();
     const url = `${baseUrl}/api/square/catalog/search`;
     const response = await fetch(url, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
-        ...(accessToken && { 'Authorization': `Bearer ${accessToken}` })
+        ...(accessToken && { Authorization: `Bearer ${accessToken}` }),
       },
       body: JSON.stringify({ keywords: [searchTerm], categoryId }),
     });

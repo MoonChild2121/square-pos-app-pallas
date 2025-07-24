@@ -16,21 +16,6 @@ const ProductGrid = memo(function ProductGrid({ products, loading }: ProductGrid
     return <Heading level={5} color="disabled">Searching...</Heading>
   }
 
-  const handleAddToCart = useCallback((product: Product) => {
-    addItem({
-      id: product.id,
-      name: product.name,
-      price: product.price.amount / 100,
-      quantity: 1,
-      imageUrl: product.imageUrl,
-      taxIds: product.taxIds,
-      selectedModifier: product.modifiers?.[0] ? {
-        id: product.modifiers[0].id,
-        name: product.modifiers[0].name,
-        price: product.modifiers[0].priceMoney.amount / 100
-      } : undefined
-    })
-  }, [addItem])
 
   return (
     <Grid

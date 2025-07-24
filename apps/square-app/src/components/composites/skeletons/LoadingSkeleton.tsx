@@ -1,18 +1,17 @@
 import { VStack, HStack } from '@styled-system/jsx'
 import { Skeleton } from '@/components/primitives/ui/skeleton'
-import { pill, skeleton } from '@styled-system/recipes'
 import { css } from '@styled-system/css'
 
 export function LoadingSkeleton() {
   return (
-    <VStack gap="6" w="100%" h="100vh" p="6" >
+    <VStack gap="gap.inline.lg" w="100%" h="100vh" p="padding.inline.lg" >
       {/* Header */}
-      <HStack w="100%" h="56px" align="center" gap="4">
+      <HStack w="100%" h="56px" align="center" gap="gap.inline.md">
         <Skeleton className={css({ width: '200px', height: '40px', borderRadius: '8px', bg:'fill.secondary'}) }/>
       </HStack>
 
       {/* Horizontal Category Grid */}
-      <HStack w="100%" gap="4" className={css({
+      <HStack w="100%" gap="gap.inline.md" className={css({
         overflow:"hidden",
       })}>
         {Array.from({ length: 8 }).map((_, i) => (
@@ -29,13 +28,13 @@ export function LoadingSkeleton() {
       <div className={css({ 
         display: 'grid', 
         gridTemplateColumns: 'repeat(auto-fill, minmax(200px, 1fr))', 
-        gap: '6', 
+        gap: 'gap.inline.lg', 
         w: '100%',
         flex: 1,
         overflow: 'auto'
       })}>
         {Array.from({ length: 9 }).map((_, i) => (
-          <VStack key={i} gap="3" align="start">
+          <VStack key={i} align="start">
             <Skeleton className={css({ width: '100%', height: '160px', borderRadius: '12px', bg:'fill.secondary' })} />
           </VStack>
         ))}

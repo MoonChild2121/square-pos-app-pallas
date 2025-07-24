@@ -1,69 +1,40 @@
-import { NextRequest, NextResponse } from 'next/server'
-import { SquareClient, SquareEnvironment } from 'square'
-// eslint-disable-next-line @typescript-eslint/no-var-requires
-const JSONBig = require('json-bigint')
-import { getServerSession } from 'next-auth'
-import { authOptions } from '../../../auth/[...nextauth]/route'
-import { headers } from 'next/headers'
+import { NextRequest, NextResponse } from 'next/server';
+import { getServerSession } from 'next-auth';
+import { authOptions } from '../../../auth/[...nextauth]/route';
+import { headers } from 'next/headers';
+import { fetchSquareSearch } from '@/shared/services/catalog/logic';
 
 export async function POST(req: NextRequest): Promise<NextResponse> {
-  const { keywords, categoryId } = await req.json()
-
-  // Try to get token from session first
-  const session = await getServerSession(authOptions)
-  const headersList = headers()
-  const authHeader = headersList.get('authorization')
-
-  // Extract token from Authorization header if present
-  const bearerToken = authHeader?.startsWith('Bearer ') 
-    ? authHeader.substring(7) 
-    : null
-
-  // Use either session token or bearer token
-  const accessToken = session?.accessToken || bearerToken
-
-  if (!accessToken) {
-    return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
-  }
-
-  const client = new SquareClient({
-    environment: SquareEnvironment.Sandbox,
-    token: accessToken,
-  });
-
   try {
-    const query: any = {
-      textQuery: {
-        keywords,
-      },
-    };
+    const { keywords, categoryId } = await req.json();
 
-    if (categoryId) {
-      query.itemQuery = {
-        category_ids: [categoryId],
-      };
+    // Get the session and access token securely on the server.
+    const session = await getServerSession(authOptions);
+    const accessToken = session?.accessToken;
+
+    if (!accessToken) {
+      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
     }
 
-    const response = await client.catalog.search({
-      objectTypes: ['ITEM_VARIATION', 'IMAGE'],
-      query,
-      includeRelatedObjects: true,
-    });
+    // Call the core logic function to fetch search results
+    const searchData = await fetchSquareSearch(
+      accessToken,
+      keywords,
+      categoryId
+    );
 
-    return new NextResponse(JSONBig.stringify(response), {
-      headers: { 'Content-Type': 'application/json' },
-    });
+    return NextResponse.json(searchData);
   } catch (error: any) {
     console.error('Search API: Error occurred', {
       message: error.message,
       statusCode: error.statusCode,
       code: error.code,
-      stack: error.stack
-    })
+      stack: error.stack,
+    });
 
     return NextResponse.json(
       { error: 'Search failed', message: error.message },
       { status: error.statusCode || 500 }
-    )
+    );
   }
 }

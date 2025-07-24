@@ -5,7 +5,7 @@ import { Box, VStack } from '@styled-system/jsx'
 import { Utensils } from 'lucide-react'
 import Heading from '@/components/primitives/ui/typography/heading'
 import Paragraph from '@/components/primitives/ui/typography/paragraph'
-import { menuCard } from '@styled-system/recipes'
+import { itemCard } from '@styled-system/recipes'
 import { MenuBoxProps } from '@/shared/types/menu'
 
 const MenuBox = memo(function MenuBox({ 
@@ -18,7 +18,7 @@ const MenuBox = memo(function MenuBox({
   return (
     <Box
       onClick={onClick}
-      className={menuCard({ isSelected: isSelected })}
+      className={itemCard({ variant: 'menu', isSelected })}
     >
       <VStack align="flex-start" justify="space-between" h="100%" >
         <Box p="padding.block.sm">

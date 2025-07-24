@@ -1,67 +1,81 @@
-import { Box, VStack, HStack, Circle } from '@styled-system/jsx'
+import { Box, VStack, HStack } from '@styled-system/jsx'
 import { Heading, Paragraph } from '@/components/primitives/ui/typography'
 import { css } from '@styled-system/css'
 import Image from 'next/image'
-import { orderItemCard } from '@styled-system/recipes'
+import { orderCard } from '@styled-system/recipes'
 import { formatMoney } from '@/shared/utils/helpers'
 import { OrderItemCardProps } from '@/shared/types/orders'
 
 export const OrderItemCard = ({ item, imageUrl }: OrderItemCardProps) => {
-  const styles = orderItemCard()
 
   return (
-    <HStack className={styles.root}>
+    <HStack className={orderCard()}>
       {/* Image */}
-      {imageUrl ? (
-        <Box className={styles.image}>
-          <Image src={imageUrl} alt={item.name} fill />
-        </Box>
-      ) : (
-        <Circle size="80px" className={styles.image} />
-      )}
+      <Box
+        position="relative"
+        w="64px"
+        h="64px"
+        className={css({
+          flexShrink: '0',
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center',
+        })}
+      >
+        <Image
+          src={imageUrl?.trim() || '/placeholder-image.jpg'}
+          alt={item.name}
+          width={64}
+          height={64}
+          sizes="64px"
+          priority={false}
+          quality={75}
+        />
+      </Box>
 
       {/* Item Details */}
-      <VStack className={styles.content}>
-        <Heading level={5} >
-          {item.name} - {item.variationName}
-        </Heading>
+      <HStack justify="space-between" w="full">
+        <VStack gap="0" align="start">
+          <Heading level={6}>
+            {item.name} - {item.variationName}
+          </Heading>
 
-        <HStack gap="gap.inline.sm">
-          <Paragraph size="compact">
-            Qty: {item.quantity}
-          </Paragraph>
-          <Paragraph size="compact">
-            •
-          </Paragraph>
-          <Paragraph size="compact">
-            {formatMoney(item.basePriceMoney.amount)} each
-          </Paragraph>
-        </HStack>
+          <HStack>
+            <Paragraph size="compact">Qty: {item.quantity}</Paragraph>
+            <Paragraph size="compact">•</Paragraph>
+            <Paragraph size="compact">
+              {formatMoney(item.basePriceMoney.amount)} each
+            </Paragraph>
+          </HStack>
 
-        {item.modifiers?.map(modifier => (
-          <Paragraph size="compact" key={modifier.name}>
-            {modifier.name}: {formatMoney(modifier.basePriceMoney.amount)}
-          </Paragraph>
-        ))}
+          {item.modifiers?.map(mod => (
+            <Paragraph size="compact" key={mod.name}>
+              {mod.name}: +{formatMoney(mod.basePriceMoney.amount)}
+            </Paragraph>
+          ))}
 
-        {item.totalTaxMoney.amount > 0 && (
-          <Paragraph size="compact" >
-            Tax: {formatMoney(item.totalTaxMoney.amount)}
-          </Paragraph>
-        )}
-        {item.totalDiscountMoney.amount > 0 && (
-          <Paragraph size="compact">
-            -{formatMoney(item.totalDiscountMoney.amount)}
-          </Paragraph>
-        )}
-      </VStack>
+          {item.totalTaxMoney.amount > 0 && (
+            <Paragraph size="compact">
+              Tax: {formatMoney(item.totalTaxMoney.amount)}
+            </Paragraph>
+          )}
 
-      {/* Total Price */}
-      <Box className={styles.total}>
-        <Heading level={4} className={css({ color: 'text.primary', fontSize: 'sm' })}>
-          {formatMoney(item.totalMoney.amount)}
-        </Heading>
-      </Box>
+          {item.totalDiscountMoney.amount > 0 && (
+            <Paragraph size="compact">
+              -{formatMoney(item.totalDiscountMoney.amount)}
+            </Paragraph>
+          )}
+        </VStack>
+
+        {/* Total */}
+        <Box minW="fit-content">
+          <Paragraph
+           size="compact"
+          >
+            {formatMoney(item.totalMoney.amount)}
+          </Paragraph>
+        </Box>
+      </HStack>
     </HStack>
   )
 }

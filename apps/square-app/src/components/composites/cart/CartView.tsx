@@ -42,7 +42,8 @@ export const CartView = memo(function CartView({
       {/* Items */}
       <Box className={cartContent({ isEmpty })}>
         {isEmpty ? (
-          <Heading level={5} color="disabled">Your cart is empty</Heading >
+          <Flex align="center" justify="center"><Heading level={5} color="disabled">Your cart is empty</Heading ></Flex>
+          
         ) : (
           items.map((item) => <CartItems key={item.id} {...item} />)
         )}

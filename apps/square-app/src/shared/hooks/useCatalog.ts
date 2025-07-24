@@ -44,7 +44,8 @@ export function useCatalog({ initialData }: UseCatalogOptions = {}) {
     queryKey: catalogKeys.all,
 
     // The actual fetch function: asks the injected catalogService to return data
-    queryFn: () => catalogService.getCatalog(accessToken),
+    // We no longer pass the accessToken here. The API route will get it from the session.
+    queryFn: () => catalogService.getCatalog(),
 
     // How long the data is considered fresh (prevents unnecessary refetching)
     staleTime: STALE_TIME,

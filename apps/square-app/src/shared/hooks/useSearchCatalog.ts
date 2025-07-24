@@ -12,7 +12,7 @@ export function useSearchCatalog(searchTerm: string, categoryId?: string) {
 
   const { data, isLoading, error } = useQuery({
     queryKey: ['search', searchTerm, categoryId], // the query key
-    queryFn: () => catalogService.searchProducts(searchTerm, categoryId, accessToken), // the query function
+    queryFn: () => catalogService.searchProducts(searchTerm, categoryId), // the query function
     staleTime: STALE_TIME, // the stale time
     gcTime: GC_TIME, // the garbage collection time
     enabled: !!accessToken && searchTerm.length >= 2, // the enabled condition

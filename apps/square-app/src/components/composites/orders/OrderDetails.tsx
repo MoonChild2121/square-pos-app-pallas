@@ -70,7 +70,7 @@ export const OrderDetails = ({ order, fullWidth = false }: OrderDetailsProps) =>
           w="100%"
           className={css({
             borderTop: '1px solid',
-            borderColor: 'surface.container.highest',
+            borderColor: 'surface.spotlight',
           })}
         >
           <Heading level={5}>Total</Heading>

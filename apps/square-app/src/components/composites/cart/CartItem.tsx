@@ -10,8 +10,9 @@ import { cartItem } from '@styled-system/recipes'
 import ModifierModal from '@/components/composites/modals/ItemModal'
 import { useCatalog } from '@/shared/hooks/useCatalog'
 import { css } from '@styled-system/css'
-import { CartItem } from '@/shared/types/cart/index'
+import { CartItem } from '@/shared/types/cart'
 import { formatMoney } from '@/shared/utils/helpers'
+import Image from 'next/image'
 
 const CartItems = memo(function CartItem({
   id,
@@ -23,36 +24,21 @@ const CartItems = memo(function CartItem({
   discountIds = [],
   selectedModifier
 }: CartItem) {
-  const { updateQuantity } = useCartActions()
+  const { increaseQuantity, decreaseQuantity, removeItem } = useCartActions()
   const { taxes, discounts } = useCatalog()
-  const { root, image, content, controls, button, deleteButton, contentWrapper, modifierInfo } = cartItem()
-
-  const handleDecrease = useCallback(() => {
-    if (quantity > 1) {
-      updateQuantity(id, quantity - 1)
-    } else {
-      updateQuantity(id, 0) // This will remove the item
-    }
-  }, [id, quantity, updateQuantity])
-
-  const handleIncrease = useCallback(() => {
-    updateQuantity(id, quantity + 1)
-  }, [id, quantity, updateQuantity])
+  const { root, image, content, controls, button, deleteButton } = cartItem()
 
   const handleDelete = useCallback(() => {
-    updateQuantity(id, 0)
-  }, [id, updateQuantity])
+    removeItem(id)
+  }, [id, removeItem])
 
-  // Get selected tax and discount details
   const selectedTax = taxes.find(tax => tax.uid === taxIds[0])
   const selectedDiscount = discounts.find(discount => discount.uid === discountIds[0])
-
-  // Calculate total item price including modifier
   const totalItemPrice = price * quantity
 
   return (
     <Box pb="padding.block.sm">
-      <Box className={root}>
+      <HStack className={root}>
         {/* Delete Button */}
         <Box onClick={handleDelete} className={deleteButton}>
           <Trash2 size={20} />
@@ -60,16 +46,21 @@ const CartItems = memo(function CartItem({
 
         {/* Image */}
         <Box className={image}>
-          <img
+          <Image
             src={imageUrl || '/placeholder-image.jpg'}
             alt={name}
+            fill
+            sizes="80px"
+            priority={false}
+            quality={75}
+            style={{ objectFit: 'contain' }}
           />
         </Box>
 
         {/* Content Wrapper */}
-        <Box className={contentWrapper}>
+        <VStack justify='space-between' gap='gap.inline.xs' className={css({flex: 1,})}>
           {/* Item Details */}
-          <VStack className={content}>
+          <VStack className={content} gap='0'>
             <Heading level={6}>
               {name}
               {selectedModifier && (
@@ -86,20 +77,21 @@ const CartItems = memo(function CartItem({
                 </span>
               )}
             </Paragraph>
-            
-            {/* Tax and Discount Info */}
+
             {(selectedTax || selectedDiscount) && (
-              <Box className={modifierInfo}>
+              <VStack gap='0'>
                 {selectedTax && (
-                  <Paragraph size="subscript">Tax: {selectedTax.name} ({selectedTax.percentage}%)</Paragraph>
+                  <Paragraph size="subscript" color="secondary">
+                    Tax: {selectedTax.name} ({selectedTax.percentage}%)
+                  </Paragraph>
                 )}
                 {selectedDiscount && (
-                  <Paragraph size="subscript">
+                  <Paragraph size="subscript" color="secondary">
                     Discount: {selectedDiscount.name}
                     {selectedDiscount.percentage ? ` (${selectedDiscount.percentage}%)` : ''}
                   </Paragraph>
                 )}
-              </Box>
+              </VStack>
             )}
           </VStack>
 
@@ -110,16 +102,16 @@ const CartItems = memo(function CartItem({
               selectedTaxIds={taxIds}
               selectedDiscountIds={discountIds}
             />
-            <Box onClick={handleDecrease} className={button}>
+            <Box onClick={() => decreaseQuantity(id)} className={button}>
               <Minus size={17} />
             </Box>
             <Paragraph>{quantity}</Paragraph>
-            <Box onClick={handleIncrease} className={button}>
+            <Box onClick={() => increaseQuantity(id)} className={button}>
               <Plus size={17} />
             </Box>
           </HStack>
-        </Box>
-      </Box>
+        </VStack>
+      </HStack>
     </Box>
   )
 })
