@@ -2,7 +2,7 @@
  
 import Select from '@/components/primitives/ui/select'
 import { useCatalog } from '@/shared/hooks/useCatalog'
-import { useCartActions } from '@/shared/contexts/CartContext'
+import { useCartStore } from '@/shared/stores/useCartStore'
 import { Box } from '@styled-system/jsx'
 import Heading from '@/components/primitives/ui/typography/heading'
 
@@ -20,7 +20,8 @@ interface DiscountSelectProps {
 
 export function TaxSelect({ itemId, selectedTaxIds = [], isOrderLevel = false }: TaxSelectProps) {
   const { taxes } = useCatalog()
-  const { updateItemTaxes, updateOrderTaxes } = useCartActions()
+  const updateItemTaxes = useCartStore(state => state.updateItemTaxes)
+  const updateOrderTaxes = useCartStore(state => state.updateOrderTaxes)
 
   const handleTaxChange = (value: string) => {
     if (isOrderLevel) {
@@ -54,7 +55,8 @@ export function TaxSelect({ itemId, selectedTaxIds = [], isOrderLevel = false }:
 
 export function DiscountSelect({ itemId, selectedDiscountIds = [], isOrderLevel = false }: DiscountSelectProps) {
   const { discounts } = useCatalog()
-  const { updateItemDiscounts, updateOrderDiscounts } = useCartActions()
+  const updateItemDiscounts = useCartStore(state => state.updateItemDiscounts)
+  const updateOrderDiscounts = useCartStore(state => state.updateOrderDiscounts)
 
   const handleDiscountChange = (value: string) => {
     if (isOrderLevel) {

@@ -5,13 +5,17 @@ import { MenuLayout } from '@/components/composites/menu/MenuLayout'
 import { Utensils } from 'lucide-react'
 import { useCatalog } from '@/shared/hooks/useCatalog'
 import { useSearchCatalog } from '@/shared/hooks/useSearchCatalog'
-import { useCart } from '@/shared/contexts/CartContext'
+import { useCartStore } from '@/shared/stores/useCartStore'
 import { useSearchParams, useRouter } from 'next/navigation'
 import { MenuDashboardProps } from '@/shared/types/menu'
+import { useSession } from 'next-auth/react'
 
 const MemoizedMenuLayout = memo(MenuLayout)
 
 export function MenuDashboard({ initialData }: MenuDashboardProps) {
+  const { data: session, status } = useSession()
+  if (status !== 'authenticated') return null // or a spinner
+
   const [selectedItem, setSelectedItem] = useState<string>('all')
   const [searchTerm, setSearchTerm] = useState('')
 
@@ -30,7 +34,7 @@ export function MenuDashboard({ initialData }: MenuDashboardProps) {
     isLoading: isSearchLoading 
   } = useSearchCatalog(searchTerm);
 
-  const { clearCart } = useCart()
+  const { clearCart } = useCartStore()
   const searchParams = useSearchParams()
   const router = useRouter()
 

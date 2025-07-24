@@ -4,7 +4,7 @@ import { Box } from '@styled-system/jsx'
 import { css } from '@styled-system/css'
 import { OrderDetails } from '@/components/composites/orders/OrderDetails'
 import Paragraph from '@/components/primitives/ui/typography/paragraph'
-import { useCart } from '@/shared/contexts/CartContext'
+import { useCartStore } from '@/shared/stores/useCartStore'
 import { OrderSummaryProps } from '@/shared/types/orders'
 
 const emptyOrder = {
@@ -19,7 +19,7 @@ const emptyOrder = {
 }
 
 export default function OrderSummary({ orderCalc }: OrderSummaryProps) {
-  const { state } = useCart()
+  const items = useCartStore(state => state.items)
   const { order, error } = orderCalc
   
   const stickySummaryCss = css({
@@ -31,7 +31,7 @@ export default function OrderSummary({ orderCalc }: OrderSummaryProps) {
     alignItems: 'center',
   })
   
-  if (state.items.length === 0) return null
+  if (items.length === 0) return null
 
   if (error) {
     return (

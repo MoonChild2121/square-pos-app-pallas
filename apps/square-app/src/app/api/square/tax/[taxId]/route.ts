@@ -2,7 +2,7 @@ import { SquareClient, SquareEnvironment } from 'square';
 import { getServerSession } from 'next-auth';
 import { authOptions } from '../../../auth/[...nextauth]/route';
 import { NextResponse } from 'next/server';
-import JSONbig from 'json-bigint';
+const JSONbig = require('json-bigint')
 
 export async function GET(
   request: Request,

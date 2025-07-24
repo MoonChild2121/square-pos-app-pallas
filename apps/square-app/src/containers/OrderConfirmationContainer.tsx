@@ -1,13 +1,13 @@
 'use client'
 
-import { useEffect, useCallback } from 'react'
-import { useCart } from '@/shared/contexts/CartContext'
+import { useCallback } from 'react'
+import { useCartStore } from '@/shared/stores/useCartStore'
 import { useCatalog } from '@/shared/hooks/useCatalog'
 import { useRouter } from 'next/navigation'
 import { OrderConfirmationView } from '@/components/composites/checkout/OrderConfirmationView'
 
 export function OrderConfirmationContainer() {
-  const { state, clearCart } = useCart()
+  const state = useCartStore()
   const { products, isLoading: catalogLoading } = useCatalog()
   const router = useRouter()
 

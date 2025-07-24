@@ -3,7 +3,6 @@
 import { SessionProvider } from 'next-auth/react';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { useState } from 'react';
-import { CartProvider } from '@/shared/contexts/CartContext';
 import { STALE_TIME, GC_TIME } from '@/shared/constants'
 
 export function Providers({ children }: { children: React.ReactNode }) {
@@ -24,9 +23,7 @@ export function Providers({ children }: { children: React.ReactNode }) {
         refetchOnWindowFocus={false}
         refetchInterval={0}
       >
-        <CartProvider>
             {children}
-        </CartProvider>
       </SessionProvider>
     </QueryClientProvider>
   );

@@ -22,19 +22,6 @@ export interface CartState {
   orderDiscountIds: string[]
 }
 
-// All possible actions you can perform on the cart
-export type CartAction =
-  | { type: 'ADD_ITEM'; payload: CartItem }
-  | { type: 'REMOVE_ITEM'; payload: string }
-  | { type: 'UPDATE_QUANTITY'; payload: { id: string; quantity: number } }
-  | { type: 'UPDATE_ITEM_TAXES'; payload: { id: string; taxIds: string[] } }
-  | { type: 'UPDATE_ITEM_DISCOUNTS'; payload: { id: string; discountIds: string[] } }
-  | { type: 'UPDATE_ORDER_TAXES'; payload: string[] }
-  | { type: 'UPDATE_ORDER_DISCOUNTS'; payload: string[] }
-  | { type: 'SET_ORDER'; payload: any }
-  | { type: 'CLEAR_CART' }
-  | { type: 'LOAD_CART'; payload: CartState } 
-
 export interface CartToggleProps {
   isOpen: boolean;
   onToggle: () => void;

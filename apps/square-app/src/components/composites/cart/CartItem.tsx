@@ -5,7 +5,7 @@ import { Box, HStack, VStack } from '@styled-system/jsx'
 import Paragraph from '@/components/primitives/ui/typography/paragraph'
 import Heading from '@/components/primitives/ui/typography/heading'
 import { Minus, Plus, Trash2 } from 'lucide-react'
-import { useCartActions } from '@/shared/contexts/CartContext'
+import { useCartStore } from '@/shared/stores/useCartStore'
 import { cartItem } from '@styled-system/recipes'
 import ModifierModal from '@/components/composites/modals/ItemModal'
 import { useCatalog } from '@/shared/hooks/useCatalog'
@@ -24,7 +24,7 @@ const CartItems = memo(function CartItem({
   discountIds = [],
   selectedModifier
 }: CartItem) {
-  const { increaseQuantity, decreaseQuantity, removeItem } = useCartActions()
+  const { increaseQuantity, decreaseQuantity, removeItem } = useCartStore()
   const { taxes, discounts } = useCatalog()
   const { root, image, content, controls, button, deleteButton } = cartItem()
 

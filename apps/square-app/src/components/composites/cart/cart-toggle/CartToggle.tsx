@@ -1,13 +1,14 @@
 import { Button } from '@/components/primitives/ui/button'
 import { ShoppingCart } from 'lucide-react'
 import { css } from '@styled-system/css'
-import { useCart } from '@/shared/contexts/CartContext'
+import { useCartStore } from '@/shared/stores/useCartStore'
 import { CartToggleProps } from '@/shared/types/cart'
+import { Paragraph } from '@/components/primitives/ui/typography'
 
 export function CartToggle({ isOpen, onToggle }: CartToggleProps) {
-  const { state } = useCart()
+  const items = useCartStore(state => state.items)
   // Calculate total quantity of all items
-  const totalQuantity = state.items.reduce((total, item) => total + item.quantity, 0)
+  const totalQuantity = items.reduce((total, item) => total + item.quantity, 0)
 
   return (
     <Button
@@ -20,12 +21,11 @@ export function CartToggle({ isOpen, onToggle }: CartToggleProps) {
         borderRadius: 'full',
         display: 'flex',
         alignItems: 'center',
-        gap: '3',
         zIndex: '50',
-        boxShadow: 'xl',
+        boxShadow: 'sm',
         transform: isOpen ? 'scale(0)' : 'scale(1)',
         transition: 'transform 0.2s ease-in-out',
-        p: '6',
+        p: 'gap.inline.lg',
         _hover: {
           transform: isOpen ? 'scale(0)' : 'scale(1.05)',
         }
@@ -33,18 +33,10 @@ export function CartToggle({ isOpen, onToggle }: CartToggleProps) {
     >
       <ShoppingCart size={24} />
       {totalQuantity > 0 && (
-        <span className={css({
-          bg: 'primary.fg',
-          color: 'primary.bg',
-          borderRadius: 'full',
-          px: '3',
-          py: '1',
-          fontSize: 'md',
-          fontWeight: 'bold',
-          minWidth: '6',
-          textAlign: 'center',
-        })}>
-          {totalQuantity}
+        <span>
+          <Paragraph size="base" textStyle="bold"  className={css({
+            color: 'bgSolid.text'
+        })}>{totalQuantity}</Paragraph>
         </span>
       )}
     </Button>

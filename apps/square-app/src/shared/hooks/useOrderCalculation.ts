@@ -1,5 +1,6 @@
 import { useCallback, useEffect, useMemo, useState } from 'react'
 import debounce from 'lodash/debounce'
+import { calculateOrderAction } from '@/app/actions/square'
 import { OrderResponse, UseOrderCalculationProps } from '@/shared/types/orders'
 
 // Helper function to generate short unique IDs
@@ -100,15 +101,7 @@ export function useOrderCalculation({
     debounce(async (payload) => {
       setLoading(true)
       try {
-        const response = await fetch('/api/square/orders/calculate', {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify(payload),
-        })
-
-        const data = await response.json()
+        const data = await calculateOrderAction(payload)
         setOrderResponse({ data })
       } catch (err) {
         console.error('Order calculation error:', err)

@@ -3,7 +3,7 @@
 import { memo, useState } from 'react'
 import { Box, HStack, VStack } from '@styled-system/jsx'
 import SelectModifier from '@/components/composites/select/SelectModifier'
-import { useCartActions, useCartState } from '@/shared/contexts/CartContext'
+import { useCartStore } from '@/shared/stores/useCartStore'
 import { Button } from '@/components/primitives/ui/button'
 import { Minus, Plus } from 'lucide-react'
 import Paragraph from '@/components/primitives/ui/typography/paragraph'
@@ -22,8 +22,10 @@ const ProductCard = memo(function ProductCard({
   taxIds,
   modifiers = []
 }: Product) {
-  const { addItem, increaseQuantity, decreaseQuantity } = useCartActions()
-  const { items } = useCartState()
+  const addItem = useCartStore(state => state.addItem)
+  const increaseQuantity = useCartStore(state => state.increaseQuantity)
+  const decreaseQuantity = useCartStore(state => state.decreaseQuantity)
+  const items = useCartStore(state => state.items)
   
   // Find default modifier or first one
   const defaultModifier = modifiers.find(mod => mod.onByDefault) || modifiers[0]

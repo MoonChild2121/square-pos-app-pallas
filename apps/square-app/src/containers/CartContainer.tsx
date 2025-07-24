@@ -1,7 +1,7 @@
 'use client'
 
 import { useEffect, memo } from 'react'
-import { useCartState, useCartActions } from '@/shared/contexts/CartContext'
+import { useCartStore } from '@/shared/stores/useCartStore'
 import { useOrderCalculation } from '@/shared/hooks/useOrderCalculation'
 import { useRouter } from 'next/navigation'
 import { CartView } from '@/components/composites/cart/CartView'
@@ -9,8 +9,8 @@ import { DEBOUNCE_MS } from '@/shared/constants'
 import { CartContainerProps } from '@/shared/types/cart/index'
 
 export const CartContainer = memo(function CartContainer({ isOpen, onClose }: CartContainerProps) {
-  const state = useCartState()
-  const { setOrder, updateOrderTaxes, updateOrderDiscounts } = useCartActions()
+  const state = useCartStore()
+  const { setOrder, updateOrderTaxes, updateOrderDiscounts } = useCartStore()
   const isEmpty = state.items.length === 0
 
   const orderCalc = useOrderCalculation({
