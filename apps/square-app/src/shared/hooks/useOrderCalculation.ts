@@ -2,6 +2,7 @@ import { useCallback, useEffect, useMemo, useState } from 'react'
 import debounce from 'lodash/debounce'
 import { calculateOrderAction } from '@/app/actions/square'
 import { OrderResponse, UseOrderCalculationProps } from '@/shared/types/orders'
+import { DEBOUNCE_MS } from '@/shared/constants'
 
 // Helper function to generate short unique IDs
 function generateShortId(prefix: string, itemId: string, modifierId: string): string {
@@ -21,7 +22,7 @@ function getBaseProductId(cartItemId: string): string {
 
 export function useOrderCalculation({ 
   items, 
-  debounceMs = 300,
+  debounceMs = DEBOUNCE_MS,
   orderTaxIds = [],
   orderDiscountIds = []
 }: UseOrderCalculationProps) {
