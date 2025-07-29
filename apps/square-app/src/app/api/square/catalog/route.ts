@@ -1,7 +1,7 @@
 import { getServerSession } from 'next-auth';
 import { authOptions } from '../../auth/[...nextauth]/route';
 import { NextResponse } from 'next/server';
-import { fetchSquareCatalog } from '@/shared/services/catalog/logic';
+import { fetchSquareCatalog } from '@/shared/services/catalog/fetch-logic';
 
 export async function GET() {
   try {

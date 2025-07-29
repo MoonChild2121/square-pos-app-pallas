@@ -23,27 +23,25 @@ export const CartView = memo(function CartView({
   onUpdateTaxes,
   onUpdateDiscounts,
   onClose,
+  isRedirecting = false,
 }: CartViewProps) {
+  const showSummarySkeleton = !isEmpty && orderCalc.loading
+  const showOrderSummary = !isEmpty && !orderCalc.loading && orderCalc.order
+
   return (
-    <Box className={cartSlideout({ 
-      isOpen, 
-      size: { base: 'mobile', md: 'desktop' } 
-    })}>
+    <Box className={cartSlideout({ isOpen, size: { base: 'mobile', md: 'desktop' } })}>
       <Flex justify="flex-end" align="center">
-        <Button
-          variant="text"
-          size="icon"
-          aria-label="Close cart"
-          onClick={onClose}
-        >
+        <Button variant="text" size="icon" aria-label="Close cart" onClick={onClose}>
           <X size={20} />
-        </Button></Flex>
-        
+        </Button>
+      </Flex>
+
       {/* Items */}
       <Box className={cartContent({ isEmpty })}>
         {isEmpty ? (
-          <Flex align="center" justify="center"><Heading level={5} color="disabled">Your cart is empty</Heading ></Flex>
-          
+          <Flex align="center" justify="center">
+            <Heading level={5} color="disabled">Your cart is empty</Heading>
+          </Flex>
         ) : (
           items.map((item) => <CartItems key={item.id} {...item} />)
         )}
@@ -53,12 +51,10 @@ export const CartView = memo(function CartView({
       {!isEmpty && (
         <Box className={cartControls({ hasItems: true })}>
           <Box pb="layout.internal.sm">
-            {orderCalc.loading ? (
-              <OrderSummarySkeleton />
-            ) : (
-              <OrderSummary orderCalc={orderCalc} />
-            )}
+            {showSummarySkeleton && <OrderSummarySkeleton />}
+            {showOrderSummary && <OrderSummary orderCalc={orderCalc} />}
           </Box>
+
           <VStack gap="layout.internal.sm">
             <OrderModifierModal
               selectedTaxIds={selectedTaxIds}
@@ -66,18 +62,18 @@ export const CartView = memo(function CartView({
               onUpdateTaxes={onUpdateTaxes}
               onUpdateDiscounts={onUpdateDiscounts}
             />
-            <Button 
+            <Button
               variant="outlined"
               width="full"
-              isLoading={orderCalc.loading}
+              isLoading={orderCalc.loading || isRedirecting}
               onClick={onCheckout}
+              disabled={isEmpty || orderCalc.loading || isRedirecting}
             >
               Proceed to Checkout
             </Button>
           </VStack>
         </Box>
       )}
-
     </Box>
   )
 })

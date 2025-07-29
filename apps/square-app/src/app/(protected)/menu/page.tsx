@@ -5,7 +5,7 @@ import { getCatalogService } from '@/shared/services/service-factory'
 import { authOptions } from '@/app/api/auth/[...nextauth]/route'
 import { redirect } from 'next/navigation'
 
-
+// This is the initial data for the menu dashboard
 async function getInitialData() {
   const session = await getServerSession(authOptions)
   

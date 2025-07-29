@@ -8,24 +8,20 @@ import { useSearchCatalog } from '@/shared/hooks/useSearchCatalog'
 import { useCartStore } from '@/shared/stores/useCartStore'
 import { useSearchParams, useRouter } from 'next/navigation'
 import { MenuDashboardProps } from '@/shared/types/menu'
-import { useSession } from 'next-auth/react'
-import { Spinner } from '@/components/primitives/ui/spinner'
 
 const MemoizedMenuLayout = memo(MenuLayout)
 
 export function MenuDashboard({ initialData }: MenuDashboardProps) {
-  const { data: session, status } = useSession()
-  if (status !== 'authenticated') return <Spinner /> // or a spinner
 
   const [selectedItem, setSelectedItem] = useState<string>('all')
   const [searchTerm, setSearchTerm] = useState('')
 
-  // The useCatalog hook now returns clean data and loading state
+  // The useCatalog hook returns clean data and loading state
   const {
     products: allProducts,
     isLoading: isCatalogLoading
   } = useCatalog({
-    // The initialData prop is now passed directly to the hook,
+    // The initialData prop is passed directly to the hook,
     // as it's already in the correct `CatalogData` format.
     initialData,
   });

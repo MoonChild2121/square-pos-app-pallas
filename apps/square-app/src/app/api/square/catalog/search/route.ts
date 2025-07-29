@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { getServerSession } from 'next-auth';
 import { authOptions } from '../../../auth/[...nextauth]/route';
-import { fetchSquareSearch } from '@/shared/services/catalog/logic';
+import { fetchSquareSearch } from '@/shared/services/catalog/fetch-logic';
 
 export async function POST(req: NextRequest): Promise<NextResponse> {
   try {

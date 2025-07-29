@@ -3,16 +3,16 @@ import { persist } from 'zustand/middleware'
 import type { CartItem, CartState } from '@/shared/types/cart'
 
 type CartStore = CartState & {
-  addItem: (item: CartItem) => void
-  removeItem: (id: string) => void
-  updateQuantity: (id: string, quantity: number) => void
-  updateItemTaxes: (id: string, taxIds: string[]) => void
-  updateItemDiscounts: (id: string, discountIds: string[]) => void
-  updateOrderTaxes: (taxIds: string[]) => void
-  updateOrderDiscounts: (discountIds: string[]) => void
-  clearCart: () => void
-  setOrder: (order: any) => void
-  increaseQuantity: (id: string) => void
+  addItem: (item: CartItem) => void // Add item to cart
+  removeItem: (id: string) => void // Remove item from cart
+  updateQuantity: (id: string, quantity: number) => void // Update item quantity
+  updateItemTaxes: (id: string, taxIds: string[]) => void // Update item taxes
+  updateItemDiscounts: (id: string, discountIds: string[]) => void // Update item discounts
+  updateOrderTaxes: (taxIds: string[]) => void // Update order taxes
+  updateOrderDiscounts: (discountIds: string[]) => void // Update order discounts
+  clearCart: () => void // Clear cart
+  setOrder: (order: any) => void // Set order
+  increaseQuantity: (id: string) => void // Increase item quantity
   decreaseQuantity: (id: string) => void
 }
 

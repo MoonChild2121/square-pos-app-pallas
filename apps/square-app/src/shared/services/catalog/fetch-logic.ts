@@ -1,7 +1,5 @@
 import { SquareClient, SquareEnvironment } from 'square';
-// eslint-disable-next-line @typescript-eslint/no-var-requires
 const JSONbigFactory = require('json-bigint');
-// eslint-disable-next-line @typescript-eslint/no-var-requires
 const JSONBig = require('json-bigint');
 
 /**

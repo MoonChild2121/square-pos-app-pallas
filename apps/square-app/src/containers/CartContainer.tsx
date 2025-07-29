@@ -1,6 +1,6 @@
 'use client'
 
-import { useEffect, memo } from 'react'
+import { useEffect, memo, useState, useTransition } from 'react'
 import { useCartStore } from '@/shared/stores/useCartStore'
 import { useOrderCalculation } from '@/shared/hooks/useOrderCalculation'
 import { useRouter } from 'next/navigation'
@@ -11,6 +11,9 @@ import { CartContainerProps } from '@/shared/types/cart/index'
 export const CartContainer = memo(function CartContainer({ isOpen, onClose }: CartContainerProps) {
   const state = useCartStore()
   const { setOrder, updateOrderTaxes, updateOrderDiscounts } = useCartStore()
+  const [isRedirecting, setIsRedirecting] = useState(false);
+  const [isPending, startTransition] = useTransition()
+
   const isEmpty = state.items.length === 0
 
   const orderCalc = useOrderCalculation({
@@ -29,7 +32,10 @@ export const CartContainer = memo(function CartContainer({ isOpen, onClose }: Ca
   const router = useRouter()
 
   const handleCheckout = () => {
-    router.push('/checkout')
+    setIsRedirecting(true)
+    startTransition(() => {
+      router.push('/checkout')
+    })
   }
 
   return (
@@ -44,6 +50,7 @@ export const CartContainer = memo(function CartContainer({ isOpen, onClose }: Ca
       selectedTaxIds={state.orderTaxIds}
       selectedDiscountIds={state.orderDiscountIds}
       onClose={onClose}
+      isRedirecting={isPending}
     />
   )
 })

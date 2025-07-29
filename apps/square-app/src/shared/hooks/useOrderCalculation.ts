@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useMemo, useState } from 'react'
 import debounce from 'lodash/debounce'
-import { calculateOrderAction } from '@/app/actions/square'
+import { calculateOrderAction } from '@/app/actions/order'
 import { OrderResponse, UseOrderCalculationProps } from '@/shared/types/orders'
 import { DEBOUNCE_MS } from '@/shared/constants'
 

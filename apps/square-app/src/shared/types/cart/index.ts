@@ -41,4 +41,5 @@ export interface CartViewProps extends CartContainerProps {
   onCheckout: () => void;
   onUpdateTaxes: (ids: string[]) => void;
   onUpdateDiscounts: (ids: string[]) => void;
+  isRedirecting?: boolean;
 }

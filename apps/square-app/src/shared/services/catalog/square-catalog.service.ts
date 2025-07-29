@@ -16,7 +16,7 @@ import {
   SearchCatalogResponse,
 } from '@/shared/types/catalog';
 import JSONBig from 'json-bigint';
-import { fetchSquareCatalog, fetchSquareSearch } from './logic';
+import { fetchSquareCatalog, fetchSquareSearch } from './fetch-logic';
 
 // Helper to get the base URL for API calls
 const getBaseUrl = () => {
