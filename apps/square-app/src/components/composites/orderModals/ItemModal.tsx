@@ -3,11 +3,11 @@
 import Modal from '@/components/primitives/ui/modal/modal'
 import { useState } from 'react'
 import { Edit } from 'lucide-react'
-import { TaxSelect, DiscountSelect } from '@/components/composites/select/SelectTaxDiscount'
+import { TaxSelect, DiscountSelect } from '@/components/composites/modifierSelect/SelectTaxDiscount'
 import { VStack } from '@styled-system/jsx'
 import { cartItem } from '@styled-system/recipes'
 import { Box } from '@styled-system/jsx'
-import { ModifierModalProps } from '@/components/composites/modals/types'
+import { ModifierModalProps } from '@/components/composites/orderModals/types'
 
 export default function ModifierModal({ itemId, selectedTaxIds = [], selectedDiscountIds = [] }: ModifierModalProps) {
   const [open, setOpen] = useState(false)

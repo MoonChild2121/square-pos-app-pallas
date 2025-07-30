@@ -1,17 +1,17 @@
 'use client'
 
 import { useState, useMemo, useCallback, useEffect, memo } from 'react'
-import { MenuLayout } from '@/components/composites/menu/MenuLayout'
+import { HomeLayout } from '@/components/composites/layout/HomeLayout'
 import { Utensils } from 'lucide-react'
 import { useCatalog } from '@/shared/hooks/useCatalog'
 import { useSearchCatalog } from '@/shared/hooks/useSearchCatalog'
 import { useCartStore } from '@/shared/stores/useCartStore'
 import { useSearchParams, useRouter } from 'next/navigation'
-import { MenuDashboardProps } from '@/shared/types/menu'
+import { HomeContainerProps } from '@/shared/types/menu'
 
-const MemoizedMenuLayout = memo(MenuLayout)
+const MemoizedHomeLayout = memo(HomeLayout)
 
-export function MenuDashboard({ initialData }: MenuDashboardProps) {
+export function HomeContainer({ initialData }: HomeContainerProps) {
 
   const [selectedItem, setSelectedItem] = useState<string>('all')
   const [searchTerm, setSearchTerm] = useState('')
@@ -40,7 +40,7 @@ export function MenuDashboard({ initialData }: MenuDashboardProps) {
   useEffect(() => {
     if (shouldClearCart) {
       clearCart()
-      router.replace('/menu')
+      router.replace('/home')
     }
   }, [shouldClearCart, clearCart, router])
 
@@ -99,7 +99,7 @@ export function MenuDashboard({ initialData }: MenuDashboardProps) {
   }, [])
 
   return (
-    <MemoizedMenuLayout
+    <MemoizedHomeLayout
       menuItems={menuItems}
       selectedItem={selectedItem}
       onSelectItem={handleSelectItem}

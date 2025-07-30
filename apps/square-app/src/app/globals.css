@@ -3,27 +3,18 @@
   @import "../styled-system/styles.css";
 }
 
-@font-face {
-  font-family: 'Geist';
-  src: url('../assets/fonts/GeistVF.woff') format('woff');
-  font-weight: 100 900;
-  font-style: normal;
-  font-display: swap;
-}
-
-@font-face {
-  font-family: 'Geist Mono';
-  src: url('../assets/fonts/GeistMonoVF.woff') format('woff');
-  font-weight: 100 900;
-  font-style: normal;
-  font-display: swap;
-}
 
 :root {
-  --font-geist: 'Geist';
-  --font-geist-mono: 'Geist Mono';
-  --font-sans: var(--font-inter);
-  --font-heading: var(--font-noto-sans-jp);
+  --font-geist: 'Geist', sans-serif;
+  --font-geist-mono: 'Geist Mono', monospace;
+}
+
+body {
+  font-family: var(--font-geist);
+}
+
+code, pre {
+  font-family: var(--font-geist-mono);
 }
 
 html {

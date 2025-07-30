@@ -10,6 +10,7 @@ export interface CatalogData {
   products: Product[];
   taxes: Tax[];
   discounts: Discount[];
+  modifierMap: Record<string, ModifierData[]>;
 }
 /**
  * ICatalogService defines the contract that all catalog providers must follow.

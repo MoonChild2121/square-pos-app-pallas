@@ -17,7 +17,7 @@ export function OrderConfirmationContainer() {
   }, [products]);
 
   const handleContinueShopping = useCallback(() => {
-    router.push('/menu?clear=true')
+    router.push('/home?clear=true')
   }, [router])
 
   return (

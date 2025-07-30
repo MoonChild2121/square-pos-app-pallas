@@ -21,7 +21,6 @@ export async function POST(req: NextRequest): Promise<NextResponse> {
       keywords,
       categoryId
     );
-
     return NextResponse.json(searchData);
   } catch (error: any) {
     console.error('Search API: Error occurred', {

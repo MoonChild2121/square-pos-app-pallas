@@ -11,7 +11,7 @@ export function LoginFormContainer() {
   const handleSignIn = async () => {
     setIsLoading(true)
     try {
-      await signIn('square', { callbackUrl: '/menu' })
+      await signIn('square', { callbackUrl: '/home' })
     } catch (error) {
       setIsLoading(false)
     }

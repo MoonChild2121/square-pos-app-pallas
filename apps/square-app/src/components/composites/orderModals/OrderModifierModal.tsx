@@ -3,9 +3,9 @@
 import { Box, VStack } from '@styled-system/jsx'
 import  Modal from '@/components/primitives/ui/modal/modal'
 import { Button } from '@/components/primitives/ui/button'
-import { TaxSelect, DiscountSelect } from '@/components/composites/select/SelectTaxDiscount'
+import { TaxSelect, DiscountSelect } from '@/components/composites/modifierSelect/SelectTaxDiscount'
 import { Edit } from 'lucide-react'
-import { OrderModifierModalProps } from '@/components/composites/modals/types'
+import { OrderModifierModalProps } from '@/components/composites/orderModals/types'
 
 export default function OrderModifierModal({
   selectedTaxIds,

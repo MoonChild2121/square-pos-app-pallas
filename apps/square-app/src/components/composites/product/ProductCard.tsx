@@ -2,7 +2,7 @@
 
 import { memo, useState } from 'react'
 import { Box, HStack, VStack } from '@styled-system/jsx'
-import SelectModifier from '@/components/composites/select/SelectModifier'
+import SelectModifier from '@/components/composites/modifierSelect/SelectModifier'
 import { useCartStore } from '@/shared/stores/useCartStore'
 import { Button } from '@/components/primitives/ui/button'
 import { Minus, Plus } from 'lucide-react'
@@ -72,6 +72,7 @@ const ProductCard = memo(function ProductCard({
           fill
           sizes="166px"
           style={{ objectFit: 'contain' }}
+          priority={false}
         />
       </Box>
       

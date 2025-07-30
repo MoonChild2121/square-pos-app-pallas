@@ -1,4 +1,4 @@
-import {LoadingSkeleton} from '@/components/composites/skeletons/LoadingSkeleton'
+import {LoadingSkeleton} from '@/components/composites/LoadingSkeletons/LayoutSkeleton'
 
 export default function Loading() {
   return (

@@ -28,3 +28,4 @@ export function useSearchCatalog(searchTerm: string, categoryId?: string) {
     [data, isLoading, error]
   );
 }
+

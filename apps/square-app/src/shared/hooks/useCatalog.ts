@@ -32,6 +32,7 @@ export function useCatalog({ initialData }: UseCatalogOptions = {}) {
     products: data?.products || [],
     taxes: data?.taxes || [],
     discounts: data?.discounts || [],
+    modifierMap: data?.modifierMap || {},
     isLoading,
     error,
   };

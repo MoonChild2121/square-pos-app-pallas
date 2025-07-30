@@ -23,8 +23,7 @@ export interface MenuBoxGridProps {
   onCategorySelect: (categoryId: string) => void;
 }
 
-
-export interface MenuLayoutProps {
+export interface HomeLayoutProps {
   menuItems: MenuItem[];
   selectedItem: string;
   onSelectItem: (id: string) => void;
@@ -33,6 +32,6 @@ export interface MenuLayoutProps {
   products: Product[];
 }
 
-export interface MenuDashboardProps {
+export interface HomeContainerProps {
   initialData: CatalogData
 }

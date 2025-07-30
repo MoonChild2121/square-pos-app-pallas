@@ -31,7 +31,7 @@ export const OrderDetails = ({ order, fullWidth = false }: OrderDetailsProps) =>
       <Heading level={4}>Order Summary</Heading>
       <VStack w="100%">
         {/* Subtotal */}
-        <HStack justify="space-between" w="100%">
+        <HStack justify="space-between" w="100%"  p='0'>
           <Paragraph size="compact">Subtotal</Paragraph>
           <Paragraph size="compact">{formatMoney(subtotal)}</Paragraph>
         </HStack>
@@ -71,6 +71,7 @@ export const OrderDetails = ({ order, fullWidth = false }: OrderDetailsProps) =>
           className={css({
             borderTop: '1px solid',
             borderColor: 'surface.spotlight',
+            pt: 'padding.block.md'
           })}
         >
           <Heading level={5}>Total</Heading>

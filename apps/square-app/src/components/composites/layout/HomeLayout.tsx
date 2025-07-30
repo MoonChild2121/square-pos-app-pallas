@@ -7,9 +7,9 @@ import { cartOverlay, cartSlideout } from '@styled-system/recipes'
 import { Header } from '@/components/composites/layout/Header'
 import MenuBoxGrid from '@/components/composites/menu/MenuBoxGrid'
 import ProductGrid from '@/components/composites/product/ProductGrid'
-import SearchBar from '@/components/composites/search/SearchBar'
+import SearchBar from '@/components/composites/productSearch/SearchBar'
 import { CartToggle } from '@/components/composites/cart/cart-toggle/CartToggle'
-import { MenuLayoutProps } from '@/shared/types/menu'
+import { HomeLayoutProps } from '@/shared/types/menu'
 import { CartContainer } from '@/containers/CartContainer'
 
 // Memoized menu section component
@@ -18,7 +18,7 @@ const MenuSection = memo(function MenuSection({
   selectedItem,
   onSelectItem,
   onSearch
-}: Pick<MenuLayoutProps, 'menuItems' | 'selectedItem' | 'onSelectItem' | 'onSearch'>) {
+}: Pick<HomeLayoutProps, 'menuItems' | 'selectedItem' | 'onSelectItem' | 'onSearch'>) {
   return (
     <Flex direction="column" gap='layout.section.sm'>
       <MenuBoxGrid
@@ -37,7 +37,7 @@ const MenuSection = memo(function MenuSection({
 const ProductSection = memo(function ProductSection({
   products,
   loading
-}: Pick<MenuLayoutProps, 'products' | 'loading'>) {
+}: Pick<HomeLayoutProps, 'products' | 'loading'>) {
   return (
     <Box
       className={css({
@@ -54,14 +54,14 @@ const ProductSection = memo(function ProductSection({
   )
 })
 
-export const MenuLayout = memo(function MenuLayout({
+export const HomeLayout = memo(function HomeLayout({
   menuItems,
   selectedItem,
   onSelectItem,
   onSearch,
   loading,
   products,
-}: MenuLayoutProps) {
+}: HomeLayoutProps) {
   const [isCartOpen, setIsCartOpen] = useState(false)
 
   return (

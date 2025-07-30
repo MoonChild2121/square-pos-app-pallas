@@ -1,9 +1,10 @@
 import { Suspense } from 'react' 
-import { MenuDashboard } from '@/containers/menu/MenuDashboard'
+import { HomeContainer } from '@/containers/home/HomeContainer'
 import { getServerSession } from 'next-auth'
 import { getCatalogService } from '@/shared/services/service-factory'
 import { authOptions } from '@/app/api/auth/[...nextauth]/route'
 import { redirect } from 'next/navigation'
+import { fetchSquareCatalog } from '@/shared/services/catalog/fetch-logic';
 
 // This is the initial data for the menu dashboard
 async function getInitialData() {
@@ -15,6 +16,9 @@ async function getInitialData() {
   // Get the catalog service  
   const catalogService = getCatalogService()
   // Get the catalog data
+  const rawData = await fetchSquareCatalog(session.accessToken);
+  const squareCatalogService = catalogService as any; // need to cast to any to access private method
+  squareCatalogService.initializeMaps(rawData);
   const data = await catalogService.getCatalog(session.accessToken)
 
   // The service returns the data in the clean `CatalogData` format,
@@ -27,7 +31,7 @@ export default async function MenuPage() {
 
   return (
     <Suspense >
-      <MenuDashboard initialData={initialData} />
+      <HomeContainer initialData={initialData} />
     </Suspense>
   )
-} 
+}

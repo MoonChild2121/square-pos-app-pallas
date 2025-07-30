@@ -36,15 +36,14 @@ export const OrderItemCard = ({ item, imageUrl }: OrderItemCardProps) => {
       {/* Item Details */}
       <HStack justify="space-between" w="full">
         <VStack gap="0" align="start">
-          <Heading level={6}>
+          <Paragraph textStyle="bold">
             {item.name} - {item.variationName}
-          </Heading>
+          </Paragraph>
 
           <HStack>
-            <Paragraph size="compact">Qty: {item.quantity}</Paragraph>
-            <Paragraph size="compact">•</Paragraph>
+            <Paragraph size="compact" >Qty: {item.quantity}</Paragraph>
             <Paragraph size="compact">
-              {formatMoney(item.basePriceMoney.amount)} each
+              ({formatMoney(item.basePriceMoney.amount)} each)
             </Paragraph>
           </HStack>
 
@@ -61,7 +60,7 @@ export const OrderItemCard = ({ item, imageUrl }: OrderItemCardProps) => {
           )}
 
           {item.totalDiscountMoney.amount > 0 && (
-            <Paragraph size="compact">
+            <Paragraph size="compact" color="error">
               -{formatMoney(item.totalDiscountMoney.amount)}
             </Paragraph>
           )}
@@ -71,6 +70,7 @@ export const OrderItemCard = ({ item, imageUrl }: OrderItemCardProps) => {
         <Box minW="fit-content">
           <Paragraph
            size="compact"
+           textStyle="bold"
           >
             {formatMoney(item.totalMoney.amount)}
           </Paragraph>

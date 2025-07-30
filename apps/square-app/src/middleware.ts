@@ -5,7 +5,7 @@ import type { NextRequest } from 'next/server';
 // List of public routes that don't require authentication
 const publicRoutes = ['/login'];
 // List of protected routes that require authentication
-const protectedRoutes = ['/menu', '/checkout', '/dashboard'];
+const protectedRoutes = ['/home', '/checkout', '/dashboard'];
 
 export async function middleware(request: NextRequest) {
   const token = await getToken({ req: request }); //check cookies for nexauth token
@@ -26,7 +26,7 @@ export async function middleware(request: NextRequest) {
 
   // Handle public routes - redirect to home if already authenticated
   if (isPublicRoute && token) {
-    return NextResponse.redirect(new URL('/menu', request.url));
+    return NextResponse.redirect(new URL('/home', request.url));
   }
 
   return NextResponse.next();
@@ -36,7 +36,7 @@ export const config = {
   // Update matcher to include all protected routes
   matcher: [
     '/login',
-    '/menu/:path*',
+    '/home/:path*',
     '/checkout/:path*',
     '/dashboard/:path*',
     // Exclude all api routes, static files, and other assets
