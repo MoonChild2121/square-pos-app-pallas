@@ -1,10 +1,11 @@
-import type { Metadata } from 'next'
 import './globals.css'
-import { Providers } from './providers'
 import { ReactScan } from './ReactScan'
+import { Providers } from './providers'
 import localFont from 'next/font/local'
+import type { Metadata } from 'next'
+import { getServerSession } from 'next-auth'
+import { authOptions } from '@/app/api/auth/[...nextauth]/route' // adjust if path differs
 
-// === Custom local fonts ===
 const geist = localFont({
   src: '../assets/fonts/GeistVF.woff',
   variable: '--font-geist',
@@ -22,16 +23,20 @@ export const metadata: Metadata = {
   description: 'Square Integration for Pallas Pay',
 }
 
-export default function RootLayout({
+export default async function RootLayout({
   children,
 }: {
   children: React.ReactNode
 }) {
+  const session = await getServerSession(authOptions)
+
   return (
     <html lang="en" className={`${geist.variable} ${geistMono.variable}`}>
       <ReactScan />
       <body>
-        <Providers>{children}</Providers>
+        <Providers session={session}>
+          {children}
+        </Providers>
       </body>
     </html>
   )

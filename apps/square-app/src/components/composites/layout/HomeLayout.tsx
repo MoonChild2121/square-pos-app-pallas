@@ -78,13 +78,29 @@ export const HomeLayout = memo(function HomeLayout({
         h: '100%',
       })}>
         <Header />
-        <MenuSection
-          menuItems={menuItems}
-          selectedItem={selectedItem}
-          onSelectItem={onSelectItem}
-          onSearch={onSearch}
-        />
-        <ProductSection products={products} loading={loading} />
+        
+        {/* Surface Container for Menu and Products */}
+        <Box
+          className={css({
+            flex: '1',
+            bg: 'surface.container', // or 'white' if you prefer
+            borderRadius: 'lg',
+            px: { base: 'padding.inline.sm', md: 'padding.inline.lg' },
+            py: { base: 'padding.block.sm', md: 'padding.block.lg' },
+            display: 'flex',
+            flexDirection: 'column',
+            gap: 'layout.section.sm',
+            minHeight: 0, // Important for proper flex behavior
+          })}
+        >
+          <MenuSection
+            menuItems={menuItems}
+            selectedItem={selectedItem}
+            onSelectItem={onSelectItem}
+            onSearch={onSearch}
+          />
+          <ProductSection products={products} loading={loading} />
+        </Box>
       </Flex>
 
       {/* Overlay - using recipe */}

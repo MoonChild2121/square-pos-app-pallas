@@ -21,8 +21,6 @@ async function getInitialData() {
   squareCatalogService.initializeMaps(rawData);
   const data = await catalogService.getCatalog(session.accessToken)
 
-  // The service returns the data in the clean `CatalogData` format,
-  // which is exactly what the MenuDashboard now expects for its initialData prop.
   return data;
 }
 

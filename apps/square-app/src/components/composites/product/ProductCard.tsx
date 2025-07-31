@@ -64,10 +64,10 @@ const ProductCard = memo(function ProductCard({
         borderRadius: 'xl',
         overflow: 'hidden',
         aspectRatio: '4/3',
-        bg: 'bgSolid.text'
+        bg: 'surface.layout',
       })}>
         <Image
-          src={imageUrl || '/placeholder-image.jpg'}
+          src={imageUrl || '/placeholder-image.png'}
           alt={name}
           fill
           sizes="166px"

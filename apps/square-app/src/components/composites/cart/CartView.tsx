@@ -11,6 +11,7 @@ import OrderModifierModal from '@/components/composites/orderModals/OrderModifie
 import { CartViewProps } from '@/shared/types/cart/index'
 import { Heading } from '@/components/primitives/ui/typography'
 import { X } from 'lucide-react'
+import { css } from '@styled-system/css'
 
 export const CartView = memo(function CartView({
   isOpen,
@@ -68,6 +69,9 @@ export const CartView = memo(function CartView({
               isLoading={orderCalc.loading || isRedirecting}
               onClick={onCheckout}
               disabled={isEmpty || orderCalc.loading || isRedirecting}
+              className={css({
+                boxShadow: 'sm',
+              })}
             >
               Proceed to Checkout
             </Button>

@@ -6,6 +6,7 @@ import { Button } from '@/components/primitives/ui/button'
 import { TaxSelect, DiscountSelect } from '@/components/composites/modifierSelect/SelectTaxDiscount'
 import { Edit } from 'lucide-react'
 import { OrderModifierModalProps } from '@/components/composites/orderModals/types'
+import { css } from '@styled-system/css'
 
 export default function OrderModifierModal({
   selectedTaxIds,
@@ -16,7 +17,11 @@ export default function OrderModifierModal({
   return (
     <Modal.Root>
       <Modal.Trigger asChild>
-        <Button variant="primary" width="full">
+        <Button variant="primary" width="full"
+        className={css({
+          boxShadow: 'sm',
+        })}
+        >
           <Edit size={20} />
           <Box ml="padding.inline.sm">Order Modifiers</Box>
         </Button>

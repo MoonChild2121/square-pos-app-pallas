@@ -7,9 +7,12 @@ export const cartItem = defineSlotRecipe({
   slots: ['root', 'image', 'content', 'title', 'controls', 'button', 'deleteButton', 'contentWrapper'],
   base: {
     root: {
-      bg: 'surface.layout',
+      bg: 'bgSolid.text',
+      borderRadius: 'xl',
+      border: '1px solid',
+      borderColor: 'border.secondary',
+      boxShadow: 'sm',
       p: 'padding.inline.sm',
-      borderRadius: 'lg',
       w: '100%',
       position: 'relative',
     },
@@ -18,7 +21,7 @@ export const cartItem = defineSlotRecipe({
       width: '80px',          // Fixed container size
       height: '80px',
       flexShrink: 0,
-      bg: 'white',
+      bg: 'surface.layout',
       borderRadius: 'lg',
       overflow: 'hidden',         // Clip overflow for clean edges
       display: 'flex',

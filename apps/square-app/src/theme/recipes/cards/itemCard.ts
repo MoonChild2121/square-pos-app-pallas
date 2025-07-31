@@ -6,8 +6,10 @@ export const itemCard = defineRecipe({
   description: 'Product card styling for menu and default cards',
   base: {
     borderRadius: 'xl',
+    border: '1px solid',
+    borderColor: 'border.secondary',
     boxShadow: 'sm',
-    bg: 'surface.layout',
+    bg: 'bgSolid.text',
     overflow: 'hidden',
     transition: 'all 0.2s ease-in-out',
     _hover: {
@@ -18,7 +20,6 @@ export const itemCard = defineRecipe({
   variants: {
     variant: {
       menu: {
-        bg: 'bgSolid.text',
         w: '150px',
         h: '150px',
         minW: '120px',
