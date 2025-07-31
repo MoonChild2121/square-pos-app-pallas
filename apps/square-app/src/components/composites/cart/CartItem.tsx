@@ -47,7 +47,7 @@ const CartItems = memo(function CartItem({
         {/* Image */}
         <Box className={image}>
           <Image
-            src={imageUrl || '/placeholder-image.jpg'}
+            src={imageUrl || '/placeholder-image.png'}
             alt={name}
             fill
             sizes="80px"

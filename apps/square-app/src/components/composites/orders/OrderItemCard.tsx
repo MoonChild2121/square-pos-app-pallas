@@ -20,10 +20,12 @@ export const OrderItemCard = ({ item, imageUrl }: OrderItemCardProps) => {
           display: 'flex',
           alignItems: 'center',
           justifyContent: 'center',
+          bg: 'surface.layout',
+          borderRadius: 'lg',
         })}
       >
         <Image
-          src={imageUrl?.trim() || '/placeholder-image.jpg'}
+          src={imageUrl?.trim() || '/placeholder-image.png'}
           alt={item.name}
           width={64}
           height={64}

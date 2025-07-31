@@ -26,10 +26,18 @@ export function OrderConfirmationView({
         alignItems: 'center', 
         justifyContent: 'center' 
       })}>
-        <VStack gap="gap.inline.lg" align="center">
-          <Heading level={2}>No order found</Heading>
-          <Paragraph>No items in your order</Paragraph>
-        </VStack>
+        {/* Surface for empty state */}
+        <Box className={css({
+          bg: 'surface.container',
+          borderRadius: 'lg',
+          p: { base: 'padding.block.lg', md: 'padding.block.xl' },
+          boxShadow: 'sm'
+        })}>
+          <VStack gap="gap.inline.lg" align="center">
+            <Heading level={2}>No order found</Heading>
+            <Paragraph>No items in your order</Paragraph>
+          </VStack>
+        </Box>
       </Box>
     )
   }
@@ -37,12 +45,12 @@ export function OrderConfirmationView({
   return (
     <Box className={css({ 
       minH: '100vh', 
-      bg: 'surface.container', 
+      bg: 'surface.layout', // Changed to background color for contrast
       p: 'padding.inline.lg' 
     })}>
       <Box className={css({ maxW: '4xl', mx: 'auto' })}>
         
-        {/* Success Message - Keep your existing header styling */}
+        {/* Success Message - stays on background */}
         <HStack 
           gap="gap.inline.lg" 
           className={css({
@@ -62,71 +70,73 @@ export function OrderConfirmationView({
           </VStack>
         </HStack>
 
-        {/* Order Number */}
-        <Paragraph 
-          size="sm" 
-          className={css({ 
-            color: 'text.secondary',
-            mb: 'gap.inline.lg'
-          })}
-        >
-          Order #{Math.random().toString(36).substr(2, 9).toUpperCase()}
-        </Paragraph>
-
-        {/* Simple Two Column Layout */}
+        {/* Main Surface Container - everything else goes here */}
         <Box className={css({
-          display: 'grid',
-          gridTemplateColumns: { base: '1fr', lg: '2fr 1fr' },
-          gap: 'gap.inline.lg'
+          bg: 'surface.container',
+          borderRadius: 'lg',
+          p: { base: 'padding.inline.md', md: 'padding.inline.lg' },
+          boxShadow: 'sm'
         })}>
-          
-          {/* Order Items */}
-          <VStack gap="gap.inline.sm" className={css({
-            borderRadius: 'lg',
-            boxShadow: 'sm',
-            p: 'padding.inline.md',
-            border: '1px solid',
-            borderColor: 'border'
-          })}>
-            <Heading level={4}>Order Items</Heading>
-            <VStack 
-              gap="gap.inline.md" 
-              className={css({ 
-                w: 'full',
-                maxH: '400px',
-                overflowY: 'auto',
-                pr: 'padding.inline.sm'
-              })}
-            >
-              {catalogLoading ? (
-                <Paragraph>Loading items...</Paragraph>
-              ) : state.order?.lineItems?.map((item: any) => (
-                <OrderItemCard 
-                  key={item.uid} 
-                  item={item} 
-                  imageUrl={getVariantImageUrl(item.catalogObjectId)} 
-                />
-              ))}
-            </VStack>
-          </VStack>
+          {/* Order Number */}
+          <Paragraph 
+            size="sm" 
+            className={css({ 
+              color: 'text.secondary',
+              mb: 'gap.inline.lg'
+            })}
+          >
+            Order #{Math.random().toString(36).substr(2, 9).toUpperCase()}
+          </Paragraph>
 
-          {/* Order Summary */}
-          <VStack gap="gap.inline.md">
-            {catalogLoading ? (
-              <OrderSummarySkeleton />
-            ) : state.order ? (
-              <>
-                <OrderDetails order={state.order} />
-                <Button 
-                  variant="primary" 
-                  onClick={onContinueShopping}
-                  className={css({ w: 'full' })}
-                >
-                  Continue Shopping
-                </Button>
-              </>
-            ) : null}
-          </VStack>
+          {/* Content Grid */}
+          <Box className={css({
+            display: 'grid',
+            gridTemplateColumns: { base: '1fr', lg: '2fr 1fr' },
+            gap: 'gap.inline.lg'
+          })}>
+            
+            {/* Order Items */}
+            <VStack gap="gap.inline.md">
+              <Heading level={4}>Order Items</Heading>
+              <VStack 
+                gap="gap.inline.md" 
+                className={css({ 
+                  w: 'full',
+                  maxH: '400px',
+                  overflowY: 'auto',
+                  pr: 'padding.inline.sm'
+                })}
+              >
+                {catalogLoading ? (
+                  <Paragraph>Loading items...</Paragraph>
+                ) : state.order?.lineItems?.map((item: any) => (
+                  <OrderItemCard 
+                    key={item.uid} 
+                    item={item} 
+                    imageUrl={getVariantImageUrl(item.catalogObjectId)} 
+                  />
+                ))}
+              </VStack>
+            </VStack>
+
+            {/* Order Summary */}
+            <VStack gap="gap.inline.md">
+              {catalogLoading ? (
+                <OrderSummarySkeleton />
+              ) : state.order ? (
+                <>
+                  <OrderDetails order={state.order} />
+                  <Button 
+                    variant="primary" 
+                    onClick={onContinueShopping}
+                    className={css({ w: 'full' })}
+                  >
+                    Continue Shopping
+                  </Button>
+                </>
+              ) : null}
+            </VStack>
+          </Box>
         </Box>
       </Box>
     </Box>

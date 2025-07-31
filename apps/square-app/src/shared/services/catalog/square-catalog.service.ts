@@ -229,7 +229,7 @@ export class SquareCatalogService implements ICatalogService {
         const imageUrl =
           imageMap[variationImageId || ''] ||
           imageMap[itemImageId || ''] ||
-          '/placeholder-image.jpg';
+          '/placeholder-image.png';
 
         const price: Money = {
           amount: Number(item.itemVariationData.priceMoney.amount),
