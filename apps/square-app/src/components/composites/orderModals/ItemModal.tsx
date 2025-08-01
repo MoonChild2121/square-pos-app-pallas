@@ -1,24 +1,33 @@
-'use client'
- 
-import Modal from '@/components/primitives/ui/modal/modal'
-import { useState } from 'react'
-import { Edit } from 'lucide-react'
-import { TaxSelect, DiscountSelect } from '@/components/composites/modifierSelect/SelectTaxDiscount'
-import { VStack } from '@styled-system/jsx'
-import { cartItem } from '@styled-system/recipes'
-import { Box } from '@styled-system/jsx'
-import { ModifierModalProps } from '@/components/composites/orderModals/types'
+'use client';
 
-export default function ModifierModal({ itemId, selectedTaxIds = [], selectedDiscountIds = [] }: ModifierModalProps) {
-  const [open, setOpen] = useState(false)
-  const {button} = cartItem()
+import Modal from '@/components/primitives/ui/modal/modal';
+import { useState } from 'react';
+import { Edit } from 'lucide-react';
+import {
+  TaxSelect,
+  DiscountSelect,
+} from '@/components/composites/modifierSelect/SelectTaxDiscount';
+import { VStack } from '@styled-system/jsx';
+import { cartItem } from '@styled-system/recipes';
+import { Box } from '@styled-system/jsx';
+import { ModifierModalProps } from '@/components/composites/orderModals/types';
 
- 
+export default function ModifierModal({
+  itemId,
+  selectedTaxIds = [],
+  selectedDiscountIds = [],
+}: ModifierModalProps) {
+  const [open, setOpen] = useState(false);
+  const { button } = cartItem();
+
   return (
     <>
       <Modal.Root open={open} onOpenChange={setOpen}>
         <Modal.Trigger asChild>
-            <Box className={button}> <Edit size={17} /></Box>
+          <Box className={button}>
+            {' '}
+            <Edit size={17} />
+          </Box>
         </Modal.Trigger>
         <Modal.Content>
           <Modal.Header>
@@ -35,5 +44,5 @@ export default function ModifierModal({ itemId, selectedTaxIds = [], selectedDis
         </Modal.Content>
       </Modal.Root>
     </>
-  )
+  );
 }

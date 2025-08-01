@@ -1,4 +1,4 @@
-import { defineRecipe } from '@pandacss/dev'
+import { defineRecipe } from '@pandacss/dev';
 
 export const searchBox = defineRecipe({
   className: 'searchBox',
@@ -12,4 +12,4 @@ export const searchBox = defineRecipe({
     borderColor: 'border.secondary',
     transition: 'all 0.2s',
   },
-})
+});

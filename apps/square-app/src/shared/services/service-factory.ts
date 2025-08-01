@@ -11,7 +11,7 @@ import { SquareCatalogService } from './catalog/square-catalog.service';
 
 /**
  * This value determines which provider/implementation to use.
- * In real projects, this could come from an environment variable, 
+ * In real projects, this could come from an environment variable,
  * feature flag, or runtime configuration.
  */
 const VENDOR = 'SQUARE'; // For now, hardcoded to 'SQUARE'
@@ -23,10 +23,10 @@ let catalogServiceInstance: ICatalogService;
 /**
  * Returns a singleton instance of a catalog service that implements
  * the ICatalogService interface, depending on the selected vendor.
- * 
+ *
  * This pattern encapsulates the provider logic behind a factory,
  * so the rest of the app does not depend on specific implementations.
- * 
+ *
  * @returns An object that implements ICatalogService (e.g., SquareCatalogService)
  */
 export function getCatalogService(): ICatalogService {

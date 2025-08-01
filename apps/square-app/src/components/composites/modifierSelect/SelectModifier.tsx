@@ -1,8 +1,8 @@
-'use client'
- 
-import Select from '@/components/primitives/ui/select'
-import { ModifierData } from '@/shared/types/base'
-import { css } from '@styled-system/css'
+'use client';
+
+import Select from '@/components/primitives/ui/select';
+import { ModifierData } from '@/shared/types/base';
+import { css } from '@styled-system/css';
 
 interface SelectModifierProps {
   modifiers: ModifierData[];
@@ -12,24 +12,22 @@ interface SelectModifierProps {
 
 export default function SelectModifier({ modifiers, value, onChange }: SelectModifierProps) {
   // Find the selected modifier for display
-  const selectedModifier = modifiers.find(mod => mod.id === value)
+  const selectedModifier = modifiers.find((mod) => mod.id === value);
 
   const truncateStyle = css({
     maxWidth: '200px',
     overflow: 'hidden',
     textOverflow: 'ellipsis',
     whiteSpace: 'nowrap',
-    display: 'block'
-  })
+    display: 'block',
+  });
 
   return (
     <Select.Root value={value} onValueChange={onChange}>
       <Select.Trigger style={{ width: '100%' }}>
         <Select.Value placeholder="Select modifier">
           {selectedModifier ? (
-            <span className={truncateStyle}>
-              {selectedModifier.name} 
-            </span>
+            <span className={truncateStyle}>{selectedModifier.name}</span>
           ) : (
             'Select modifier'
           )}
@@ -39,8 +37,8 @@ export default function SelectModifier({ modifiers, value, onChange }: SelectMod
         <Select.Group>
           <Select.Label>Options</Select.Label>
           {modifiers.map((modifier) => (
-            <Select.Item 
-              key={modifier.id} 
+            <Select.Item
+              key={modifier.id}
               value={modifier.id}
               className={css({
                 display: 'block',
@@ -56,5 +54,5 @@ export default function SelectModifier({ modifiers, value, onChange }: SelectMod
         </Select.Group>
       </Select.Content>
     </Select.Root>
-  )
+  );
 }

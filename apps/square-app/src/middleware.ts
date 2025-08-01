@@ -12,15 +12,15 @@ export async function middleware(request: NextRequest) {
   const { pathname } = request.nextUrl;
 
   // Check if the current path is a protected route
-  const isProtectedRoute = protectedRoutes.some(route => pathname.startsWith(route));
+  const isProtectedRoute = protectedRoutes.some((route) => pathname.startsWith(route));
   // Check if the current path is a public route
-  const isPublicRoute = publicRoutes.some(route => pathname.startsWith(route));
+  const isPublicRoute = publicRoutes.some((route) => pathname.startsWith(route));
 
   // Handle protected routes - redirect to login if no token
   if (isProtectedRoute && !token) {
     console.log('Protected route, no token found');
     const redirectUrl = new URL('/login', request.url);
-    redirectUrl.searchParams.set('callbackUrl', pathname); //sets callback as a query parameter 
+    redirectUrl.searchParams.set('callbackUrl', pathname); //sets callback as a query parameter
     return NextResponse.redirect(redirectUrl);
   }
 

@@ -1,5 +1,5 @@
-import type { CartItem } from '../cart'
-import {Money, Tax, Discount} from '@/shared/types/base'
+import type { CartItem } from '../cart';
+import { Money, Tax, Discount } from '@/shared/types/base';
 
 export interface OrderDetailsProps {
   order: {
@@ -35,7 +35,7 @@ export interface OrderItemCardProps {
     modifiers?: {
       name: string;
       basePriceMoney: { amount: number };
-  }[];
+    }[];
   };
   imageUrl?: string;
 }
@@ -73,4 +73,4 @@ export interface UseOrderCalculationProps {
   debounceMs?: number;
   orderTaxIds?: string[];
   orderDiscountIds?: string[];
-} 
+}

@@ -9,4 +9,4 @@ export interface OrderModifierModalProps {
   selectedDiscountIds: string[];
   onUpdateTaxes: (taxIds: string[]) => void;
   onUpdateDiscounts: (discountIds: string[]) => void;
-} 
+}

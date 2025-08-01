@@ -1,34 +1,36 @@
-'use client'
+'use client';
 
-import { useEffect } from 'react'
-import { VStack, HStack } from '@styled-system/jsx'
-import { css } from '@styled-system/css'
-import Heading from '@/components/primitives/ui/typography/heading'
-import Paragraph from '@/components/primitives/ui/typography/paragraph'
+import { useEffect } from 'react';
+import { VStack, HStack } from '@styled-system/jsx';
+import { css } from '@styled-system/css';
+import Heading from '@/components/primitives/ui/typography/heading';
+import Paragraph from '@/components/primitives/ui/typography/paragraph';
 
 export default function Error({ error, reset }) {
   useEffect(() => {
-    console.error('Menu page error:', error)
-  }, [error])
+    console.error('Menu page error:', error);
+  }, [error]);
 
   return (
-    <VStack 
-      gap="layout.default.md" 
-      w="100vw" 
-      h="100vh" 
-      align="center" 
-      justify="center" 
-      p="padding.block.md" 
+    <VStack
+      gap="layout.default.md"
+      w="100vw"
+      h="100vh"
+      align="center"
+      justify="center"
+      p="padding.block.md"
       className={css({ bg: 'surface.layout', textAlign: 'center' })}
     >
       {/* Cute Broken Robot/Chef Illustration */}
       <VStack align="center">
-        <div className={css({ 
-          fontSize: '4xl', 
-          lineHeight: '1',
-          filter: 'grayscale(0.3)',
-          animation: 'bounce 2s ease-in-out infinite alternate'
-        })}>
+        <div
+          className={css({
+            fontSize: '4xl',
+            lineHeight: '1',
+            filter: 'grayscale(0.3)',
+            animation: 'bounce 2s ease-in-out infinite alternate',
+          })}
+        >
           🤖💔
         </div>
 
@@ -42,28 +44,32 @@ export default function Error({ error, reset }) {
         <Heading level={2}>Oops! Our kitchen robot had a hiccup 🍳</Heading>
 
         <Paragraph>
-          Don't worry, it's not your fault! Sometimes our little chef bot gets overwhelmed and needs a quick reboot. 
-          We're already working on getting everything back to delicious!
+          Don't worry, it's not your fault! Sometimes our little chef bot gets overwhelmed and needs
+          a quick reboot. We're already working on getting everything back to delicious!
         </Paragraph>
       </VStack>
 
       {/* Error Details (development only) */}
       {process.env.NODE_ENV === 'development' && (
-        <div className={css({ 
-          w: '100%', 
-          maxW: '500px',
-          p: '4', 
-          bg: 'surface.card', 
-          borderRadius: '12px',
-          border: '1px dashed',
-          borderColor: 'border.subtle'
-        })}>
-          <Paragraph className={css({
-            fontFamily: 'mono',
-            fontSize: 'sm',
-            color: 'text.secondary',
-            wordBreak: 'break-all'
-          })}>
+        <div
+          className={css({
+            w: '100%',
+            maxW: '500px',
+            p: '4',
+            bg: 'surface.card',
+            borderRadius: '12px',
+            border: '1px dashed',
+            borderColor: 'border.subtle',
+          })}
+        >
+          <Paragraph
+            className={css({
+              fontFamily: 'mono',
+              fontSize: 'sm',
+              color: 'text.secondary',
+              wordBreak: 'break-all',
+            })}
+          >
             🔧 Dev Info: {error?.message || 'Unknown error occurred'}
           </Paragraph>
         </div>
@@ -96,20 +102,31 @@ export default function Error({ error, reset }) {
 
       {/* Support Message */}
       <Paragraph size="sm" className={css({ maxW: '400px' })}>
-        Still having trouble? Our support team is standing by with virtual hugs and technical expertise! 🤗
+        Still having trouble? Our support team is standing by with virtual hugs and technical
+        expertise! 🤗
       </Paragraph>
 
       <style jsx>{`
         @keyframes bounce {
-          0%, 100% { transform: translateY(0px); }
-          50% { transform: translateY(-20px); }
+          0%,
+          100% {
+            transform: translateY(0px);
+          }
+          50% {
+            transform: translateY(-20px);
+          }
         }
-        
+
         @keyframes pulse {
-          0%, 100% { opacity: 1; }
-          50% { opacity: 0.4; }
+          0%,
+          100% {
+            opacity: 1;
+          }
+          50% {
+            opacity: 0.4;
+          }
         }
       `}</style>
     </VStack>
-  )
+  );
 }

@@ -1,4 +1,4 @@
-import { defineRecipe } from '@pandacss/dev'
+import { defineRecipe } from '@pandacss/dev';
 
 export const button = defineRecipe({
   className: 'button',
@@ -121,7 +121,7 @@ export const button = defineRecipe({
           },
           _active: {
             bg: '{colors.fill}',
-          }
+          },
         },
         '& .spinner': {
           borderColor: '{colors.bgSolid.text}',
@@ -173,4 +173,4 @@ export const button = defineRecipe({
     variant: 'primary',
     size: 'md',
   },
-})
+});

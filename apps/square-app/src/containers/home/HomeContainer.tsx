@@ -1,54 +1,47 @@
-'use client'
+'use client';
 
-import { useState, useMemo, useCallback, useEffect, memo } from 'react'
-import { HomeLayout } from '@/components/composites/layout/HomeLayout'
-import { Utensils } from 'lucide-react'
-import { useCatalog } from '@/shared/hooks/useCatalog'
-import { useSearchCatalog } from '@/shared/hooks/useSearchCatalog'
-import { useCartStore } from '@/shared/stores/useCartStore'
-import { useSearchParams, useRouter } from 'next/navigation'
-import { HomeContainerProps } from '@/shared/types/menu'
+import { useState, useMemo, useCallback, useEffect, memo } from 'react';
+import { HomeLayout } from '@/components/composites/layout/HomeLayout';
+import { Utensils } from 'lucide-react';
+import { useCatalog } from '@/shared/hooks/useCatalog';
+import { useSearchCatalog } from '@/shared/hooks/useSearchCatalog';
+import { useCartStore } from '@/shared/stores/useCartStore';
+import { useSearchParams, useRouter } from 'next/navigation';
+import { HomeContainerProps } from '@/shared/types/menu';
 
-const MemoizedHomeLayout = memo(HomeLayout)
+const MemoizedHomeLayout = memo(HomeLayout);
 
 export function HomeContainer({ initialData }: HomeContainerProps) {
-
-  const [selectedItem, setSelectedItem] = useState<string>('all')
-  const [searchTerm, setSearchTerm] = useState('')
+  const [selectedItem, setSelectedItem] = useState<string>('all');
+  const [searchTerm, setSearchTerm] = useState('');
 
   // The useCatalog hook returns clean data and loading state
-  const {
-    products: allProducts,
-    isLoading: isCatalogLoading
-  } = useCatalog({
+  const { products: allProducts, isLoading: isCatalogLoading } = useCatalog({
     // The initialData prop is passed directly to the hook,
     // as it's already in the correct `CatalogData` format.
     initialData,
   });
 
-  const { 
-    products: searchedProducts, 
-    isLoading: isSearchLoading 
-  } = useSearchCatalog(searchTerm);
+  const { products: searchedProducts, isLoading: isSearchLoading } = useSearchCatalog(searchTerm);
 
-  const { clearCart } = useCartStore()
-  const searchParams = useSearchParams()
-  const router = useRouter()
+  const { clearCart } = useCartStore();
+  const searchParams = useSearchParams();
+  const router = useRouter();
 
-  const shouldClearCart = useMemo(() => searchParams.get('clear') === 'true', [searchParams])
+  const shouldClearCart = useMemo(() => searchParams.get('clear') === 'true', [searchParams]);
 
   useEffect(() => {
     if (shouldClearCart) {
-      clearCart()
-      router.replace('/home')
+      clearCart();
+      router.replace('/home');
     }
-  }, [shouldClearCart, clearCart, router])
+  }, [shouldClearCart, clearCart, router]);
 
   // Derive category menu items from the full product list
   const menuItems = useMemo(() => {
     const categories = new Map<string, { label: string; count: number }>();
 
-    allProducts.forEach(product => {
+    allProducts.forEach((product) => {
       if (product.categoryId && product.categoryName) {
         if (!categories.has(product.categoryId)) {
           categories.set(product.categoryId, {
@@ -86,17 +79,16 @@ export function HomeContainer({ initialData }: HomeContainerProps) {
       return productsToFilter;
     }
 
-    return productsToFilter.filter(p => p.categoryId === selectedItem);
+    return productsToFilter.filter((p) => p.categoryId === selectedItem);
   }, [searchTerm, selectedItem, allProducts, searchedProducts]);
 
-
   const handleSelectItem = useCallback((id: string) => {
-    setSelectedItem(id)
-  }, [])
+    setSelectedItem(id);
+  }, []);
 
   const handleSearch = useCallback((term: string) => {
-    setSearchTerm(term)
-  }, [])
+    setSearchTerm(term);
+  }, []);
 
   return (
     <MemoizedHomeLayout
@@ -107,5 +99,5 @@ export function HomeContainer({ initialData }: HomeContainerProps) {
       loading={isCatalogLoading || isSearchLoading}
       products={products}
     />
-  )
+  );
 }

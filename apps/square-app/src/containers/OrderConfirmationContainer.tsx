@@ -1,24 +1,27 @@
-'use client'
+'use client';
 
-import { useCallback } from 'react'
-import { useCartStore } from '@/shared/stores/useCartStore'
-import { useCatalog } from '@/shared/hooks/useCatalog'
-import { useRouter } from 'next/navigation'
-import { OrderConfirmationView } from '@/components/composites/checkout/OrderConfirmationView'
+import { useCallback } from 'react';
+import { useCartStore } from '@/shared/stores/useCartStore';
+import { useCatalog } from '@/shared/hooks/useCatalog';
+import { useRouter } from 'next/navigation';
+import { OrderConfirmationView } from '@/components/composites/checkout/OrderConfirmationView';
 
 export function OrderConfirmationContainer() {
-  const state = useCartStore()
-  const { products, isLoading: catalogLoading } = useCatalog()
-  const router = useRouter()
+  const state = useCartStore();
+  const { products, isLoading: catalogLoading } = useCatalog();
+  const router = useRouter();
 
-  const getVariantImageUrl = useCallback((variantId: string): string | undefined => {
-    const product = products.find(p => p.id === variantId);
-    return product?.imageUrl;
-  }, [products]);
+  const getVariantImageUrl = useCallback(
+    (variantId: string): string | undefined => {
+      const product = products.find((p) => p.id === variantId);
+      return product?.imageUrl;
+    },
+    [products]
+  );
 
   const handleContinueShopping = useCallback(() => {
-    router.push('/home?clear=true')
-  }, [router])
+    router.push('/home?clear=true');
+  }, [router]);
 
   return (
     <OrderConfirmationView
@@ -27,5 +30,5 @@ export function OrderConfirmationContainer() {
       getVariantImageUrl={getVariantImageUrl}
       onContinueShopping={handleContinueShopping}
     />
-  )
+  );
 }

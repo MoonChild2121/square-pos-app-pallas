@@ -1,4 +1,4 @@
-import { defineRecipe } from '@pandacss/dev'
+import { defineRecipe } from '@pandacss/dev';
 
 export const skeleton = defineRecipe({
   className: 'skeleton',
@@ -43,4 +43,4 @@ export const skeleton = defineRecipe({
   defaultVariants: {
     variant: 'orderDetails',
   },
-})
+});

@@ -34,9 +34,6 @@ export default defineConfig({
           body: {
             value: 'var(--font-geist), system-ui, sans-serif',
           },
-          mono: {
-            value: 'var(--font-geist-mono), monospace'
-          }
         },
       },
     },

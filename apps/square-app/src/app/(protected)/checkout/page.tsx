@@ -1,7 +1,7 @@
-'use client'
+'use client';
 
-import { OrderConfirmationContainer } from '@/containers/OrderConfirmationContainer'
+import { OrderConfirmationContainer } from '@/containers/OrderConfirmationContainer';
 
 export default function OrderConfirmationPage() {
-  return <OrderConfirmationContainer />
+  return <OrderConfirmationContainer />;
 }

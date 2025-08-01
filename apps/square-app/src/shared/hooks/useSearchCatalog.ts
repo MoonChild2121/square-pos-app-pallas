@@ -22,10 +22,9 @@ export function useSearchCatalog(searchTerm: string, categoryId?: string) {
   return useMemo(
     () => ({
       products: data || [],
-      isLoading, 
+      isLoading,
       error,
     }),
     [data, isLoading, error]
   );
 }
-

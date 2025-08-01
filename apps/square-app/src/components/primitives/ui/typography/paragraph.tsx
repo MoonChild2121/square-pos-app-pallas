@@ -1,6 +1,6 @@
-import { styled } from '@styled-system/jsx'
-import { paragraph } from '@styled-system/recipes'
+import { styled } from '@styled-system/jsx';
+import { paragraph } from '@styled-system/recipes';
 
-const Paragraph = styled('p', paragraph)
+const Paragraph = styled('p', paragraph);
 
-export default Paragraph
+export default Paragraph;

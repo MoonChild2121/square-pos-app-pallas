@@ -1,28 +1,25 @@
-'use client'
+'use client';
 
-import { useState } from 'react'
-import { signIn } from 'next-auth/react'
-import { LoginForm } from '@/components/composites/auth/LoginForm'
-import { Flex } from '@styled-system/jsx'
+import { useState } from 'react';
+import { signIn } from 'next-auth/react';
+import { LoginForm } from '@/components/composites/auth/LoginForm';
+import { Flex } from '@styled-system/jsx';
 
 export function LoginFormContainer() {
-  const [isLoading, setIsLoading] = useState(false)
+  const [isLoading, setIsLoading] = useState(false);
 
   const handleSignIn = async () => {
-    setIsLoading(true)
+    setIsLoading(true);
     try {
-      await signIn('square', { callbackUrl: '/home' })
+      await signIn('square', { callbackUrl: '/home' });
     } catch (error) {
-      setIsLoading(false)
+      setIsLoading(false);
     }
-  }
+  };
 
   return (
     <Flex align="center" justify="center" h="100vh">
-      <LoginForm
-        isLoading={isLoading}
-        onSignIn={handleSignIn}
-      />
+      <LoginForm isLoading={isLoading} onSignIn={handleSignIn} />
     </Flex>
-  )
+  );
 }

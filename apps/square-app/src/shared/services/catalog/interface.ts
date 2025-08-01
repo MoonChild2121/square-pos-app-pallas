@@ -2,7 +2,7 @@ import { Product, Tax, Discount, ModifierData } from '@/shared/types/base';
 /**
  * CatalogData represents the structure of the full product catalog
  * as returned from any catalog provider (e.g., Square, Shopify).
- * 
+ *
  * This is a normalized internal shape that the rest of the app depends on —
  * completely abstracted away from external APIs' raw responses.
  */
@@ -14,10 +14,10 @@ export interface CatalogData {
 }
 /**
  * ICatalogService defines the contract that all catalog providers must follow.
- * 
+ *
  * It is the core interface used by the app to interact with product data,
  * without knowing or depending on any specific provider like Square or Shopify.
- * 
+ *
  * This enables the Dependency Inversion Principle by ensuring:
  * - The app depends on this interface, not any concrete class.
  * - Provider implementations plug into this contract.

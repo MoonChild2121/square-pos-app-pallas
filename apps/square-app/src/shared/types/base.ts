@@ -67,7 +67,6 @@ export interface Product {
   categoryName?: string;
 }
 
-
 export interface ItemVariation {
   id: string;
   itemVariationData: {
@@ -79,4 +78,3 @@ export interface ItemVariation {
     imageIds?: string[];
   };
 }
-

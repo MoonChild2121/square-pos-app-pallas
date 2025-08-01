@@ -1,29 +1,29 @@
-import { Slot } from '@radix-ui/react-slot'
-import { css, cx } from '@styled-system/css'
-import { type InputVariantProps, icon, input } from '@styled-system/recipes'
-import { format } from 'date-fns'
-import { ChevronDown, ChevronUp } from 'lucide-react'
-import { Calendar } from 'lucide-react'
-import React from 'react'
-import { DayPicker } from '@/components/primitives/ui/daypicker'
-import Popover from '@/components/primitives/ui/popover'
+import { Slot } from '@radix-ui/react-slot';
+import { css, cx } from '@styled-system/css';
+import { type InputVariantProps, icon, input } from '@styled-system/recipes';
+import { format } from 'date-fns';
+import { ChevronDown, ChevronUp } from 'lucide-react';
+import { Calendar } from 'lucide-react';
+import React from 'react';
+import { DayPicker } from '@/components/primitives/ui/daypicker';
+import Popover from '@/components/primitives/ui/popover';
 
 const InputContext = React.createContext<
   | ({
-      id: string
-      dataStatus?: 'error' | 'success' | 'warning'
+      id: string;
+      dataStatus?: 'error' | 'success' | 'warning';
     } & InputVariantProps)
   | null
->(null)
+>(null);
 
 // Hook to ensure components are used within InputRoot
 const useInputContext = () => {
-  const context = React.useContext(InputContext)
+  const context = React.useContext(InputContext);
   if (!context) {
-    throw new Error('Input components must be used within an Input component')
+    throw new Error('Input components must be used within an Input component');
   }
-  return context
-}
+  return context;
+};
 
 // Root component
 const InputRoot = React.forwardRef<
@@ -31,65 +31,65 @@ const InputRoot = React.forwardRef<
   React.HTMLAttributes<HTMLDivElement> &
     InputVariantProps & { 'data-status'?: 'error' | 'success' | 'warning' }
 >(({ className, size, shape, 'data-status': dataStatus, ...props }, ref) => {
-  const id = React.useId()
-  const { root } = input({ size, shape })
+  const id = React.useId();
+  const { root } = input({ size, shape });
   return (
     <InputContext.Provider value={{ id, dataStatus, size, shape }}>
       <div ref={ref} className={cx(root, className)} {...props} />
     </InputContext.Provider>
-  )
-})
-InputRoot.displayName = 'Input'
+  );
+});
+InputRoot.displayName = 'Input';
 
 // Prefix component
 const InputPrefix = React.forwardRef<HTMLDivElement, React.HTMLAttributes<HTMLDivElement>>(
   ({ className, ...props }, ref) => {
-    const { size, shape } = useInputContext()
-    const { prefix } = input({ size, shape })
-    return <div ref={ref} className={cx(prefix, className)} {...props} />
-  },
-)
-InputPrefix.displayName = 'Input.Prefix'
+    const { size, shape } = useInputContext();
+    const { prefix } = input({ size, shape });
+    return <div ref={ref} className={cx(prefix, className)} {...props} />;
+  }
+);
+InputPrefix.displayName = 'Input.Prefix';
 
 // Postfix component
 const InputPostfix = React.forwardRef<HTMLDivElement, React.HTMLAttributes<HTMLDivElement>>(
   ({ className, ...props }, ref) => {
-    const { size, shape } = useInputContext()
-    const { postfix } = input({ size, shape })
-    return <div ref={ref} className={cx(postfix, className)} {...props} />
-  },
-)
-InputPostfix.displayName = 'Input.Postfix'
+    const { size, shape } = useInputContext();
+    const { postfix } = input({ size, shape });
+    return <div ref={ref} className={cx(postfix, className)} {...props} />;
+  }
+);
+InputPostfix.displayName = 'Input.Postfix';
 
 type InputTextProps = React.InputHTMLAttributes<HTMLInputElement> & {
-  formatter?: (value: string) => string
-  maxLength?: number
-  showCount?: boolean
-  status?: 'error' | 'success' | 'warning'
-}
+  formatter?: (value: string) => string;
+  maxLength?: number;
+  showCount?: boolean;
+  status?: 'error' | 'success' | 'warning';
+};
 
 // Text input component
 const InputText = React.forwardRef<HTMLInputElement, InputTextProps>(
   (
     { className, formatter, maxLength, showCount, status, onChange, value, defaultValue, ...props },
-    ref,
+    ref
   ) => {
-    const { id, dataStatus, size, shape } = useInputContext()
-    const { field, charCount } = input({ size, shape })
-    const [inputValue, setInputValue] = React.useState(value || defaultValue || '')
-    const characterCount = String(inputValue).length
+    const { id, dataStatus, size, shape } = useInputContext();
+    const { field, charCount } = input({ size, shape });
+    const [inputValue, setInputValue] = React.useState(value || defaultValue || '');
+    const characterCount = String(inputValue).length;
 
     const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-      let newValue = e.target.value
+      let newValue = e.target.value;
       if (formatter) {
-        newValue = formatter(newValue)
+        newValue = formatter(newValue);
       }
       if (maxLength) {
-        newValue = newValue.slice(0, maxLength)
+        newValue = newValue.slice(0, maxLength);
       }
-      setInputValue(newValue)
-      onChange?.(e)
-    }
+      setInputValue(newValue);
+      onChange?.(e);
+    };
 
     return (
       <div className={css({ position: 'relative', width: '100%', height: '100%' })}>
@@ -113,63 +113,63 @@ const InputText = React.forwardRef<HTMLInputElement, InputTextProps>(
           </div>
         )}
       </div>
-    )
-  },
-)
-InputText.displayName = 'Input.Text'
+    );
+  }
+);
+InputText.displayName = 'Input.Text';
 
 type InputNumberProps = Omit<React.InputHTMLAttributes<HTMLInputElement>, 'type'> & {
-  controls?: boolean
-  step?: number
-  min?: number
-  max?: number
-}
+  controls?: boolean;
+  step?: number;
+  min?: number;
+  max?: number;
+};
 
 const InputNumber = React.forwardRef<HTMLInputElement, InputNumberProps>(
   ({ className, controls = true, step = 1, min, max, value, onChange, ...props }, ref) => {
-    const { id, dataStatus, size, shape } = useInputContext()
-    const { field, control } = input({ size, shape })
+    const { id, dataStatus, size, shape } = useInputContext();
+    const { field, control } = input({ size, shape });
     const [localValue, setLocalValue] = React.useState<number | undefined>(
-      value !== undefined ? Number(value) : undefined,
-    )
+      value !== undefined ? Number(value) : undefined
+    );
 
     const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-      const newValue = e.target.value === '' ? undefined : Number(e.target.value)
-      setLocalValue(newValue)
-      onChange?.(e)
-    }
+      const newValue = e.target.value === '' ? undefined : Number(e.target.value);
+      setLocalValue(newValue);
+      onChange?.(e);
+    };
 
     const increment = () => {
       if (localValue === undefined) {
-        const newValue = min ?? 0
-        setLocalValue(newValue)
-        simulateInputChange(newValue)
+        const newValue = min ?? 0;
+        setLocalValue(newValue);
+        simulateInputChange(newValue);
       } else {
-        const newValue = Math.min(max ?? Number.POSITIVE_INFINITY, localValue + step)
-        setLocalValue(newValue)
-        simulateInputChange(newValue)
+        const newValue = Math.min(max ?? Number.POSITIVE_INFINITY, localValue + step);
+        setLocalValue(newValue);
+        simulateInputChange(newValue);
       }
-    }
+    };
 
     const decrement = () => {
       if (localValue === undefined) {
-        const newValue = min ?? 0
-        setLocalValue(newValue)
-        simulateInputChange(newValue)
+        const newValue = min ?? 0;
+        setLocalValue(newValue);
+        simulateInputChange(newValue);
       } else {
-        const newValue = Math.max(min ?? Number.NEGATIVE_INFINITY, localValue - step)
-        setLocalValue(newValue)
-        simulateInputChange(newValue)
+        const newValue = Math.max(min ?? Number.NEGATIVE_INFINITY, localValue - step);
+        setLocalValue(newValue);
+        simulateInputChange(newValue);
       }
-    }
+    };
 
     // Helper function to simulate input change event
     const simulateInputChange = (newValue: number) => {
       const event = {
         target: { value: String(newValue) },
-      } as React.ChangeEvent<HTMLInputElement>
-      onChange?.(event)
-    }
+      } as React.ChangeEvent<HTMLInputElement>;
+      onChange?.(event);
+    };
 
     return (
       <div className={css({ display: 'flex', alignItems: 'center', width: '100%' })}>
@@ -191,7 +191,7 @@ const InputNumber = React.forwardRef<HTMLInputElement, InputNumberProps>(
                 WebkitAppearance: 'textfield',
                 appearance: 'textfield',
               }),
-              className,
+              className
             )}
             {...props}
           />
@@ -223,39 +223,39 @@ const InputNumber = React.forwardRef<HTMLInputElement, InputNumberProps>(
           </div>
         )}
       </div>
-    )
-  },
-)
-InputNumber.displayName = 'Input.Number'
+    );
+  }
+);
+InputNumber.displayName = 'Input.Number';
 
 type InputDayPickerProps = Omit<
   React.InputHTMLAttributes<HTMLInputElement>,
   'value' | 'onChange'
 > & {
-  value?: Date
-  onChange?: (date: Date | undefined) => void
-  format?: string
-  placeholder?: string
-}
+  value?: Date;
+  onChange?: (date: Date | undefined) => void;
+  format?: string;
+  placeholder?: string;
+};
 
 const InputDayPicker = React.forwardRef<HTMLInputElement, InputDayPickerProps>(
   (
     { className, value, onChange, format: formatStr = 'PP', placeholder = 'Pick a date', ...props },
-    ref,
+    ref
   ) => {
-    const { id, dataStatus, size, shape } = useInputContext()
-    const { field, postfix } = input({ size, shape })
-    const [selected, setSelected] = React.useState<Date | undefined>(value)
+    const { id, dataStatus, size, shape } = useInputContext();
+    const { field, postfix } = input({ size, shape });
+    const [selected, setSelected] = React.useState<Date | undefined>(value);
 
     // Update internal state when value prop changes
     React.useEffect(() => {
-      setSelected(value)
-    }, [value])
+      setSelected(value);
+    }, [value]);
 
     const handleSelect = (date: Date | undefined) => {
-      setSelected(date)
-      onChange?.(date)
-    }
+      setSelected(date);
+      onChange?.(date);
+    };
 
     return (
       <Popover.Root>
@@ -283,11 +283,11 @@ const InputDayPicker = React.forwardRef<HTMLInputElement, InputDayPickerProps>(
           <DayPicker mode="single" selected={selected} onSelect={handleSelect} />
         </Popover.Content>
       </Popover.Root>
-    )
-  },
-)
+    );
+  }
+);
 
-InputDayPicker.displayName = 'Input.DayPicker'
+InputDayPicker.displayName = 'Input.DayPicker';
 
 // Update the Input export
 export const Input = Object.assign(InputRoot, {
@@ -296,4 +296,4 @@ export const Input = Object.assign(InputRoot, {
   Text: InputText,
   Number: InputNumber,
   DayPicker: InputDayPicker,
-})
+});

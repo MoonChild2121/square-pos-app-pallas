@@ -1,26 +1,26 @@
-'use client'
+'use client';
 
-import { memo, useState } from 'react'
-import { Flex, Box } from '@styled-system/jsx'
-import { css } from '@styled-system/css'
-import { cartOverlay, cartSlideout } from '@styled-system/recipes'
-import { Header } from '@/components/composites/layout/Header'
-import MenuBoxGrid from '@/components/composites/menu/MenuBoxGrid'
-import ProductGrid from '@/components/composites/product/ProductGrid'
-import SearchBar from '@/components/composites/productSearch/SearchBar'
-import { CartToggle } from '@/components/composites/cart/cart-toggle/CartToggle'
-import { HomeLayoutProps } from '@/shared/types/menu'
-import { CartContainer } from '@/containers/CartContainer'
+import { memo, useState } from 'react';
+import { Flex, Box } from '@styled-system/jsx';
+import { css } from '@styled-system/css';
+import { cartOverlay, cartSlideout } from '@styled-system/recipes';
+import { Header } from '@/components/composites/layout/Header';
+import MenuBoxGrid from '@/components/composites/menu/MenuBoxGrid';
+import ProductGrid from '@/components/composites/product/ProductGrid';
+import SearchBar from '@/components/composites/productSearch/SearchBar';
+import { CartToggle } from '@/components/composites/cart/cart-toggle/CartToggle';
+import { HomeLayoutProps } from '@/shared/types/menu';
+import { CartContainer } from '@/containers/CartContainer';
 
 // Memoized menu section component
 const MenuSection = memo(function MenuSection({
   menuItems,
   selectedItem,
   onSelectItem,
-  onSearch
+  onSearch,
 }: Pick<HomeLayoutProps, 'menuItems' | 'selectedItem' | 'onSelectItem' | 'onSearch'>) {
   return (
-    <Flex direction="column" gap='layout.section.sm'>
+    <Flex direction="column" gap="layout.section.sm">
       <MenuBoxGrid
         items={menuItems}
         selectedCategory={selectedItem}
@@ -30,13 +30,13 @@ const MenuSection = memo(function MenuSection({
         <SearchBar onSearch={onSearch} />
       </Box>
     </Flex>
-  )
-})
+  );
+});
 
 // Memoized product section component
 const ProductSection = memo(function ProductSection({
   products,
-  loading
+  loading,
 }: Pick<HomeLayoutProps, 'products' | 'loading'>) {
   return (
     <Box
@@ -51,8 +51,8 @@ const ProductSection = memo(function ProductSection({
     >
       <ProductGrid products={products} loading={loading} />
     </Box>
-  )
-})
+  );
+});
 
 export const HomeLayout = memo(function HomeLayout({
   menuItems,
@@ -62,23 +62,21 @@ export const HomeLayout = memo(function HomeLayout({
   loading,
   products,
 }: HomeLayoutProps) {
-  const [isCartOpen, setIsCartOpen] = useState(false)
+  const [isCartOpen, setIsCartOpen] = useState(false);
 
   return (
-    <Box
-      position="relative"
-      w="100%" 
-      h="100vh" 
-      className={css({ overflow: 'hidden' })}
-    >
+    <Box position="relative" w="100%" h="100vh" className={css({ overflow: 'hidden' })}>
       {/* Main Content */}
-      <Flex direction="column" className={css({ 
-        p: 'padding.block.md', 
-        gap: 'layout.section.sm',
-        h: '100%',
-      })}>
+      <Flex
+        direction="column"
+        className={css({
+          p: 'padding.block.md',
+          gap: 'layout.section.sm',
+          h: '100%',
+        })}
+      >
         <Header />
-        
+
         {/* Surface Container for Menu and Products */}
         <Box
           className={css({
@@ -113,12 +111,14 @@ export const HomeLayout = memo(function HomeLayout({
       <CartToggle isOpen={isCartOpen} onToggle={() => setIsCartOpen(!isCartOpen)} />
 
       {/* Cart Container - using recipe */}
-      <Box className={cartSlideout({ 
-        isOpen: isCartOpen, 
-        size: { base: 'mobile', md: 'desktop' } 
-      })}>
+      <Box
+        className={cartSlideout({
+          isOpen: isCartOpen,
+          size: { base: 'mobile', md: 'desktop' },
+        })}
+      >
         <CartContainer isOpen={isCartOpen} onClose={() => setIsCartOpen(false)} />
       </Box>
     </Box>
-  )
-})
+  );
+});

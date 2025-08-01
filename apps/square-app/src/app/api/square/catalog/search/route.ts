@@ -16,11 +16,7 @@ export async function POST(req: NextRequest): Promise<NextResponse> {
     }
 
     // Call the core logic function to fetch search results
-    const searchData = await fetchSquareSearch(
-      accessToken,
-      keywords,
-      categoryId
-    );
+    const searchData = await fetchSquareSearch(accessToken, keywords, categoryId);
     return NextResponse.json(searchData);
   } catch (error: any) {
     console.error('Search API: Error occurred', {

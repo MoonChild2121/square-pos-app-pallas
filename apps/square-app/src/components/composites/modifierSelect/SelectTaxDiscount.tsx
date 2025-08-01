@@ -1,39 +1,41 @@
-'use client'
- 
-import Select from '@/components/primitives/ui/select'
-import { useCatalog } from '@/shared/hooks/useCatalog'
-import { useCartStore } from '@/shared/stores/useCartStore'
-import { Box } from '@styled-system/jsx'
-import Heading from '@/components/primitives/ui/typography/heading'
+'use client';
+
+import Select from '@/components/primitives/ui/select';
+import { useCatalog } from '@/shared/hooks/useCatalog';
+import { useCartStore } from '@/shared/stores/useCartStore';
+import { Box } from '@styled-system/jsx';
+import Heading from '@/components/primitives/ui/typography/heading';
 
 interface TaxSelectProps {
-  itemId: string
-  selectedTaxIds: string[]
-  isOrderLevel?: boolean
+  itemId: string;
+  selectedTaxIds: string[];
+  isOrderLevel?: boolean;
 }
 
 interface DiscountSelectProps {
-  itemId: string
-  selectedDiscountIds: string[]
-  isOrderLevel?: boolean
+  itemId: string;
+  selectedDiscountIds: string[];
+  isOrderLevel?: boolean;
 }
 
 export function TaxSelect({ itemId, selectedTaxIds = [], isOrderLevel = false }: TaxSelectProps) {
-  const { taxes } = useCatalog()
-  const updateItemTaxes = useCartStore(state => state.updateItemTaxes)
-  const updateOrderTaxes = useCartStore(state => state.updateOrderTaxes)
+  const { taxes } = useCatalog();
+  const updateItemTaxes = useCartStore((state) => state.updateItemTaxes);
+  const updateOrderTaxes = useCartStore((state) => state.updateOrderTaxes);
 
   const handleTaxChange = (value: string) => {
     if (isOrderLevel) {
-      updateOrderTaxes(value === 'none' ? [] : [value])
+      updateOrderTaxes(value === 'none' ? [] : [value]);
     } else {
-      updateItemTaxes(itemId, value === 'none' ? [] : [value])
+      updateItemTaxes(itemId, value === 'none' ? [] : [value]);
     }
-  }
+  };
 
   return (
     <Box>
-      <Heading level={6} className="mb-2">Applicable Taxes</Heading>
+      <Heading level={6} className="mb-2">
+        Applicable Taxes
+      </Heading>
       <Select.Root value={selectedTaxIds?.[0] || 'none'} onValueChange={handleTaxChange}>
         <Select.Trigger style={{ width: '100%' }}>
           <Select.Value placeholder="Select taxes" />
@@ -50,25 +52,31 @@ export function TaxSelect({ itemId, selectedTaxIds = [], isOrderLevel = false }:
         </Select.Content>
       </Select.Root>
     </Box>
-  )
+  );
 }
 
-export function DiscountSelect({ itemId, selectedDiscountIds = [], isOrderLevel = false }: DiscountSelectProps) {
-  const { discounts } = useCatalog()
-  const updateItemDiscounts = useCartStore(state => state.updateItemDiscounts)
-  const updateOrderDiscounts = useCartStore(state => state.updateOrderDiscounts)
+export function DiscountSelect({
+  itemId,
+  selectedDiscountIds = [],
+  isOrderLevel = false,
+}: DiscountSelectProps) {
+  const { discounts } = useCatalog();
+  const updateItemDiscounts = useCartStore((state) => state.updateItemDiscounts);
+  const updateOrderDiscounts = useCartStore((state) => state.updateOrderDiscounts);
 
   const handleDiscountChange = (value: string) => {
     if (isOrderLevel) {
-      updateOrderDiscounts(value === 'none' ? [] : [value])
+      updateOrderDiscounts(value === 'none' ? [] : [value]);
     } else {
-      updateItemDiscounts(itemId, value === 'none' ? [] : [value])
+      updateItemDiscounts(itemId, value === 'none' ? [] : [value]);
     }
-  }
+  };
 
   return (
     <Box>
-      <Heading level={6} className="mb-2">Available Discounts</Heading>
+      <Heading level={6} className="mb-2">
+        Available Discounts
+      </Heading>
       <Select.Root value={selectedDiscountIds?.[0] || 'none'} onValueChange={handleDiscountChange}>
         <Select.Trigger style={{ width: '100%' }}>
           <Select.Value placeholder="Select discounts" />
@@ -86,5 +94,5 @@ export function DiscountSelect({ itemId, selectedDiscountIds = [], isOrderLevel 
         </Select.Content>
       </Select.Root>
     </Box>
-  )
+  );
 }

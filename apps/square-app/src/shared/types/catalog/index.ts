@@ -1,4 +1,4 @@
-import { ItemVariation, ModifierData, TaxItem, DiscountItem } from '@/shared/types/base'
+import { ItemVariation, ModifierData, TaxItem, DiscountItem } from '@/shared/types/base';
 
 export interface Modifier {
   id: string;
@@ -14,32 +14,32 @@ export interface ModifierListInfo {
 }
 
 export interface CatalogItem {
-  id: string
-  type: string
+  id: string;
+  type: string;
   itemData?: {
-    name: string
-    categoryId?: string
-    variations: ItemVariation[]
-    imageIds?: string[]
-    taxIds?: string[]
-    modifierListInfo?: ModifierListInfo[]
-  }
+    name: string;
+    categoryId?: string;
+    variations: ItemVariation[];
+    imageIds?: string[];
+    taxIds?: string[];
+    modifierListInfo?: ModifierListInfo[];
+  };
   itemVariationData?: {
-    name: string
+    name: string;
     priceMoney: {
-      amount: number
-      currency: string
-    }
-    imageIds?: string[]
-    itemId: string
-  }
+      amount: number;
+      currency: string;
+    };
+    imageIds?: string[];
+    itemId: string;
+  };
   imageData?: {
-    url: string
-    name?: string
-  }
-  modifierData?: ModifierData
-  taxData?: any
-  discountData?: any
+    url: string;
+    name?: string;
+  };
+  modifierData?: ModifierData;
+  taxData?: any;
+  discountData?: any;
 }
 
 export interface CatalogResponse {

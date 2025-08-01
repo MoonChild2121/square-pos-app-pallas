@@ -1,20 +1,11 @@
 @layer reset, base, tokens, recipes, utilities;
 @supports (color: var(--panda)) {
-  @import "../styled-system/styles.css";
 }
 
 
 :root {
-  --font-geist: 'Geist', sans-serif;
-  --font-geist-mono: 'Geist Mono', monospace;
-}
-
-body {
-  font-family: var(--font-geist);
-}
-
-code, pre {
-  font-family: var(--font-geist-mono);
+  --font-sans: var(--font-inter);
+  --font-heading: var(--font-inter);
 }
 
 html {
@@ -26,7 +17,6 @@ html {
     height: 100%;
     background-color: white;
     color: black;
-    font-family: var(--font-sans);
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
   }
@@ -35,12 +25,17 @@ html {
     font-family: var(--font-heading);
   }
 
+  code, pre {
+    font-family: var(--font-geist);
+  }
+
   *, *::before, *::after {
     box-sizing: border-box;
   }
 }
+
 body {
-  font-family: var(--font-geist);
+  font-family: var(--font-sans);
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   background-color: var(--colors-surface-layout);

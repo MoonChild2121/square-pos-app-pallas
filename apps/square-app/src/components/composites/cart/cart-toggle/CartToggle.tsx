@@ -1,14 +1,14 @@
-import { Button } from '@/components/primitives/ui/button'
-import { ShoppingCart } from 'lucide-react'
-import { css } from '@styled-system/css'
-import { useCartStore } from '@/shared/stores/useCartStore'
-import { CartToggleProps } from '@/shared/types/cart'
-import { Paragraph } from '@/components/primitives/ui/typography'
+import { Button } from '@/components/primitives/ui/button';
+import { ShoppingCart } from 'lucide-react';
+import { css } from '@styled-system/css';
+import { useCartStore } from '@/shared/stores/useCartStore';
+import { CartToggleProps } from '@/shared/types/cart';
+import { Paragraph } from '@/components/primitives/ui/typography';
 
 export function CartToggle({ isOpen, onToggle }: CartToggleProps) {
-  const items = useCartStore(state => state.items)
+  const items = useCartStore((state) => state.items);
   // Calculate total quantity of all items
-  const totalQuantity = items.reduce((total, item) => total + item.quantity, 0)
+  const totalQuantity = items.reduce((total, item) => total + item.quantity, 0);
 
   return (
     <Button
@@ -28,17 +28,23 @@ export function CartToggle({ isOpen, onToggle }: CartToggleProps) {
         p: 'gap.inline.lg',
         _hover: {
           transform: isOpen ? 'scale(0)' : 'scale(1.05)',
-        }
+        },
       })}
     >
       <ShoppingCart size={24} />
       {totalQuantity > 0 && (
         <span>
-          <Paragraph size="base" textStyle="bold"  className={css({
-            color: 'bgSolid.text'
-        })}>{totalQuantity}</Paragraph>
+          <Paragraph
+            size="base"
+            textStyle="bold"
+            className={css({
+              color: 'bgSolid.text',
+            })}
+          >
+            {totalQuantity}
+          </Paragraph>
         </span>
       )}
     </Button>
-  )
-} 
+  );
+}

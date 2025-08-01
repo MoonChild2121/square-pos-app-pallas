@@ -33,5 +33,5 @@ export interface HomeLayoutProps {
 }
 
 export interface HomeContainerProps {
-  initialData: CatalogData
+  initialData: CatalogData;
 }

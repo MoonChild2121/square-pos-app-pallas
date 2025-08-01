@@ -1,18 +1,20 @@
-'use client'
+'use client';
 
-import { memo, useCallback } from 'react'
-import { Grid } from '@styled-system/jsx'
-import { css } from '@styled-system/css'
-import ProductCard from '@/components/composites/product/ProductCard'
-import { ProductGridProps } from './types'
-import Heading from '@/components/primitives/ui/typography/heading'
+import { memo } from 'react';
+import { Grid } from '@styled-system/jsx';
+import { css } from '@styled-system/css';
+import ProductCard from '@/components/composites/product/ProductCard';
+import { ProductGridProps } from './types';
+import Heading from '@/components/primitives/ui/typography/heading';
 
 const ProductGrid = memo(function ProductGrid({ products, loading }: ProductGridProps) {
-
   if (loading) {
-    return <Heading level={5} color="disabled">Searching...</Heading>
+    return (
+      <Heading level={5} color="disabled">
+        Searching...
+      </Heading>
+    );
   }
-
 
   return (
     <Grid
@@ -22,7 +24,7 @@ const ProductGrid = memo(function ProductGrid({ products, loading }: ProductGrid
         py: 'padding.block.md',
         w: '100%',
         overflowY: 'auto',
-        overflowX: 'hidden'
+        overflowX: 'hidden',
       })}
     >
       {(Array.isArray(products) ? products : []).map((product) => (
@@ -37,8 +39,7 @@ const ProductGrid = memo(function ProductGrid({ products, loading }: ProductGrid
         />
       ))}
     </Grid>
-  )
-})
+  );
+});
 
-export default ProductGrid
-
+export default ProductGrid;

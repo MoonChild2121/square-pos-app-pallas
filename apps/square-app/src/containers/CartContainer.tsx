@@ -1,42 +1,42 @@
-'use client'
+'use client';
 
-import { useEffect, memo, useState, useTransition } from 'react'
-import { useCartStore } from '@/shared/stores/useCartStore'
-import { useOrderCalculation } from '@/shared/hooks/useOrderCalculation'
-import { useRouter } from 'next/navigation'
-import { CartView } from '@/components/composites/cart/CartView'
-import { DEBOUNCE_MS } from '@/shared/constants'
-import { CartContainerProps } from '@/shared/types/cart/index'
+import { useEffect, memo, useState, useTransition } from 'react';
+import { useCartStore } from '@/shared/stores/useCartStore';
+import { useOrderCalculation } from '@/shared/hooks/useOrderCalculation';
+import { useRouter } from 'next/navigation';
+import { CartView } from '@/components/composites/cart/CartView';
+import { DEBOUNCE_MS } from '@/shared/constants';
+import { CartContainerProps } from '@/shared/types/cart/index';
 
 export const CartContainer = memo(function CartContainer({ isOpen, onClose }: CartContainerProps) {
-  const state = useCartStore()
-  const { setOrder, updateOrderTaxes, updateOrderDiscounts } = useCartStore()
+  const state = useCartStore();
+  const { setOrder, updateOrderTaxes, updateOrderDiscounts } = useCartStore();
   const [isRedirecting, setIsRedirecting] = useState(false);
-  const [isPending, startTransition] = useTransition()
+  const [isPending, startTransition] = useTransition();
 
-  const isEmpty = state.items.length === 0
+  const isEmpty = state.items.length === 0;
 
   const orderCalc = useOrderCalculation({
     items: state.items,
     debounceMs: DEBOUNCE_MS,
     orderTaxIds: state.orderTaxIds,
-    orderDiscountIds: state.orderDiscountIds
-  })
+    orderDiscountIds: state.orderDiscountIds,
+  });
 
   useEffect(() => {
     if (orderCalc.order && !orderCalc.loading && !orderCalc.error) {
-      setOrder(orderCalc.order)
+      setOrder(orderCalc.order);
     }
-  }, [orderCalc.order, orderCalc.loading, orderCalc.error, setOrder])
+  }, [orderCalc.order, orderCalc.loading, orderCalc.error, setOrder]);
 
-  const router = useRouter()
+  const router = useRouter();
 
   const handleCheckout = () => {
-    setIsRedirecting(true)
+    setIsRedirecting(true);
     startTransition(() => {
-      router.push('/checkout')
-    })
-  }
+      router.push('/checkout');
+    });
+  };
 
   return (
     <CartView
@@ -52,5 +52,5 @@ export const CartContainer = memo(function CartContainer({ isOpen, onClose }: Ca
       onClose={onClose}
       isRedirecting={isPending}
     />
-  )
-})
+  );
+});

@@ -1,5 +1,5 @@
 // productCard.ts
-import { defineRecipe } from '@pandacss/dev'
+import { defineRecipe } from '@pandacss/dev';
 
 export const itemCard = defineRecipe({
   className: 'productCard',
@@ -54,7 +54,7 @@ export const itemCard = defineRecipe({
     variant: undefined,
     isSelected: false,
   },
-})
+});
 
 export const orderCard = defineRecipe({
   className: 'orderItemCard',
@@ -67,4 +67,4 @@ export const orderCard = defineRecipe({
     p: 'padding.inline.sm',
     gap: 'gap.inline.md',
   },
-})
+});

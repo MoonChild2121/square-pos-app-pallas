@@ -1,4 +1,4 @@
-import { defineRecipe } from '@pandacss/dev'
+import { defineRecipe } from '@pandacss/dev';
 
 export const cartSlideout = defineRecipe({
   className: 'cartSlideout',
@@ -23,7 +23,7 @@ export const cartSlideout = defineRecipe({
       },
       false: {
         transform: 'translateX(100%)',
-      }
+      },
     },
     size: {
       mobile: {
@@ -35,14 +35,14 @@ export const cartSlideout = defineRecipe({
         width: '400px',
         maxWidth: '100%',
         borderRadius: 'lg 0 0 lg',
-      }
-    }
+      },
+    },
   },
   defaultVariants: {
     isOpen: false,
-    size: 'desktop'
-  }
-})
+    size: 'desktop',
+  },
+});
 
 export const cartOverlay = defineRecipe({
   className: 'cartOverlay',
@@ -63,13 +63,13 @@ export const cartOverlay = defineRecipe({
       false: {
         opacity: 0,
         pointerEvents: 'none',
-      }
-    }
+      },
+    },
   },
   defaultVariants: {
-    isVisible: false
-  }
-})
+    isVisible: false,
+  },
+});
 
 export const cartContent = defineRecipe({
   className: 'cartContent',
@@ -77,10 +77,10 @@ export const cartContent = defineRecipe({
   base: {
     flex: '1',
     overflowY: 'auto',
-    scrollbarWidth: 'none',       // Firefox
-    msOverflowStyle: 'none',      // IE/Edge
+    scrollbarWidth: 'none', // Firefox
+    msOverflowStyle: 'none', // IE/Edge
     '&::-webkit-scrollbar': {
-      display: 'none',            // Chrome/Safari
+      display: 'none', // Chrome/Safari
     },
   },
   variants: {
@@ -92,19 +92,18 @@ export const cartContent = defineRecipe({
       },
       false: {
         display: 'block',
-      }
-    }
+      },
+    },
   },
   defaultVariants: {
-    isEmpty: false
-  }
-})
+    isEmpty: false,
+  },
+});
 
 export const cartControls = defineRecipe({
   className: 'cartControls',
   description: 'Cart summary and checkout controls',
-  base: {
-  },
+  base: {},
   variants: {
     hasItems: {
       true: {
@@ -112,11 +111,10 @@ export const cartControls = defineRecipe({
       },
       false: {
         display: 'none',
-      }
-    }
+      },
+    },
   },
   defaultVariants: {
-    hasItems: true
-  }
-})
-
+    hasItems: true,
+  },
+});

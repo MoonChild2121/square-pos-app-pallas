@@ -1,4 +1,4 @@
-import { defineRecipe } from '@pandacss/dev'
+import { defineRecipe } from '@pandacss/dev';
 
 export const heading = defineRecipe({
   className: 'heading',
@@ -31,7 +31,7 @@ export const heading = defineRecipe({
     variant: 'normal',
     color: 'default',
   },
-})
+});
 
 export const paragraph = defineRecipe({
   className: 'paragraph',
@@ -57,4 +57,4 @@ export const paragraph = defineRecipe({
     size: 'md',
     color: 'default',
   },
-}) 
+});

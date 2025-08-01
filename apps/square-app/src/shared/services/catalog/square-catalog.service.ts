@@ -1,15 +1,5 @@
-import {
-  CatalogData,
-  ICatalogService,
-  
-} from './interface';
-import {
-  Product,
-  Tax,
-  Discount,
-  ModifierData,
-  Money,
-} from '@/shared/types/base';
+import { CatalogData, ICatalogService } from './interface';
+import { Product, Tax, Discount, ModifierData, Money } from '@/shared/types/base';
 import {
   CatalogItem,
   CatalogResponse,
@@ -32,15 +22,11 @@ export class SquareCatalogService implements ICatalogService {
   private modifierMap: Record<string, ModifierData[]> = {}; // Maps modifierListId -> ModifierData[]
   private imageMap: Record<string, string> = {}; // Maps imageId -> imageUrl
   // Fetch the catalog data from the API
-  private async fetchCatalogData(
-    accessToken?: string
-  ): Promise<CatalogResponse> {
+  private async fetchCatalogData(accessToken?: string): Promise<CatalogResponse> {
     // On the server, call the logic function directly
     if (typeof window === 'undefined') {
       if (!accessToken) {
-        throw new Error(
-          'SquareCatalogService: Access token is required for server-side fetching.'
-        );
+        throw new Error('SquareCatalogService: Access token is required for server-side fetching.');
       }
       // The raw data from the logic function is already in the shape of CatalogResponse
       return fetchSquareCatalog(accessToken);
@@ -104,24 +90,30 @@ export class SquareCatalogService implements ICatalogService {
   // Initialize the maps from the catalog data
   private initializeMaps(catalog: CatalogResponse): void {
     this.imageMap = catalog.images || {};
-    
-    this.variantImageMap = (catalog.items || []).reduce((acc, item) => {
-      if (!item.itemData) return acc;
-      const itemImageIds = item.itemData.imageIds || [];
-      item.itemData.variations.forEach(variation => {
-        acc[variation.id] = variation.itemVariationData.imageIds || itemImageIds;
-      });
-      return acc;
-    }, {} as Record<string, string[]>);
 
-    this.modifierMap = (catalog.modifiers || []).reduce((acc, modifier) => {
-      const listId = modifier.modifierData.modifierListId;
-      if (!acc[listId]) {
-        acc[listId] = [];
-      }
-      acc[listId].push({ ...modifier.modifierData, id: modifier.id });
-      return acc;
-    }, {} as Record<string, ModifierData[]>);
+    this.variantImageMap = (catalog.items || []).reduce(
+      (acc, item) => {
+        if (!item.itemData) return acc;
+        const itemImageIds = item.itemData.imageIds || [];
+        item.itemData.variations.forEach((variation) => {
+          acc[variation.id] = variation.itemVariationData.imageIds || itemImageIds;
+        });
+        return acc;
+      },
+      {} as Record<string, string[]>
+    );
+
+    this.modifierMap = (catalog.modifiers || []).reduce(
+      (acc, modifier) => {
+        const listId = modifier.modifierData.modifierListId;
+        if (!acc[listId]) {
+          acc[listId] = [];
+        }
+        acc[listId].push({ ...modifier.modifierData, id: modifier.id });
+        return acc;
+      },
+      {} as Record<string, ModifierData[]>
+    );
   }
 
   // Transform the catalog item to a product
@@ -131,7 +123,7 @@ export class SquareCatalogService implements ICatalogService {
     const itemName = item.itemData.name;
     const taxIds = item.itemData.taxIds || [];
 
-    return item.itemData.variations.map(variation => {
+    return item.itemData.variations.map((variation) => {
       const price: Money = {
         amount: Number(variation.itemVariationData.priceMoney.amount),
         currency: variation.itemVariationData.priceMoney.currency,
@@ -157,7 +149,7 @@ export class SquareCatalogService implements ICatalogService {
     const rawData = await this.fetchCatalogData(accessToken);
     this.initializeMaps(rawData);
 
-    const products = (rawData.items || []).flatMap(item =>
+    const products = (rawData.items || []).flatMap((item) =>
       this.transformCatalogItemToProduct(item)
     );
 
@@ -179,7 +171,7 @@ export class SquareCatalogService implements ICatalogService {
       })
     );
 
-    return { products, taxes, discounts, modifierMap: this.modifierMap, };
+    return { products, taxes, discounts, modifierMap: this.modifierMap };
   }
 
   // Search the catalog for products
@@ -192,22 +184,28 @@ export class SquareCatalogService implements ICatalogService {
     if (!data.objects) return [];
 
     const relatedObjects = data.relatedObjects || [];
-    
+
     // Build image map from related objects
-    const imageMap = relatedObjects.reduce((acc, obj) => {
-      if (obj.type === 'IMAGE' && obj.imageData) {
-        acc[obj.id] = (obj.imageData as any).url;
-      }
-      return acc;
-    }, {} as Record<string, string>);
+    const imageMap = relatedObjects.reduce(
+      (acc, obj) => {
+        if (obj.type === 'IMAGE' && obj.imageData) {
+          acc[obj.id] = (obj.imageData as any).url;
+        }
+        return acc;
+      },
+      {} as Record<string, string>
+    );
 
     // Create a map of ITEM objects for easy lookup
-    const itemMap = relatedObjects.reduce((acc, obj) => {
-      if (obj.type === 'ITEM' && obj.itemData) {
-        acc[obj.id] = obj;
-      }
-      return acc;
-    }, {} as Record<string, any>);
+    const itemMap = relatedObjects.reduce(
+      (acc, obj) => {
+        if (obj.type === 'ITEM' && obj.itemData) {
+          acc[obj.id] = obj;
+        }
+        return acc;
+      },
+      {} as Record<string, any>
+    );
 
     // The modifierMap should already be populated from a previous catalog fetch
     // If it's empty, we might need to fetch the full catalog first to get modifier data
@@ -238,7 +236,7 @@ export class SquareCatalogService implements ICatalogService {
 
         // Get modifiers for this item using the existing helper method
         const modifiers = this.getProductModifiersByItem(relatedItem);
-      
+
         return {
           id: item.id,
           name: item.itemVariationData.name || '',
@@ -273,7 +271,7 @@ export class SquareCatalogService implements ICatalogService {
   // Get the product modifiers by item
   private getProductModifiersByItem(item: CatalogItem): ModifierData[] {
     if (!item.itemData || !item.itemData.modifierListInfo) return [];
-    const result = item.itemData.modifierListInfo.flatMap(info => {
+    const result = item.itemData.modifierListInfo.flatMap((info) => {
       return this.modifierMap[info.modifierListId] || [];
     });
     return result;

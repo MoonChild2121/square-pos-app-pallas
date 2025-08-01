@@ -1,24 +1,24 @@
-'use client'
+'use client';
 
-import { type Assign, type WithFixedClassName, createStyleContext } from '@pallas-ui/style-context'
-import * as MenubarPrimitive from '@radix-ui/react-menubar'
-import { css, cx } from '@styled-system/css'
-import { icon, menubar } from '@styled-system/recipes'
-import type { HTMLStyledProps, JsxStyleProps } from '@styled-system/types'
-import { Check, ChevronRight, Circle } from 'lucide-react'
-import * as React from 'react'
+import { type Assign, type WithFixedClassName, createStyleContext } from '@pallas-ui/style-context';
+import * as MenubarPrimitive from '@radix-ui/react-menubar';
+import { css, cx } from '@styled-system/css';
+import { icon, menubar } from '@styled-system/recipes';
+import type { HTMLStyledProps, JsxStyleProps } from '@styled-system/types';
+import { Check, ChevronRight, Circle } from 'lucide-react';
+import * as React from 'react';
 
-const { withProvider, withContext } = createStyleContext(menubar)
+const { withProvider, withContext } = createStyleContext(menubar);
 
 const ItemIndicator = withContext<
   React.ComponentRef<typeof MenubarPrimitive.ItemIndicator>,
   Assign<MenubarPrimitive.MenubarItemIndicatorProps, JsxStyleProps>
->(MenubarPrimitive.ItemIndicator, 'itemIndicator')
+>(MenubarPrimitive.ItemIndicator, 'itemIndicator');
 
 const CustomSubTrigger = React.forwardRef<
   React.ComponentRef<typeof MenubarPrimitive.SubTrigger>,
   React.ComponentPropsWithoutRef<typeof MenubarPrimitive.SubTrigger> & {
-    insetLeft?: boolean
+    insetLeft?: boolean;
   }
 >(({ className, insetLeft, children, ...props }, ref) => (
   <MenubarPrimitive.SubTrigger
@@ -29,15 +29,15 @@ const CustomSubTrigger = React.forwardRef<
     {children}
     <ChevronRight className={icon({ left: 'auto' })} />
   </MenubarPrimitive.SubTrigger>
-))
-CustomSubTrigger.displayName = MenubarPrimitive.SubTrigger.displayName
+));
+CustomSubTrigger.displayName = MenubarPrimitive.SubTrigger.displayName;
 
-type CustomSubTriggerProps = React.ComponentPropsWithoutRef<typeof CustomSubTrigger>
+type CustomSubTriggerProps = React.ComponentPropsWithoutRef<typeof CustomSubTrigger>;
 
 const Arrow = withContext<
   React.ComponentRef<typeof MenubarPrimitive.Arrow>,
   Assign<MenubarPrimitive.MenubarArrowProps, JsxStyleProps>
->(MenubarPrimitive.Arrow, 'arrow')
+>(MenubarPrimitive.Arrow, 'arrow');
 
 const CustomContent = React.forwardRef<
   React.ComponentRef<typeof MenubarPrimitive.Content>,
@@ -55,13 +55,13 @@ const CustomContent = React.forwardRef<
       <Arrow />
     </MenubarPrimitive.Content>
   </MenubarPrimitive.Portal>
-))
-CustomContent.displayName = MenubarPrimitive.Content.displayName
+));
+CustomContent.displayName = MenubarPrimitive.Content.displayName;
 
 const CustomItem = React.forwardRef<
   React.ComponentRef<typeof MenubarPrimitive.Item>,
   MenubarPrimitive.MenubarItemProps & {
-    insetLeft?: boolean
+    insetLeft?: boolean;
   }
 >(({ className, insetLeft, ...props }, ref) => (
   <MenubarPrimitive.Item
@@ -69,10 +69,10 @@ const CustomItem = React.forwardRef<
     ref={ref}
     {...props}
   />
-))
-CustomItem.displayName = MenubarPrimitive.Item.displayName
+));
+CustomItem.displayName = MenubarPrimitive.Item.displayName;
 
-type CustomItemProps = React.ComponentPropsWithoutRef<typeof CustomItem>
+type CustomItemProps = React.ComponentPropsWithoutRef<typeof CustomItem>;
 const CustomCheckboxItem = React.forwardRef<
   React.ComponentRef<typeof MenubarPrimitive.CheckboxItem>,
   React.ComponentPropsWithoutRef<typeof MenubarPrimitive.CheckboxItem>
@@ -83,8 +83,8 @@ const CustomCheckboxItem = React.forwardRef<
     </ItemIndicator>
     {children}
   </MenubarPrimitive.CheckboxItem>
-))
-CustomCheckboxItem.displayName = MenubarPrimitive.CheckboxItem.displayName
+));
+CustomCheckboxItem.displayName = MenubarPrimitive.CheckboxItem.displayName;
 
 const CustomRadioItem = React.forwardRef<
   React.ComponentRef<typeof MenubarPrimitive.RadioItem>,
@@ -96,13 +96,13 @@ const CustomRadioItem = React.forwardRef<
     </ItemIndicator>
     {children}
   </MenubarPrimitive.RadioItem>
-))
-CustomRadioItem.displayName = MenubarPrimitive.RadioItem.displayName
+));
+CustomRadioItem.displayName = MenubarPrimitive.RadioItem.displayName;
 
 const CustomLabel = React.forwardRef<
   React.ComponentRef<typeof MenubarPrimitive.Label>,
   React.ComponentPropsWithoutRef<typeof MenubarPrimitive.Label> & {
-    insetLeft?: boolean
+    insetLeft?: boolean;
   }
 >(({ className, insetLeft, ...props }, ref) => (
   <MenubarPrimitive.Label
@@ -110,81 +110,81 @@ const CustomLabel = React.forwardRef<
     className={cx(insetLeft && css({ pl: '8' }), className)}
     {...props}
   />
-))
-CustomLabel.displayName = MenubarPrimitive.Label.displayName
+));
+CustomLabel.displayName = MenubarPrimitive.Label.displayName;
 
-export type RootProps = WithFixedClassName<MenubarPrimitive.MenubarProps>
+export type RootProps = WithFixedClassName<MenubarPrimitive.MenubarProps>;
 
 export const Root = withProvider<
   React.ComponentRef<typeof MenubarPrimitive.Root>,
   Assign<MenubarPrimitive.MenubarProps, JsxStyleProps>
->(MenubarPrimitive.Root, 'root')
+>(MenubarPrimitive.Root, 'root');
 
-export const Menu: React.FC<MenubarPrimitive.MenubarMenuProps> = MenubarPrimitive.Menu //not doing this was giving error
+export const Menu: React.FC<MenubarPrimitive.MenubarMenuProps> = MenubarPrimitive.Menu; //not doing this was giving error
 
 export const Group = withContext<
   React.ComponentRef<typeof MenubarPrimitive.Group>,
   Assign<MenubarPrimitive.MenubarGroupProps, JsxStyleProps>
->(MenubarPrimitive.Group, 'group')
+>(MenubarPrimitive.Group, 'group');
 
-export const Portal: React.FC<MenubarPrimitive.MenubarPortalProps> = MenubarPrimitive.Portal //not doing this was giving error
+export const Portal: React.FC<MenubarPrimitive.MenubarPortalProps> = MenubarPrimitive.Portal; //not doing this was giving error
 
-export const SubMenu: React.FC<MenubarPrimitive.MenubarSubProps> = MenubarPrimitive.Sub //not doing this was giving error
+export const SubMenu: React.FC<MenubarPrimitive.MenubarSubProps> = MenubarPrimitive.Sub; //not doing this was giving error
 
 export const RadioGroup = withContext<
   React.ComponentRef<typeof MenubarPrimitive.RadioGroup>,
   Assign<MenubarPrimitive.MenubarRadioGroupProps, JsxStyleProps>
->(MenubarPrimitive.RadioGroup, 'radioGroup')
+>(MenubarPrimitive.RadioGroup, 'radioGroup');
 
 export const Trigger = withContext<
   React.ComponentRef<typeof MenubarPrimitive.Trigger>,
   Assign<MenubarPrimitive.MenubarTriggerProps, JsxStyleProps>
->(MenubarPrimitive.Trigger, 'trigger')
+>(MenubarPrimitive.Trigger, 'trigger');
 
 export const Content = withContext<
   React.ComponentRef<typeof CustomContent>,
   Assign<MenubarPrimitive.MenubarContentProps, JsxStyleProps>
->(CustomContent, 'content')
+>(CustomContent, 'content');
 
 export const SubTrigger = withContext<
   React.ComponentRef<typeof CustomSubTrigger>,
   Assign<CustomSubTriggerProps, JsxStyleProps>
->(CustomSubTrigger, 'subTrigger')
+>(CustomSubTrigger, 'subTrigger');
 
 export const SubContent = withContext<
   React.ComponentRef<typeof MenubarPrimitive.SubContent>,
   Assign<MenubarPrimitive.MenubarSubContentProps, JsxStyleProps>
->(MenubarPrimitive.SubContent, 'subContent')
+>(MenubarPrimitive.SubContent, 'subContent');
 
 export const Item = withContext<
   React.ComponentRef<typeof CustomItem>,
   Assign<CustomItemProps, JsxStyleProps>
->(CustomItem, 'item')
+>(CustomItem, 'item');
 
 export const CheckboxItem = withContext<
   React.ComponentRef<typeof CustomCheckboxItem>,
   Assign<MenubarPrimitive.MenubarCheckboxItemProps, JsxStyleProps>
->(CustomCheckboxItem, 'checkboxItem')
+>(CustomCheckboxItem, 'checkboxItem');
 
 export const RadioItem = withContext<
   React.ComponentRef<typeof CustomRadioItem>,
   Assign<MenubarPrimitive.MenubarRadioItemProps, JsxStyleProps>
->(CustomRadioItem, 'radioItem')
+>(CustomRadioItem, 'radioItem');
 
 export const Label = withContext<
   React.ComponentRef<typeof CustomLabel>,
   Assign<MenubarPrimitive.MenubarLabelProps, JsxStyleProps>
->(CustomLabel, 'label')
+>(CustomLabel, 'label');
 
 export const Separator = withContext<
   React.ComponentRef<typeof MenubarPrimitive.Separator>,
   Assign<MenubarPrimitive.MenubarSeparatorProps, JsxStyleProps>
->(MenubarPrimitive.Separator, 'separator')
+>(MenubarPrimitive.Separator, 'separator');
 
 export const Shortcut = withContext<React.ComponentRef<'span'>, HTMLStyledProps<'span'>>(
   'span',
-  'shortcut',
-)
+  'shortcut'
+);
 
 const Menubar = {
   Root,
@@ -203,6 +203,6 @@ const Menubar = {
   Label,
   Separator,
   Shortcut,
-}
+};
 
-export default Menubar
+export default Menubar;

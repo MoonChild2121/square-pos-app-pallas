@@ -1,17 +1,17 @@
-'use client'
+'use client';
 
-import { memo } from 'react'
-import { Box, Flex, VStack } from '@styled-system/jsx'
-import { cartSlideout, cartContent, cartControls } from '@styled-system/recipes'
-import CartItems from '@/components/composites/cart/CartItem'
-import { Button } from '@/components/primitives/ui/button'
-import OrderSummary from '@/components/composites/orders/OrderSummary'
-import { OrderSummarySkeleton } from '@/components/composites/loadingSkeletons/order-skeletons/OrderSummarySkeleton'
-import OrderModifierModal from '@/components/composites/orderModals/OrderModifierModal'
-import { CartViewProps } from '@/shared/types/cart/index'
-import { Heading } from '@/components/primitives/ui/typography'
-import { X } from 'lucide-react'
-import { css } from '@styled-system/css'
+import { memo } from 'react';
+import { Box, Flex, VStack } from '@styled-system/jsx';
+import { cartSlideout, cartContent, cartControls } from '@styled-system/recipes';
+import CartItems from '@/components/composites/cart/CartItem';
+import { Button } from '@/components/primitives/ui/button';
+import OrderSummary from '@/components/composites/orders/OrderSummary';
+import { OrderSummarySkeleton } from '@/components/composites/loadingSkeletons/order-skeletons/OrderSummarySkeleton';
+import OrderModifierModal from '@/components/composites/orderModals/OrderModifierModal';
+import { CartViewProps } from '@/shared/types/cart/index';
+import { Heading } from '@/components/primitives/ui/typography';
+import { X } from 'lucide-react';
+import { css } from '@styled-system/css';
 
 export const CartView = memo(function CartView({
   isOpen,
@@ -26,8 +26,8 @@ export const CartView = memo(function CartView({
   onClose,
   isRedirecting = false,
 }: CartViewProps) {
-  const showSummarySkeleton = !isEmpty && orderCalc.loading
-  const showOrderSummary = !isEmpty && !orderCalc.loading && orderCalc.order
+  const showSummarySkeleton = !isEmpty && orderCalc.loading;
+  const showOrderSummary = !isEmpty && !orderCalc.loading && orderCalc.order;
 
   return (
     <Box className={cartSlideout({ isOpen, size: { base: 'mobile', md: 'desktop' } })}>
@@ -41,7 +41,9 @@ export const CartView = memo(function CartView({
       <Box className={cartContent({ isEmpty })}>
         {isEmpty ? (
           <Flex align="center" justify="center">
-            <Heading level={5} color="disabled">Your cart is empty</Heading>
+            <Heading level={5} color="disabled">
+              Your cart is empty
+            </Heading>
           </Flex>
         ) : (
           items.map((item) => <CartItems key={item.id} {...item} />)
@@ -79,5 +81,5 @@ export const CartView = memo(function CartView({
         </Box>
       )}
     </Box>
-  )
-})
+  );
+});

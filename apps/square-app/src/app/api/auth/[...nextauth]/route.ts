@@ -11,15 +11,15 @@ const SQUARE_SANDBOX_URL = 'https://connect.squareupsandbox.com';
 declare module 'next-auth' {
   interface Session {
     user: {
-      id?: string | null;     // Square merchant ID
-      name?: string | null;   // Square business name
-      email?: string | null; 
+      id?: string | null; // Square merchant ID
+      name?: string | null; // Square business name
+      email?: string | null;
     };
-    accessToken?: string;     // Our custom addition to the session
+    accessToken?: string; // Our custom addition to the session
   }
 
   interface JWT {
-    accessToken?: string;     // Attach the Square access token to the JWT
+    accessToken?: string; // Attach the Square access token to the JWT
   }
 }
 
@@ -28,11 +28,13 @@ declare module 'next-auth' {
 // Define the full NextAuth config object
 export const authOptions: NextAuthOptions = {
   // Define a custom OAuth provider for Square
+  secret: process.env.NEXTAUTH_SECRET,
+
   providers: [
     {
-      id: 'square',               // Provider ID used internally
-      name: 'Square',             // Display name for the provider
-      type: 'oauth',              // Type of auth strategy
+      id: 'square', // Provider ID used internally
+      name: 'Square', // Display name for the provider
+      type: 'oauth', // Type of auth strategy
 
       // OAuth2 Authorization URL and parameters
       authorization: {
@@ -40,15 +42,14 @@ export const authOptions: NextAuthOptions = {
         params: {
           // Required scopes for accessing merchant, orders, items, and payments
           scope: 'MERCHANT_PROFILE_READ PAYMENTS_READ PAYMENTS_WRITE ITEMS_READ ORDERS_READ',
-          session: 'false', 
+          session: 'false',
         },
       },
 
       // How to exchange the authorization code for access tokens
       token: {
         url: `${SQUARE_SANDBOX_URL}/oauth2/token`,
-        async request({params }) {
-
+        async request({ params }) {
           // Make a custom POST request to Square's token endpoint
           const response = await fetch(`${SQUARE_SANDBOX_URL}/oauth2/token`, {
             method: 'POST',
@@ -57,10 +58,10 @@ export const authOptions: NextAuthOptions = {
               'Content-Type': 'application/json',
             },
             body: JSON.stringify({
-              client_id: process.env.NEXT_PUBLIC_SQUARE_APPLICATION_ID,   // from .env
-              client_secret: process.env.SQUARE_APPLICATION_SECRET,       // from .env
-              code: params.code,                                          // auth code from Square
-              grant_type: 'authorization_code',                           // standard OAuth2 grant
+              client_id: process.env.NEXT_PUBLIC_SQUARE_APPLICATION_ID, // from .env
+              client_secret: process.env.SQUARE_APPLICATION_SECRET, // from .env
+              code: params.code, // auth code from Square
+              grant_type: 'authorization_code', // standard OAuth2 grant
               redirect_uri: 'http://localhost:3000/api/auth/callback/square', // must match Square app settings
             }),
           });
@@ -83,7 +84,7 @@ export const authOptions: NextAuthOptions = {
         async request({ tokens }) {
           const response = await fetch(`${SQUARE_SANDBOX_URL}/v2/merchants/me`, {
             headers: {
-              Authorization: `Bearer ${tokens.access_token}`,     // Square token
+              Authorization: `Bearer ${tokens.access_token}`, // Square token
               'Content-Type': 'application/json',
               'Square-Version': '2024-01-01',
             },
@@ -99,9 +100,9 @@ export const authOptions: NextAuthOptions = {
       // Format Square's profile shape into the shape NextAuth expects
       profile(profile) {
         return {
-          id: profile.merchant?.id || 'default-id',            // Square merchant ID
-          name: profile.merchant?.business_name || null,       // Store name
-          email: null,                                          // Not returned by Square
+          id: profile.merchant?.id || 'default-id', // Square merchant ID
+          name: profile.merchant?.business_name || null, // Store name
+          email: null, // Not returned by Square
         };
       },
     },
@@ -111,7 +112,7 @@ export const authOptions: NextAuthOptions = {
 
   callbacks: {
     // Called when a JWT is created or updated
-    async jwt({ token, account, user }) {
+    async jwt({ token, account }) {
       if (account?.access_token) {
         token.accessToken = account.access_token; // Store Square token in JWT
       }

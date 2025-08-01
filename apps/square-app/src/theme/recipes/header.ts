@@ -1,5 +1,5 @@
 // @styled-system/recipes/header.ts
-import { defineSlotRecipe } from '@pandacss/dev'
+import { defineSlotRecipe } from '@pandacss/dev';
 
 export const header = defineSlotRecipe({
   className: 'header',
@@ -17,7 +17,7 @@ export const header = defineSlotRecipe({
       alignItems: 'center',
       justifyContent: 'space-between',
       w: '100%',
-      flexDirection: { base: 'column', sm: 'row' }, 
+      flexDirection: { base: 'column', sm: 'row' },
     },
   },
-})
+});

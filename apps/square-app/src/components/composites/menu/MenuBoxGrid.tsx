@@ -1,25 +1,25 @@
-'use client'
+'use client';
 
-import { memo, useCallback } from 'react'
-import { Box, HStack } from '@styled-system/jsx'
-import { css } from '@styled-system/css'
-import MenuBox from './MenuBox'
-import type { MenuItem } from '@/shared/types/menu'
-import { MenuBoxGridProps } from '@/shared/types/menu'
+import { memo, useCallback } from 'react';
+import { Box, HStack } from '@styled-system/jsx';
+import { css } from '@styled-system/css';
+import MenuBox from './MenuBox';
+import type { MenuItem } from '@/shared/types/menu';
+import { MenuBoxGridProps } from '@/shared/types/menu';
 
 // Memoized individual menu item component
 const MenuItem = memo(function MenuItem({
   item,
   isSelected,
-  onSelect
+  onSelect,
 }: {
-  item: MenuItem
-  isSelected: boolean
-  onSelect: (id: string) => void
+  item: MenuItem;
+  isSelected: boolean;
+  onSelect: (id: string) => void;
 }) {
   const handleClick = useCallback(() => {
-    onSelect(item.id)
-  }, [item.id, onSelect])
+    onSelect(item.id);
+  }, [item.id, onSelect]);
 
   return (
     <MenuBox
@@ -30,13 +30,13 @@ const MenuItem = memo(function MenuItem({
       isSelected={isSelected}
       onClick={handleClick}
     />
-  )
-})
+  );
+});
 
-const MenuBoxGrid = memo(function MenuBoxGrid({ 
-  items, 
-  selectedCategory, 
-  onCategorySelect 
+const MenuBoxGrid = memo(function MenuBoxGrid({
+  items,
+  selectedCategory,
+  onCategorySelect,
 }: MenuBoxGridProps) {
   return (
     <Box>
@@ -64,7 +64,7 @@ const MenuBoxGrid = memo(function MenuBoxGrid({
         </HStack>
       </Box>
     </Box>
-  )
-})
+  );
+});
 
-export default MenuBoxGrid
+export default MenuBoxGrid;

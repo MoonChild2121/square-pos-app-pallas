@@ -3,4 +3,4 @@ export interface OrderConfirmationViewProps {
   catalogLoading: boolean;
   getVariantImageUrl: (catalogObjectId: string) => string | undefined;
   onContinueShopping: () => void;
-} 
+}

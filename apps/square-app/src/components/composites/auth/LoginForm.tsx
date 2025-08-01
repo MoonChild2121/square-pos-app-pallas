@@ -1,11 +1,11 @@
-'use client'
+'use client';
 
-import { Button } from '@/components/primitives/ui/button'
-import Heading from '@/components/primitives/ui/typography/heading'
-import Paragraph from '@/components/primitives/ui/typography/paragraph'
-import { Box, VStack } from '@styled-system/jsx'
-import { css } from '@styled-system/css'
-import { LoginFormProps } from '@/components/composites/auth/types'
+import { Button } from '@/components/primitives/ui/button';
+import Heading from '@/components/primitives/ui/typography/heading';
+import Paragraph from '@/components/primitives/ui/typography/paragraph';
+import { Box, VStack } from '@styled-system/jsx';
+import { css } from '@styled-system/css';
+import { LoginFormProps } from '@/components/composites/auth/types';
 
 export function LoginForm({ isLoading, onSignIn }: LoginFormProps) {
   return (
@@ -36,11 +36,11 @@ export function LoginForm({ isLoading, onSignIn }: LoginFormProps) {
           width="full"
           size="lg"
           isLoading={isLoading}
-          disabled={isLoading} 
+          disabled={isLoading}
         >
           {isLoading ? 'Processing' : 'Connect with Square'}
         </Button>
       </VStack>
     </Box>
-  )
+  );
 }

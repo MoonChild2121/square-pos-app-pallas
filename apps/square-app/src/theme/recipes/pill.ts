@@ -1,4 +1,4 @@
-import { defineRecipe } from '@pandacss/dev'
+import { defineRecipe } from '@pandacss/dev';
 
 export const pill = defineRecipe({
   className: 'pill',
@@ -25,7 +25,7 @@ export const pill = defineRecipe({
         borderColor: 'surface.spotlight', // default border
         w: '100%',
         justifyContent: 'space-between',
-      }
+      },
     },
     colorScheme: {
       default: {
@@ -42,8 +42,8 @@ export const pill = defineRecipe({
       },
       info: {
         borderColor: 'info',
-      }
-    }
+      },
+    },
   },
   // Only apply colorScheme border styles when variant is 'cart'
   compoundVariants: [
@@ -52,39 +52,39 @@ export const pill = defineRecipe({
       colorScheme: 'default',
       css: {
         borderColor: 'surface.spotlight',
-      }
+      },
     },
     {
       variant: 'cart',
       colorScheme: 'success',
       css: {
         borderColor: 'success',
-      }
+      },
     },
     {
       variant: 'cart',
       colorScheme: 'danger',
       css: {
         borderColor: 'danger',
-      }
+      },
     },
     {
       variant: 'cart',
       colorScheme: 'warning',
       css: {
         borderColor: 'warning',
-      }
+      },
     },
     {
       variant: 'cart',
       colorScheme: 'info',
       css: {
         borderColor: 'info',
-      }
-    }
+      },
+    },
   ],
   defaultVariants: {
     variant: 'layout',
     colorScheme: 'default',
   },
-})
+});

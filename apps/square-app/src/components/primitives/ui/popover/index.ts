@@ -1,2 +1,2 @@
-export * from './popover'
-export { default } from './popover'
+export * from './popover';
+export { default } from './popover';

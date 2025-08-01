@@ -18,28 +18,23 @@ export async function fetchSquareCatalog(accessToken: string) {
   const JSONbigNative = JSONbigFactory({ useNativeBigInt: true });
 
   // Fetch catalog items, taxes, discounts, images, and modifiers in parallel
-  const [
-    catalogResponse,
-    taxResponse,
-    discountResponse,
-    imagesResponse,
-    modifierResponse,
-  ] = await Promise.all([
-    client.catalog.list({ types: 'ITEM' }),
-    client.catalog.list({ types: 'TAX' }),
-    client.catalog.list({ types: 'DISCOUNT' }),
-    client.catalog.list({ types: 'IMAGE' }),
-    client.catalog.list({ types: 'MODIFIER' }),
-  ]).catch(error => {
-    console.error('Square Logic: Square API call failed', {
-      error: error.message,
-      code: error.code,
-      statusCode: error.statusCode,
-      details: error.errors,
-      stack: error.stack,
+  const [catalogResponse, taxResponse, discountResponse, imagesResponse, modifierResponse] =
+    await Promise.all([
+      client.catalog.list({ types: 'ITEM' }),
+      client.catalog.list({ types: 'TAX' }),
+      client.catalog.list({ types: 'DISCOUNT' }),
+      client.catalog.list({ types: 'IMAGE' }),
+      client.catalog.list({ types: 'MODIFIER' }),
+    ]).catch((error) => {
+      console.error('Square Logic: Square API call failed', {
+        error: error.message,
+        code: error.code,
+        statusCode: error.statusCode,
+        details: error.errors,
+        stack: error.stack,
+      });
+      throw error;
     });
-    throw error;
-  });
 
   // Process catalog items
   const serializedCatalog = JSONbigNative.stringify(catalogResponse.data);
@@ -54,29 +49,22 @@ export async function fetchSquareCatalog(accessToken: string) {
   // Process discount items
   const serializedDiscounts = JSONbigNative.stringify(discountResponse.data);
   const discountData = JSON.parse(serializedDiscounts);
-  const discounts = discountData.filter(
-    (item: any) => item.type === 'DISCOUNT'
-  );
+  const discounts = discountData.filter((item: any) => item.type === 'DISCOUNT');
 
   // Process image data
   const serializedImages = JSONbigNative.stringify(imagesResponse.data);
   const imagesData = JSON.parse(serializedImages);
-  const imageMap = imagesData.reduce(
-    (acc: Record<string, string>, obj: any) => {
-      if (obj.type === 'IMAGE' && obj.imageData?.url) {
-        acc[obj.id] = obj.imageData.url;
-      }
-      return acc;
-    },
-    {}
-  );
+  const imageMap = imagesData.reduce((acc: Record<string, string>, obj: any) => {
+    if (obj.type === 'IMAGE' && obj.imageData?.url) {
+      acc[obj.id] = obj.imageData.url;
+    }
+    return acc;
+  }, {});
 
   // Process modifier data
   const serializedModifiers = JSONbigNative.stringify(modifierResponse.data);
   const modifierData = JSON.parse(serializedModifiers);
-  const modifiers = modifierData.filter(
-    (item: any) => item.type === 'MODIFIER'
-  );
+  const modifiers = modifierData.filter((item: any) => item.type === 'MODIFIER');
 
   return {
     items,

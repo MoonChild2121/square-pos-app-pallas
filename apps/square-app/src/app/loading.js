@@ -1,7 +1,5 @@
-import {LoadingSkeleton} from '@/components/composites/LoadingSkeletons/LayoutSkeleton'
+import { LayoutSkeleton } from '@/components/composites/loadingSkeletons/LayoutSkeleton';
 
 export default function Loading() {
-  return (
-    <LoadingSkeleton/>
-  )
+  return <LayoutSkeleton />;
 }

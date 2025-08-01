@@ -1,18 +1,18 @@
-'use client'
+'use client';
 
-import { memo, useCallback } from 'react'
-import { Box, HStack, VStack } from '@styled-system/jsx'
-import Paragraph from '@/components/primitives/ui/typography/paragraph'
-import Heading from '@/components/primitives/ui/typography/heading'
-import { Minus, Plus, Trash2 } from 'lucide-react'
-import { useCartStore } from '@/shared/stores/useCartStore'
-import { cartItem } from '@styled-system/recipes'
-import ModifierModal from '@/components/composites/orderModals/ItemModal'
-import { useCatalog } from '@/shared/hooks/useCatalog'
-import { css } from '@styled-system/css'
-import { CartItem } from '@/shared/types/cart'
-import { formatMoney } from '@/shared/utils/helpers'
-import Image from 'next/image'
+import { memo, useCallback } from 'react';
+import { Box, HStack, VStack } from '@styled-system/jsx';
+import Paragraph from '@/components/primitives/ui/typography/paragraph';
+import Heading from '@/components/primitives/ui/typography/heading';
+import { Minus, Plus, Trash2 } from 'lucide-react';
+import { useCartStore } from '@/shared/stores/useCartStore';
+import { cartItem } from '@styled-system/recipes';
+import ModifierModal from '@/components/composites/orderModals/ItemModal';
+import { useCatalog } from '@/shared/hooks/useCatalog';
+import { css } from '@styled-system/css';
+import { CartItem } from '@/shared/types/cart';
+import { formatMoney } from '@/shared/utils/helpers';
+import Image from 'next/image';
 
 const CartItems = memo(function CartItem({
   id,
@@ -22,19 +22,19 @@ const CartItems = memo(function CartItem({
   imageUrl,
   taxIds = [],
   discountIds = [],
-  selectedModifier
+  selectedModifier,
 }: CartItem) {
-  const { increaseQuantity, decreaseQuantity, removeItem } = useCartStore()
-  const { taxes, discounts } = useCatalog()
-  const { root, image, content, controls, button, deleteButton } = cartItem()
+  const { increaseQuantity, decreaseQuantity, removeItem } = useCartStore();
+  const { taxes, discounts } = useCatalog();
+  const { root, image, content, controls, button, deleteButton } = cartItem();
 
   const handleDelete = useCallback(() => {
-    removeItem(id)
-  }, [id, removeItem])
+    removeItem(id);
+  }, [id, removeItem]);
 
-  const selectedTax = taxes.find(tax => tax.uid === taxIds[0])
-  const selectedDiscount = discounts.find(discount => discount.uid === discountIds[0])
-  const totalItemPrice = price * quantity
+  const selectedTax = taxes.find((tax) => tax.uid === taxIds[0]);
+  const selectedDiscount = discounts.find((discount) => discount.uid === discountIds[0]);
+  const totalItemPrice = price * quantity;
 
   return (
     <Box pb="padding.block.sm">
@@ -51,21 +51,22 @@ const CartItems = memo(function CartItem({
             alt={name}
             fill
             sizes="80px"
-            priority={false}
+            priority
             quality={75}
             style={{ objectFit: 'contain' }}
           />
         </Box>
 
         {/* Content Wrapper */}
-        <VStack justify='space-between' gap='gap.inline.xs' className={css({flex: 1,})}>
+        <VStack justify="space-between" gap="gap.inline.xs" className={css({ flex: 1 })}>
           {/* Item Details */}
-          <VStack className={content} gap='0'>
+          <VStack className={content} gap="0">
             <Heading level={6}>
               {name}
               {selectedModifier && (
                 <span className={css({ color: 'text.secondary', fontSize: 'sm' })}>
-                  {' - '}{selectedModifier.name}
+                  {' - '}
+                  {selectedModifier.name}
                 </span>
               )}
             </Heading>
@@ -73,13 +74,14 @@ const CartItems = memo(function CartItem({
               {formatMoney(totalItemPrice)}
               {selectedModifier && selectedModifier.price > 0 && (
                 <span className={css({ color: 'text.secondary', fontSize: 'xs' })}>
-                  {' '}(+{formatMoney(selectedModifier.price)} each)
+                  {' '}
+                  (+{formatMoney(selectedModifier.price)} each)
                 </span>
               )}
             </Paragraph>
 
             {(selectedTax || selectedDiscount) && (
-              <VStack gap='0'>
+              <VStack gap="0">
                 {selectedTax && (
                   <Paragraph size="subscript" color="secondary">
                     Tax: {selectedTax.name} ({selectedTax.percentage}%)
@@ -97,11 +99,7 @@ const CartItems = memo(function CartItem({
 
           {/* Quantity Controls */}
           <HStack className={controls}>
-            <ModifierModal 
-              itemId={id} 
-              selectedTaxIds={taxIds}
-              selectedDiscountIds={discountIds}
-            />
+            <ModifierModal itemId={id} selectedTaxIds={taxIds} selectedDiscountIds={discountIds} />
             <Box onClick={() => decreaseQuantity(id)} className={button}>
               <Minus size={17} />
             </Box>
@@ -113,7 +111,7 @@ const CartItems = memo(function CartItem({
         </VStack>
       </HStack>
     </Box>
-  )
-})
+  );
+});
 
-export default CartItems
+export default CartItems;

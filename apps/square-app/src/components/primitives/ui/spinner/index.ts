@@ -1,4 +1,4 @@
-import { styled } from '@styled-system/jsx'
-import { spinner } from '@styled-system/recipes'
+import { styled } from '@styled-system/jsx';
+import { spinner } from '@styled-system/recipes';
 
-export const Spinner = styled('span', spinner)
+export const Spinner = styled('span', spinner);

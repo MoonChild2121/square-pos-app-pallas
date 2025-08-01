@@ -2,10 +2,15 @@
 const nextConfig = {
   reactStrictMode: true,
   experimental: {
-    serverActions: true,
-  },
+    serverActions: {},
+  },  
   images: {
-    domains: ['items-images-sandbox.s3.us-west-2.amazonaws.com'],
+    remotePatterns: [
+      {
+        protocol: 'https',
+        hostname: 'items-images-sandbox.s3.us-west-2.amazonaws.com',
+      },
+    ],
   },
 };
 

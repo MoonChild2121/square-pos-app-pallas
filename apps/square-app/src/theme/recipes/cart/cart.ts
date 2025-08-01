@@ -1,10 +1,19 @@
 // @styled-system/recipes/cartItem.ts
-import { defineSlotRecipe } from '@pandacss/dev'
+import { defineSlotRecipe } from '@pandacss/dev';
 
 export const cartItem = defineSlotRecipe({
   className: 'cartItem',
   description: 'Multi-part styles for a cart item component',
-  slots: ['root', 'image', 'content', 'title', 'controls', 'button', 'deleteButton', 'contentWrapper'],
+  slots: [
+    'root',
+    'image',
+    'content',
+    'title',
+    'controls',
+    'button',
+    'deleteButton',
+    'contentWrapper',
+  ],
   base: {
     root: {
       bg: 'bgSolid.text',
@@ -17,16 +26,16 @@ export const cartItem = defineSlotRecipe({
       position: 'relative',
     },
     image: {
-      position: 'relative',       // Required for Next.js Image fill to work
-      width: '80px',          // Fixed container size
+      position: 'relative', // Required for Next.js Image fill to work
+      width: '80px', // Fixed container size
       height: '80px',
       flexShrink: 0,
       bg: 'surface.layout',
       borderRadius: 'lg',
-      overflow: 'hidden',         // Clip overflow for clean edges
+      overflow: 'hidden', // Clip overflow for clean edges
       display: 'flex',
       alignItems: 'center',
-      justifyContent: 'center',          
+      justifyContent: 'center',
     },
     content: {
       maxW: 'calc(100% - 40px)', // Space for delete button
@@ -60,7 +69,7 @@ export const cartItem = defineSlotRecipe({
       cursor: 'pointer',
       _hover: {
         bg: 'primary.hover',
-      }
+      },
     },
     deleteButton: {
       color: 'text.secondary',
@@ -75,7 +84,7 @@ export const cartItem = defineSlotRecipe({
       right: 'padding.inline.sm',
       _hover: {
         transform: 'scale(1.1)',
-      }
-    }
+      },
+    },
   },
-})
+});
