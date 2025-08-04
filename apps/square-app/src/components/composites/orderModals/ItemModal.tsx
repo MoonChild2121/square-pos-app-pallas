@@ -9,7 +9,7 @@ import {
 } from '@/components/composites/modifierSelect/SelectTaxDiscount';
 import { VStack } from '@styled-system/jsx';
 import { cartItem } from '@styled-system/recipes';
-import { Box } from '@styled-system/jsx';
+import { Button } from '@/components/primitives/ui/button';
 import { ModifierModalProps } from '@/components/composites/orderModals/types';
 
 export default function ModifierModal({
@@ -24,10 +24,15 @@ export default function ModifierModal({
     <>
       <Modal.Root open={open} onOpenChange={setOpen}>
         <Modal.Trigger asChild>
-          <Box className={button}>
-            {' '}
+          <Button
+            variant="primary"
+            size="sm"
+            shape="circle"
+            className={button}
+            aria-label="Add modifiers to item"
+          >
             <Edit size={17} />
-          </Box>
+          </Button>
         </Modal.Trigger>
         <Modal.Content>
           <Modal.Header>

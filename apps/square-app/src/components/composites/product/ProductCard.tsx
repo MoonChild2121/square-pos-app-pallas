@@ -7,7 +7,6 @@ import { useCartStore } from '@/shared/stores/useCartStore';
 import { Button } from '@/components/primitives/ui/button';
 import { Minus, Plus } from 'lucide-react';
 import Paragraph from '@/components/primitives/ui/typography/paragraph';
-import Heading from '@/components/primitives/ui/typography/heading';
 import { Product } from '@/shared/types/base';
 import { formatMoney } from '@/shared/utils/helpers';
 import Image from 'next/image';
@@ -67,21 +66,32 @@ const ProductCard = memo(function ProductCard({
           className={css({
             borderRadius: 'xl',
             overflow: 'hidden',
-            aspectRatio: '4/3',
+            aspectRatio: '3/3',
             bg: 'surface.layout',
           })}
         >
           <Image
             src={imageUrl || '/placeholder-image.png'}
             alt={name}
-            fill
-            sizes="166px"
+            width={166}
+            height={166}
+            sizes="(max-width: 166px) 50vw, 166px"
             style={{ objectFit: 'contain' }}
             priority
           />
         </Box>
 
-        <Heading level={6}>{name}</Heading>
+        <Paragraph
+          size="compact"
+          textStyle="bold"
+          className={css({
+            fontSize: 'md',
+            fontWeight: 'semibold',
+            lineHeight: 'tight',
+          })}
+        >
+          {name}
+        </Paragraph>
 
         <Paragraph
           size="compact"
@@ -104,16 +114,30 @@ const ProductCard = memo(function ProductCard({
 
         {cartItem ? (
           <HStack justify="space-between">
-            <Button shape="circle" onClick={() => decreaseQuantity(compositeId)}>
+            <Button 
+              shape="circle" 
+              onClick={() => decreaseQuantity(compositeId)}
+              aria-label={`Decrease quantity of ${name}`}
+            >
               <Minus size={15} />
             </Button>
-            <Box>{cartItem.quantity}</Box>
-            <Button shape="circle" onClick={() => increaseQuantity(compositeId)}>
+            <Box aria-label={`Current quantity: ${cartItem.quantity}`}>
+              {cartItem.quantity}
+            </Box>
+            <Button 
+              shape="circle" 
+              onClick={() => increaseQuantity(compositeId)}
+              aria-label={`Increase quantity of ${name}`}
+            >
               <Plus size={15} />
             </Button>
           </HStack>
         ) : (
-          <Button onClick={handleAddToCart} width="full">
+          <Button 
+            onClick={handleAddToCart} 
+            width="full"
+            aria-label={`Add ${name} to cart`}
+          >
             Add to Cart
           </Button>
         )}

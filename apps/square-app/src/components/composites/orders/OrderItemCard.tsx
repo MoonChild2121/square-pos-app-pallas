@@ -28,8 +28,12 @@ export const OrderItemCard = ({ item, imageUrl }: OrderItemCardProps) => {
           alt={item.name}
           width={64}
           height={64}
-          sizes="64px"
-          priority
+          sizes="(max-width: 64px) 50vw, 64px"
+          style={{
+            objectFit: 'contain',
+            width: 'auto',
+            height: 'auto',
+          }}
           quality={75}
         />
       </Box>

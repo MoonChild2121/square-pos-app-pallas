@@ -24,7 +24,11 @@ export default function SelectModifier({ modifiers, value, onChange }: SelectMod
 
   return (
     <Select.Root value={value} onValueChange={onChange}>
-      <Select.Trigger style={{ width: '100%' }}>
+      <Select.Trigger 
+        style={{ width: '100%' }} 
+        aria-label="Select product modifier"
+        aria-describedby="modifier-description"
+      >
         <Select.Value placeholder="Select modifier">
           {selectedModifier ? (
             <span className={truncateStyle}>{selectedModifier.name}</span>
@@ -35,7 +39,7 @@ export default function SelectModifier({ modifiers, value, onChange }: SelectMod
       </Select.Trigger>
       <Select.Content>
         <Select.Group>
-          <Select.Label>Options</Select.Label>
+          <Select.Label>Product Options</Select.Label>
           {modifiers.map((modifier) => (
             <Select.Item
               key={modifier.id}
@@ -53,6 +57,9 @@ export default function SelectModifier({ modifiers, value, onChange }: SelectMod
           ))}
         </Select.Group>
       </Select.Content>
+      <div id="modifier-description" className={css({ srOnly: true })}>
+        Choose a modifier for this product. Each option may have an additional cost.
+      </div>
     </Select.Root>
   );
 }

@@ -2,7 +2,7 @@
 
 import { SquareClient, SquareEnvironment } from 'square';
 import { getServerSession } from 'next-auth';
-import { authOptions } from '../api/auth/[...nextauth]/route';
+import { authOptions } from '@/lib/auth';
 const JSONbig = require('json-bigint');
 
 export async function calculateOrderAction(orderPayload: any) {

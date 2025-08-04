@@ -2,7 +2,7 @@ import { Suspense } from 'react';
 import { HomeContainer } from '@/containers/home/HomeContainer';
 import { getServerSession } from 'next-auth';
 import { getCatalogService } from '@/shared/services/service-factory';
-import { authOptions } from '@/app/api/auth/[...nextauth]/route';
+import { authOptions } from '@/lib/auth';
 import { redirect } from 'next/navigation';
 import { fetchSquareCatalog } from '@/shared/services/catalog/fetch-logic';
 

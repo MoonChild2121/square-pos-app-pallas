@@ -14,6 +14,7 @@ export function CartToggle({ isOpen, onToggle }: CartToggleProps) {
     <Button
       variant="primary"
       onClick={onToggle}
+      aria-label="Open cart"
       className={css({
         position: 'fixed',
         bottom: '6',

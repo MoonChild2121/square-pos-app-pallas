@@ -3,7 +3,6 @@
 import { memo, useCallback } from 'react';
 import { Box, HStack, VStack } from '@styled-system/jsx';
 import Paragraph from '@/components/primitives/ui/typography/paragraph';
-import Heading from '@/components/primitives/ui/typography/heading';
 import { Minus, Plus, Trash2 } from 'lucide-react';
 import { useCartStore } from '@/shared/stores/useCartStore';
 import { cartItem } from '@styled-system/recipes';
@@ -13,6 +12,7 @@ import { css } from '@styled-system/css';
 import { CartItem } from '@/shared/types/cart';
 import { formatMoney } from '@/shared/utils/helpers';
 import Image from 'next/image';
+import { Button } from '@/components/primitives/ui/button';
 
 const CartItems = memo(function CartItem({
   id,
@@ -40,20 +40,30 @@ const CartItems = memo(function CartItem({
     <Box pb="padding.block.sm">
       <HStack className={root}>
         {/* Delete Button */}
-        <Box onClick={handleDelete} className={deleteButton}>
+        <Button
+          variant="text"
+          size="sm"
+          onClick={handleDelete}
+          className={deleteButton}
+          aria-label="Remove item from cart"
+        >
           <Trash2 size={20} />
-        </Box>
+        </Button>
 
         {/* Image */}
         <Box className={image}>
           <Image
             src={imageUrl || '/placeholder-image.png'}
             alt={name}
-            fill
-            sizes="80px"
-            priority
+            width={80}
+            height={80}
+            sizes="(max-width: 80px) 50vw, 80px"
             quality={75}
-            style={{ objectFit: 'contain' }}
+            style={{
+              objectFit: 'contain',
+              width: 'auto',
+              height: 'auto',
+            }}
           />
         </Box>
 
@@ -61,7 +71,7 @@ const CartItems = memo(function CartItem({
         <VStack justify="space-between" gap="gap.inline.xs" className={css({ flex: 1 })}>
           {/* Item Details */}
           <VStack className={content} gap="0">
-            <Heading level={6}>
+            <Paragraph size="compact" textStyle="bold">
               {name}
               {selectedModifier && (
                 <span className={css({ color: 'text.secondary', fontSize: 'sm' })}>
@@ -69,7 +79,7 @@ const CartItems = memo(function CartItem({
                   {selectedModifier.name}
                 </span>
               )}
-            </Heading>
+            </Paragraph>
             <Paragraph size="compact" textStyle="bold">
               {formatMoney(totalItemPrice)}
               {selectedModifier && selectedModifier.price > 0 && (
@@ -100,13 +110,25 @@ const CartItems = memo(function CartItem({
           {/* Quantity Controls */}
           <HStack className={controls}>
             <ModifierModal itemId={id} selectedTaxIds={taxIds} selectedDiscountIds={discountIds} />
-            <Box onClick={() => decreaseQuantity(id)} className={button}>
+            <Button
+              variant="primary"
+              size="sm"
+              shape="circle"
+              onClick={() => decreaseQuantity(id)}
+              aria-label="Decrease quantity"
+            >
               <Minus size={17} />
-            </Box>
+            </Button>
             <Paragraph>{quantity}</Paragraph>
-            <Box onClick={() => increaseQuantity(id)} className={button}>
+            <Button
+              variant="primary"
+              size="sm"
+              shape="circle"
+              onClick={() => increaseQuantity(id)}
+              aria-label="Increase quantity"
+            >
               <Plus size={17} />
-            </Box>
+            </Button>
           </HStack>
         </VStack>
       </HStack>

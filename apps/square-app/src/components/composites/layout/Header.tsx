@@ -23,7 +23,13 @@ export function Header() {
         <Box className={pill({ variant: 'layout' })}>
           <Heading level={5}>{merchantName}</Heading>
         </Box>
-        <Button variant="primary" shape="circle" size="icon" onClick={handleSignOut}>
+        <Button
+          variant="primary"
+          shape="circle"
+          size="icon"
+          aria-label="Sign out"
+          onClick={handleSignOut}
+        >
           <LogOut />
         </Button>
       </HStack>

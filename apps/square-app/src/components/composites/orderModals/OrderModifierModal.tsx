@@ -24,6 +24,7 @@ export default function OrderModifierModal({
           className={css({
             boxShadow: 'sm',
           })}
+          aria-label="Configure order modifiers"
         >
           <Edit size={20} />
           <Box ml="padding.inline.sm">Order Modifiers</Box>

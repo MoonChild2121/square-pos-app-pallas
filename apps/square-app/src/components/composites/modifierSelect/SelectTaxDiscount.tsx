@@ -4,7 +4,7 @@ import Select from '@/components/primitives/ui/select';
 import { useCatalog } from '@/shared/hooks/useCatalog';
 import { useCartStore } from '@/shared/stores/useCartStore';
 import { Box } from '@styled-system/jsx';
-import Heading from '@/components/primitives/ui/typography/heading';
+import Paragraph from '@/components/primitives/ui/typography/paragraph';
 
 interface TaxSelectProps {
   itemId: string;
@@ -33,11 +33,11 @@ export function TaxSelect({ itemId, selectedTaxIds = [], isOrderLevel = false }:
 
   return (
     <Box>
-      <Heading level={6} className="mb-2">
+      <Paragraph size="compact" textStyle="bold" className="mb-2">
         Applicable Taxes
-      </Heading>
+      </Paragraph>
       <Select.Root value={selectedTaxIds?.[0] || 'none'} onValueChange={handleTaxChange}>
-        <Select.Trigger style={{ width: '100%' }}>
+        <Select.Trigger style={{ width: '100%' }} aria-label="Select taxes">
           <Select.Value placeholder="Select taxes" />
         </Select.Trigger>
         <Select.Content>
@@ -74,11 +74,11 @@ export function DiscountSelect({
 
   return (
     <Box>
-      <Heading level={6} className="mb-2">
+      <Paragraph size="compact" textStyle="bold" className="mb-2">
         Available Discounts
-      </Heading>
+      </Paragraph>
       <Select.Root value={selectedDiscountIds?.[0] || 'none'} onValueChange={handleDiscountChange}>
-        <Select.Trigger style={{ width: '100%' }}>
+        <Select.Trigger style={{ width: '100%' }} aria-label="Select discounts">
           <Select.Value placeholder="Select discounts" />
         </Select.Trigger>
         <Select.Content>
