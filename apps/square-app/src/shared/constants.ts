@@ -11,3 +11,7 @@ export const LOCALE = 'en-US';
 
 // Debounce interval for search and input (in milliseconds)
 export const DEBOUNCE_MS = 300;
+
+// Cache configuration
+export const CACHE_TTL = 3600000; // 1 hour in milliseconds
+export const CACHE_PREFIX = 'catalog:';

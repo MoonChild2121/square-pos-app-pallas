@@ -1,22 +1,23 @@
 'use client';
-
 import { Box, VStack } from '@styled-system/jsx';
 import Modal from '@/components/primitives/ui/modal/modal';
 import { Button } from '@/components/primitives/ui/button';
-import {
-  TaxSelect,
-  DiscountSelect,
-} from '@/components/composites/modifierSelect/SelectTaxDiscount';
+import { useState } from 'react';
+import { DiscountSelect } from '@/components/composites/modifierSelect/EditCheckbox';
 import { Edit } from 'lucide-react';
 import { OrderModifierModalProps } from '@/components/composites/orderModals/types';
 import { css } from '@styled-system/css';
+import { useCartStore } from '@/shared/stores/useCartStore';
 
-export default function OrderModifierModal({
-  selectedTaxIds,
-  selectedDiscountIds,
+export default function OrderDiscountModal({
+  selectedTaxIds = [],
+  selectedDiscountIds = [],
 }: OrderModifierModalProps) {
+  const [open, setOpen] = useState(false);
+  const orderDiscountIds = useCartStore((state) => state.orderDiscountIds);
+
   return (
-    <Modal.Root>
+    <Modal.Root open={open} onOpenChange={setOpen}>
       <Modal.Trigger asChild>
         <Button
           variant="primary"
@@ -24,23 +25,24 @@ export default function OrderModifierModal({
           className={css({
             boxShadow: 'sm',
           })}
-          aria-label="Configure order modifiers"
+          aria-label="Configure order discounts"
         >
           <Edit size={20} />
-          <Box ml="padding.inline.sm">Order Modifiers</Box>
+          <Box ml="padding.inline.md">Order Discounts</Box>
         </Button>
       </Modal.Trigger>
       <Modal.Content>
         <Modal.Header>
-          <Modal.Title>Order Modifiers</Modal.Title>
-          <Modal.Description>Apply taxes and discounts to the entire order</Modal.Description>
+          <Modal.Title>Order Discounts</Modal.Title>
+          <Modal.Description>Apply discounts to the entire order</Modal.Description>
         </Modal.Header>
         <VStack gap="gap.inline.sm" py="padding.block.sm">
-          <TaxSelect itemId="order" selectedTaxIds={selectedTaxIds} isOrderLevel={true} />
           <DiscountSelect
             itemId="order"
-            selectedDiscountIds={selectedDiscountIds}
+            selectedDiscountIds={orderDiscountIds}
+            orderDiscountIds={orderDiscountIds}
             isOrderLevel={true}
+            disableSelectedOrderLevelDiscounts={true}
           />
         </VStack>
         <Modal.Footer>

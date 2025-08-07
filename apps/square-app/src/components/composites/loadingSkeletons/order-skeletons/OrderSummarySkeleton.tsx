@@ -6,15 +6,9 @@ import { Heading } from '@/components/primitives/ui/typography';
 export function OrderSummarySkeleton() {
   return (
     <VStack className={skeleton({ variant: 'orderSummary' })}>
-      {/* Title */}
-      <Heading level={4}>Order Summary</Heading>
-      {/* Subtotal */}
-      <HStack justify="space-between" w="100%">
-        <Skeleton css={{ height: '30px' }} />
-      </HStack>
       {/* Discount pill */}
       <Skeleton
-        css={{ height: '40px' }} // or whatever height your pills typically are
+        css={{ height: '20px' }} // or whatever height your pills typically are
       />
 
       {/* Tax pill skeleton */}

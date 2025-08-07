@@ -72,5 +72,3 @@ export function LayoutSkeleton() {
     </VStack>
   );
 }
-
-export default LayoutSkeleton;

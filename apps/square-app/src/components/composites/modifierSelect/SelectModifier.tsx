@@ -24,8 +24,8 @@ export default function SelectModifier({ modifiers, value, onChange }: SelectMod
 
   return (
     <Select.Root value={value} onValueChange={onChange}>
-      <Select.Trigger 
-        style={{ width: '100%' }} 
+      <Select.Trigger
+        style={{ width: '100%' }}
         aria-label="Select product modifier"
         aria-describedby="modifier-description"
       >

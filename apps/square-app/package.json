@@ -34,6 +34,7 @@
     "@tanstack/react-query": "^5.81.5",
     "@types/lodash": "^4.17.20",
     "date-fns": "^4.1.0",
+    "ioredis": "^5.7.0",
     "json-bigint": "^1.0.0",
     "jsonwebtoken": "^9.0.2",
     "lodash": "^4.17.21",
@@ -53,6 +54,7 @@
   "devDependencies": {
     "@eslint/eslintrc": "^3",
     "@eslint/js": "^9.0.0",
+    "@next/bundle-analyzer": "^15.4.5",
     "@next/eslint-plugin-next": "^15.3.4",
     "@pallas-ui/style-context": "workspace:*",
     "@pallas-ui/typescript-config": "workspace:*",

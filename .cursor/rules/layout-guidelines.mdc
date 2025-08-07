@@ -19,46 +19,60 @@ alwaysApply: false
 5. Use `Circle` and `Square` for geometric shape requirements
 6. Use `AspectRatio` to maintain specific width-to-height ratios
 
-## Common Properties
-Apply these properties directly to all layout components:
+## Spacing & Sizing
+Use **Pallas UI design tokens** for all sizing and spacing to ensure consistency.
+
+### Control Heights
+- **Small:** `100px x 1.75rem`
+- **Medium:** `100px x 2rem`
+- **Large:** `100px x 2.5rem`
+
+### Layout Spacing
+**Default Layout Spacing**
+- Small: `spacing.layout.default.sm`  
+- Medium: `spacing.layout.default.md`  
+- Large: `spacing.layout.default.lg`  
+
+**Internal Layout Spacing**
+- Small: `spacing.layout.internal.sm`  
+- Medium: `spacing.layout.internal.md`  
+- Large: `spacing.layout.internal.lg`  
+
+**Section Layout Spacing**
+- Small: `spacing.layout.section.sm`  
+- Medium: `spacing.layout.section.md`  
+- Large: `spacing.layout.section.lg`  
+
+### Component Spacing
+**Gap Component**
+- Small: `spacing.gap.component.sm`  
+- Medium: `spacing.gap.component.md`  
+- Large: `spacing.gap.component.lg`  
+
+**Gap Inline**
+- Extra Small: `spacing.gap.inline.xs`  
+- Small: `spacing.gap.inline.sm`  
+- Medium: `spacing.gap.inline.md`  
+- Large: `spacing.gap.inline.lg`  
 
 ### Padding
-- `p` - All sides
-- `px` - Horizontal (left/right)
-- `py` - Vertical (top/bottom)
-- `pt`, `pr`, `pb`, `pl` - Individual sides
+**Padding Block**
+- Small: `spacing.padding.block.sm`  
+- Medium: `spacing.padding.block.md`  
+- Large: `spacing.padding.block.lg`  
 
-### Sizing
-- `w`, `minW`, `maxW` - Width properties
-- `h`, `minH`, `maxH` - Height properties
+**Padding Inline**
+- Extra Small: `spacing.padding.inline.xs`  
+- Small: `spacing.padding.inline.sm`  
+- Medium: `spacing.padding.inline.md`  
+- Large: `spacing.padding.inline.lg`  
 
-### Position
-- `position` - CSS position property
+## Surfaces
+Surfaces represent a distinct visual layer in the interface.
 
-## Import Pattern
-```jsx
-import { Box, Flex, HStack, VStack, Grid, GridItem, Circle, Square, AspectRatio } from '@styled-system/jsx'
-```
-
-## Examples
-```jsx
-// Preferred: Using HStack/VStack
-<VStack gap={4}>
-  <HStack gap={2} justify="space-between">
-    <Box p={3}>Item 1</Box>
-    <Box p={3}>Item 2</Box>
-  </HStack>
-</VStack>
-
-// When needed: Using Flex for more complex scenarios
-<Flex direction="row" wrap="wrap" gap={4}>
-  <Box flex="1">Flexible item</Box>
-</Flex>
-
-// For grid layouts:
-<Grid columns={3} gap={4}>
-  <GridItem colSpan={2}>Spans 2 columns</GridItem>
-  <GridItem>Regular item</GridItem>
-</Grid>
-```
-```
+- Each surface must have a **consistent background color** that defines its elevation level.
+- All elements placed on the same surface must **share the same background color**.
+- Depth and hierarchy should be created through **shadows**, not by changing the background color within the same surface.
+- Always use Pallas UI background tokens such as `surface.default`, `surface.raised`, or `surface.overlay`.
+- Shadows should come from Pallas UI shadow tokens to ensure visual consistency.
+- Do not mix unrelated background colors on a single surface — this breaks the elevation logic.

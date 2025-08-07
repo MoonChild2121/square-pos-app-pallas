@@ -42,12 +42,12 @@ export const OrderDetails = ({ order, fullWidth = false }: OrderDetailsProps) =>
           <Box>
             {/* Discount pill */}
             {hasDiscount && (
-              <Box className={pill({ variant: 'cart', colorScheme: 'success' })}>
+              <HStack justify="space-between" w="100%" p="0">
                 <Paragraph size="compact">Discount</Paragraph>
                 <Paragraph size="compact">
                   -{formatMoney(order.totalDiscountMoney.amount)}
                 </Paragraph>
-              </Box>
+              </HStack>
             )}
 
             {/* Tax pill */}
@@ -62,20 +62,6 @@ export const OrderDetails = ({ order, fullWidth = false }: OrderDetailsProps) =>
             )}
           </Box>
         )}
-
-        {/* Total */}
-        <HStack
-          justify="space-between"
-          w="100%"
-          className={css({
-            borderTop: '1px solid',
-            borderColor: 'surface.spotlight',
-            pt: 'padding.block.md',
-          })}
-        >
-          <Heading level={5}>Total</Heading>
-          <Heading level={5}>{formatMoney(order.totalMoney.amount)}</Heading>
-        </HStack>
       </VStack>
     </VStack>
   );

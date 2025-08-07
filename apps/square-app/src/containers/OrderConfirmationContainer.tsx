@@ -20,8 +20,11 @@ export function OrderConfirmationContainer() {
   );
 
   const handleContinueShopping = useCallback(() => {
-    router.push('/home?clear=true');
-  }, [router]);
+    // Clear cart immediately without navigation parameter
+    state.clearCart();
+    // Navigate directly to home without query parameter
+    router.push('/home');
+  }, [router, state]);
 
   return (
     <OrderConfirmationView

@@ -1,17 +1,24 @@
 'use client';
 
-import { memo, useState } from 'react';
+import { memo, useState, lazy, Suspense } from 'react';
 import { Box, HStack, VStack } from '@styled-system/jsx';
-import SelectModifier from '@/components/composites/modifierSelect/SelectModifier';
 import { useCartStore } from '@/shared/stores/useCartStore';
 import { Button } from '@/components/primitives/ui/button';
-import { Minus, Plus } from 'lucide-react';
 import Paragraph from '@/components/primitives/ui/typography/paragraph';
 import { Product } from '@/shared/types/base';
 import { formatMoney } from '@/shared/utils/helpers';
 import Image from 'next/image';
 import { itemCard } from '@styled-system/recipes';
 import { css } from '@styled-system/css';
+
+// Lazy-loaded parts
+const SelectModifier = lazy(() => import('@/components/composites/modifierSelect/SelectModifier'));
+const MinusIcon = lazy(() =>
+  import('lucide-react/dist/esm/icons/minus').then((m) => ({ default: m.default }))
+);
+const PlusIcon = lazy(() =>
+  import('lucide-react/dist/esm/icons/plus').then((m) => ({ default: m.default }))
+);
 
 const ProductCard = memo(function ProductCard({
   id,
@@ -26,11 +33,9 @@ const ProductCard = memo(function ProductCard({
   const decreaseQuantity = useCartStore((state) => state.decreaseQuantity);
   const items = useCartStore((state) => state.items);
 
-  // Find default modifier or first one
   const defaultModifier = modifiers.find((mod) => mod.onByDefault) || modifiers[0];
   const [selectedModifierId, setSelectedModifierId] = useState<string>(defaultModifier?.id || '');
 
-  // Generate the composite ID to check if item is in cart
   const compositeId = selectedModifierId ? `${id}-${selectedModifierId}` : id;
   const cartItem = items.find((item) => item.id === compositeId);
 
@@ -61,6 +66,7 @@ const ProductCard = memo(function ProductCard({
   return (
     <Box className={itemCard()}>
       <VStack gap="gap.inline.xs">
+        {/* Product Image */}
         <Box
           position="relative"
           className={css({
@@ -78,9 +84,11 @@ const ProductCard = memo(function ProductCard({
             sizes="(max-width: 166px) 50vw, 166px"
             style={{ objectFit: 'contain' }}
             priority
+            unoptimized={false}
           />
         </Box>
 
+        {/* Product Name */}
         <Paragraph
           size="compact"
           textStyle="bold"
@@ -93,6 +101,7 @@ const ProductCard = memo(function ProductCard({
           {name}
         </Paragraph>
 
+        {/* Product Price */}
         <Paragraph
           size="compact"
           textStyle="bold"
@@ -104,40 +113,40 @@ const ProductCard = memo(function ProductCard({
           {formatMoney(price.amount)}
         </Paragraph>
 
+        {/* Lazy-loaded Modifier Selector */}
         {modifiers.length > 0 && (
-          <SelectModifier
-            modifiers={modifiers}
-            value={selectedModifierId}
-            onChange={setSelectedModifierId}
-          />
+          <Suspense fallback={null}>
+            <SelectModifier
+              modifiers={modifiers}
+              value={selectedModifierId}
+              onChange={setSelectedModifierId}
+            />
+          </Suspense>
         )}
 
+        {/* Cart Controls */}
         {cartItem ? (
           <HStack justify="space-between">
-            <Button 
-              shape="circle" 
+            <Button
               onClick={() => decreaseQuantity(compositeId)}
               aria-label={`Decrease quantity of ${name}`}
             >
-              <Minus size={15} />
+              <Suspense fallback={null}>
+                <MinusIcon size={15} />
+              </Suspense>
             </Button>
-            <Box aria-label={`Current quantity: ${cartItem.quantity}`}>
-              {cartItem.quantity}
-            </Box>
-            <Button 
-              shape="circle" 
+            <Box aria-label={`Current quantity: ${cartItem.quantity}`}>{cartItem.quantity}</Box>
+            <Button
               onClick={() => increaseQuantity(compositeId)}
               aria-label={`Increase quantity of ${name}`}
             >
-              <Plus size={15} />
+              <Suspense fallback={null}>
+                <PlusIcon size={15} />
+              </Suspense>
             </Button>
           </HStack>
         ) : (
-          <Button 
-            onClick={handleAddToCart} 
-            width="full"
-            aria-label={`Add ${name} to cart`}
-          >
+          <Button onClick={handleAddToCart} width="full" aria-label={`Add ${name} to cart`}>
             Add to Cart
           </Button>
         )}

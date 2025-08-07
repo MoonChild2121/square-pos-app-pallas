@@ -3,7 +3,8 @@
 import { useCallback, useEffect, useState } from 'react';
 import { HStack } from '@styled-system/jsx';
 import { Input } from '@/components/primitives/ui/input';
-import { Search, X } from 'lucide-react';
+import Search from 'lucide-react/dist/esm/icons/search';
+import X from 'lucide-react/dist/esm/icons/x';
 import debounce from 'lodash/debounce';
 import { searchBox } from '@styled-system/recipes';
 import { Button } from '@/components/primitives/ui/button';

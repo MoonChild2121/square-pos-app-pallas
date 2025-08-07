@@ -1,6 +1,5 @@
 // src/lib/auth.ts
 import type { NextAuthOptions } from 'next-auth';
-import SquareProvider from 'next-auth/providers/oauth';
 
 const SQUARE_SANDBOX_URL = 'https://connect.squareupsandbox.com';
 
@@ -92,6 +91,4 @@ export const authOptions: NextAuthOptions = {
       return session;
     },
   },
-
-  debug: true,
 };

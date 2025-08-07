@@ -78,3 +78,7 @@ export interface ItemVariation {
     imageIds?: string[];
   };
 }
+
+export type HasInitializeMaps = {
+  initializeMaps: (data: any) => void;
+};

@@ -1,35 +1,10 @@
-import { Suspense } from 'react';
+import { VStack } from '@styled-system/jsx';
 import { HomeContainer } from '@/containers/home/HomeContainer';
-import { getServerSession } from 'next-auth';
-import { getCatalogService } from '@/shared/services/service-factory';
-import { authOptions } from '@/lib/auth';
-import { redirect } from 'next/navigation';
-import { fetchSquareCatalog } from '@/shared/services/catalog/fetch-logic';
 
-// This is the initial data for the menu dashboard
-async function getInitialData() {
-  const session = await getServerSession(authOptions);
-
-  if (!session?.accessToken) {
-    redirect('/api/auth/signin');
-  }
-  // Get the catalog service
-  const catalogService = getCatalogService();
-  // Get the catalog data
-  const rawData = await fetchSquareCatalog(session.accessToken);
-  const squareCatalogService = catalogService as any; // need to cast to any to access private method
-  squareCatalogService.initializeMaps(rawData);
-  const data = await catalogService.getCatalog(session.accessToken);
-
-  return data;
-}
-
-export default async function MenuPage() {
-  const initialData = await getInitialData();
-
+export default function HomePage() {
   return (
-    <Suspense>
-      <HomeContainer initialData={initialData} />
-    </Suspense>
+    <VStack h="100vh" p="padding.block.md" position="relative" w="100%" gap="layout.section.sm">
+      <HomeContainer />
+    </VStack>
   );
 }

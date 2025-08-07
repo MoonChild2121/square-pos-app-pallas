@@ -1,21 +1,15 @@
-'use client';
-
 import { Box, HStack } from '@styled-system/jsx';
-import { Button } from '@/components/primitives/ui/button';
-import { useSession, signOut } from 'next-auth/react';
 import { header } from '@styled-system/recipes';
 import { pill } from '@styled-system/recipes';
-import { LogOut } from 'lucide-react';
 import Heading from '@/components/primitives/ui/typography/heading';
+import { SignOutButton } from '@/components/composites/buttons/SignOutButton';
+import { getServerSession } from 'next-auth';
+import { authOptions } from '@/lib/auth';
 
-export function Header() {
-  const { data: session } = useSession();
+export async function Header() {
+  const session = await getServerSession(authOptions);
   const merchantName = session?.user?.name || 'Merchant';
   const { root, container } = header();
-
-  const handleSignOut = () => {
-    signOut({ callbackUrl: '/login' });
-  };
 
   return (
     <Box className={root}>
@@ -23,15 +17,7 @@ export function Header() {
         <Box className={pill({ variant: 'layout' })}>
           <Heading level={5}>{merchantName}</Heading>
         </Box>
-        <Button
-          variant="primary"
-          shape="circle"
-          size="icon"
-          aria-label="Sign out"
-          onClick={handleSignOut}
-        >
-          <LogOut />
-        </Button>
+        <SignOutButton />
       </HStack>
     </Box>
   );

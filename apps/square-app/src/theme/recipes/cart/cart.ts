@@ -18,8 +18,6 @@ export const cartItem = defineSlotRecipe({
     root: {
       bg: 'bgSolid.text',
       borderRadius: 'xl',
-      border: '1px solid',
-      borderColor: 'border.secondary',
       boxShadow: 'sm',
       p: 'padding.inline.sm',
       w: '100%',
@@ -49,9 +47,9 @@ export const cartItem = defineSlotRecipe({
       fontWeight: 'medium',
     },
     controls: {
-      px: 'padding.inline.sm',
+      borderRadius: 'md',
+      px: 'padding.block.sm',
       py: 'padding.block.sm',
-      borderRadius: 'full',
       gap: 'gap.inline.sm',
       display: 'flex',
       alignItems: 'center',
@@ -61,7 +59,6 @@ export const cartItem = defineSlotRecipe({
     button: {
       color: 'primary.bg',
       bg: 'primary',
-      borderRadius: 'full',
       p: 'padding.block.sm',
       display: 'flex',
       justifyContent: 'center',

@@ -6,6 +6,7 @@ import { pill } from './recipes/pill';
 import { skeleton } from './recipes/skeleton';
 import { cartSlideout, cartOverlay, cartContent, cartControls } from './recipes/cart/cartPanel';
 import { itemCard, orderCard } from './recipes/cards/itemCard';
+import { checkbox } from './recipes/checkbox';
 
 export const recipes = {
   paragraph,
@@ -21,6 +22,7 @@ export const recipes = {
   cartContent,
   cartControls,
   orderCard,
+  checkbox,
 };
 
 export { animations } from './animations';

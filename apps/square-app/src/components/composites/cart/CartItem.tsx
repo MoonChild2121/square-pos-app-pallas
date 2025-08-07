@@ -3,7 +3,9 @@
 import { memo, useCallback } from 'react';
 import { Box, HStack, VStack } from '@styled-system/jsx';
 import Paragraph from '@/components/primitives/ui/typography/paragraph';
-import { Minus, Plus, Trash2 } from 'lucide-react';
+import Minus from 'lucide-react/dist/esm/icons/minus';
+import Plus from 'lucide-react/dist/esm/icons/plus';
+import Trash2 from 'lucide-react/dist/esm/icons/trash-2';
 import { useCartStore } from '@/shared/stores/useCartStore';
 import { cartItem } from '@styled-system/recipes';
 import ModifierModal from '@/components/composites/orderModals/ItemModal';
@@ -26,14 +28,37 @@ const CartItems = memo(function CartItem({
 }: CartItem) {
   const { increaseQuantity, decreaseQuantity, removeItem } = useCartStore();
   const { taxes, discounts } = useCatalog();
+  const orderDiscountIds = useCartStore((state) => state.orderDiscountIds);
+  const orderTaxIds = useCartStore((state) => state.orderTaxIds);
   const { root, image, content, controls, button, deleteButton } = cartItem();
 
   const handleDelete = useCallback(() => {
     removeItem(id);
   }, [id, removeItem]);
 
-  const selectedTax = taxes.find((tax) => tax.uid === taxIds[0]);
-  const selectedDiscount = discounts.find((discount) => discount.uid === discountIds[0]);
+  // Get all selected taxes and discounts
+  const selectedTaxes = taxes.filter((tax) => taxIds.includes(tax.uid));
+
+  // Get item-level discounts
+  const itemLevelDiscounts = discounts.filter((discount) => discountIds.includes(discount.uid));
+
+  // Get order-level discounts
+  const orderLevelDiscounts = discounts.filter((discount) =>
+    orderDiscountIds.includes(discount.uid)
+  );
+
+  // Combine and deduplicate discounts by uid
+  const seenUids = new Set();
+  const allSelectedDiscounts = [...itemLevelDiscounts, ...orderLevelDiscounts].filter(
+    (discount) => {
+      if (seenUids.has(discount.uid)) {
+        return false;
+      }
+      seenUids.add(discount.uid);
+      return true;
+    }
+  );
+
   const totalItemPrice = price * quantity;
 
   return (
@@ -90,18 +115,26 @@ const CartItems = memo(function CartItem({
               )}
             </Paragraph>
 
-            {(selectedTax || selectedDiscount) && (
+            {(selectedTaxes.length > 0 || allSelectedDiscounts.length > 0) && (
               <VStack gap="0">
-                {selectedTax && (
-                  <Paragraph size="subscript" color="secondary">
-                    Tax: {selectedTax.name} ({selectedTax.percentage}%)
-                  </Paragraph>
+                {selectedTaxes.length > 0 && (
+                  <VStack gap="0">
+                    {selectedTaxes.map((tax) => (
+                      <Paragraph key={tax.uid} size="subscript" color="secondary">
+                        Tax: {tax.name} ({tax.percentage}%)
+                      </Paragraph>
+                    ))}
+                  </VStack>
                 )}
-                {selectedDiscount && (
-                  <Paragraph size="subscript" color="secondary">
-                    Discount: {selectedDiscount.name}
-                    {selectedDiscount.percentage ? ` (${selectedDiscount.percentage}%)` : ''}
-                  </Paragraph>
+                {allSelectedDiscounts.length > 0 && (
+                  <VStack gap="0">
+                    {allSelectedDiscounts.map((discount: any) => (
+                      <Paragraph key={discount.uid} size="subscript" color="secondary">
+                        {discount.name}
+                        {discount.percentage ? ` (${discount.percentage}%)` : ''}
+                      </Paragraph>
+                    ))}
+                  </VStack>
                 )}
               </VStack>
             )}
@@ -113,7 +146,6 @@ const CartItems = memo(function CartItem({
             <Button
               variant="primary"
               size="sm"
-              shape="circle"
               onClick={() => decreaseQuantity(id)}
               aria-label="Decrease quantity"
             >
@@ -123,7 +155,6 @@ const CartItems = memo(function CartItem({
             <Button
               variant="primary"
               size="sm"
-              shape="circle"
               onClick={() => increaseQuantity(id)}
               aria-label="Increase quantity"
             >

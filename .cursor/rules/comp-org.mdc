@@ -1,54 +1,109 @@
 ---
-description: 
-globs: 
+description: Organize Square App files into the correct directory structure based on the Pallas UI architecture method
+globs: apps/square-app/**/*.{ts,tsx,js,jsx}
 alwaysApply: true
 ---
-## Core Component Structure
 
-pallas-ui/
-├── components/                       # Main UI component library
-│   ├── src/
-│   │   └── ui/
-│   │       ├── accordion/            # Example component 
-│   │       │   ├── index.ts          # Main export file
-│   │       │   └── root.tsx          # Component implementation
-│   │       └── [other-components]/   # Other UI components
-│   └── styled-system/                # Generated styling code
-│
-├── apps/
-│   ├── docs/                         # Documentation site
-│   │   ├── app/
-│   │   │   └── content/
-│   │   │       └── components/    # Component documentation MDX files
-│   │   │           ├── accordion.mdx # Documentation for specific component
-│   │   │           └── [other].mdx   # Other component docs
-│   │   ├── components/
-│   │   │   ├── previews/             # Interactive examples of components
-│   │   │   │   ├── accordion/        # Examples for specific component
-│   │   │   │   │   ├── index.tsx     # Default example
-│   │   │   │   │   ├── controlled.tsx# Controlled state example
-│   │   │   │   │   └── [other].tsx   # Other examples
-│   │   │   │   └── [other-component]/# Examples for other components
-│   │   │   └── ui/                   # Component copies used in docs
-│   │   │       └── [component]/      # Component copied from component/  
-│   │   └── styled-system/            # Generated styling code for docs
-│   │
-│   └── web/                          # Main web application
-│       └── [app structure]
-│
-├── packages/
-│   ├── panda/                        # Styling system package
-│   │   ├── src/
-│   │   │   ├── theme/
-│   │   │   │   ├── recipes/          # Component-specific style recipes
-│   │   │   │   │   └── accordion.ts  # Styles for specific components
-│   │   │   │   ├── tokens/           # Design tokens
-│   │   │   │   └── utilities/        # Style utilities
-│   │   │   └── colors/               # Color definitions
-│   │   └── styled-system/            # Generated styling code
-│   │
-│   └── style-context/                # Shared styling context
-│
-└── ui-primitives/                    # Low-level UI primitives sometimes
-    ├── breadcrumb/                   # Example primitive component
-    └── sidebar/                      # Example primitive component
+# Square App Component Organization Rules
+
+Follow this directory structure when creating, moving, or refactoring files in the `apps/square-app` project.
+
+## Pages (`app/`)
+- All Next.js routes and layouts must be in `apps/square-app/app/`.
+- Use route groups for organization (e.g., `(routes)/menu/page.tsx`).
+- Each page should be minimal and delegate logic to containers.
+
+## Components (`components/`)
+Split into **primitives** and **composites**:
+- **Primitives**: Low-level UI building blocks (Button, Input, Card, Typography).
+  - Location: `apps/square-app/components/primitives/[ComponentName]/`
+- **Composites**: Built from primitives; may be shared or feature-specific.
+  - **Shared composites**: `apps/square-app/components/composites/common/[ComponentName]/`
+  - **Feature composites**: `apps/square-app/components/composites/[feature]/[ComponentName]/`
+- Only presentation logic and styling should be inside `components/`.
+
+## Containers (`containers/`)
+- One folder per feature container.
+- Each folder contains:
+  - `[ContainerName].tsx` (main container component)
+  - `use[ContainerName].ts` (co-located hook for state and business logic)
+- Containers handle data fetching, state, and pass props to presentational components.
+
+## Context (`context/`)
+- For global or feature-wide state providers.
+- Each context should be isolated in its own file (e.g., `CartContext.tsx`).
+
+## Hooks (`hooks/`)
+- Reusable logic across multiple features.
+- Keep feature-specific hooks in the corresponding container folder instead.
+
+## Services (`services/`)
+- All API interaction and external service logic.
+- Group by service type, e.g.:
+  - `services/square/SquareCatalogService.ts`
+  - `services/square/SquareOrderService.ts`
+
+## Utils (`utils/`)
+- Pure functions and constants with no side effects.
+- Examples: `formatMoney.ts`, `dateFormatter.ts`, `constants.ts`.
+
+## Styles (`styles/`)
+- Global CSS and theme overrides.
+- Component styles should use Panda recipes and live with the component.
+
+## Assets (`assets/`)
+- Static files (images, fonts, icons).
+- Group into subfolders like `images/` and `fonts/`.
+
+## File Placement Rules
+- **If it’s tied to a specific feature** → keep it inside that feature’s folder (co-location).
+- **If it’s reusable across the app** → place it in the shared `common/` folder or a global directory.
+- **If it’s presentation-only** → place in `components/`.
+- **If it has business logic** → place in `containers/` with a co-located hook.
+
+## Example Structure
+
+apps/square-app/
+├── app/
+│ ├── (routes)/
+│ │ ├── home/page.tsx
+│ │ ├── menu/page.tsx
+│ │ └── auth/login/page.tsx
+│ └── layout.tsx
+├── components/
+│ ├── primitives/
+│ │ ├── Button/
+│ │ └── Card/
+│ └── composites/
+│ ├── common/
+│ │ ├── Header/
+│ │ └── Footer/
+│ └── menu/
+│ ├── ProductCard/
+│ └── ModifierList/
+├── containers/
+│ ├── MenuContainer/
+│ │ ├── MenuContainer.tsx
+│ │ └── useMenu.ts
+│ └── CartContainer/
+│ ├── CartContainer.tsx
+│ └── useCart.ts
+├── context/
+│ ├── AuthContext.tsx
+│ └── CartContext.tsx
+├── hooks/
+│ ├── useAuth.ts
+│ └── useMediaQuery.ts
+├── services/
+│ └── square/
+│ ├── SquareCatalogService.ts
+│ └── SquareOrderService.ts
+├── utils/
+│ ├── formatMoney.ts
+│ └── constants.ts
+├── styles/
+│ └── globals.css
+├── assets/
+│ ├── images/
+│ └── fonts/
+└── middleware.ts

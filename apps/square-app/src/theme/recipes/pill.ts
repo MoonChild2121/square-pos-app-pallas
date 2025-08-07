@@ -7,23 +7,24 @@ export const pill = defineRecipe({
     display: 'inline-flex',
     alignItems: 'center',
     whiteSpace: 'nowrap',
-    borderRadius: 'full',
     p: 'padding.block.md',
   },
   variants: {
     variant: {
       layout: {
+        borderRadius: 'full',
         bg: 'surface.layout',
         color: 'text.primary',
         justifyContent: 'center',
         px: 'padding.inline.lg',
       },
       cart: {
-        bg: 'surface.container',
         color: 'secondary',
         border: '1px solid',
+        borderRadius: 'xl',
         borderColor: 'surface.spotlight', // default border
         w: '100%',
+        bg: 'success.bg',
         justifyContent: 'space-between',
       },
     },

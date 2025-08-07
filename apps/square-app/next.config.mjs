@@ -1,6 +1,8 @@
 /** @type {import('next').NextConfig} */
-const nextConfig = {
-  reactStrictMode: true,
+import withBundleAnalyzer from '@next/bundle-analyzer';
+const nextConfig = withBundleAnalyzer({
+  enabled: process.env.ANALYZE === 'true',
+})({  reactStrictMode: true,
   experimental: {
     serverActions: {},
     reactCompiler: true,
@@ -13,6 +15,6 @@ const nextConfig = {
       },
     ],
   },
-};
+});
 
 export default nextConfig;
